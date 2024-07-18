@@ -7,10 +7,9 @@ class Pawn : public Piece{
 public: 
 
 Pawn();
-Pawn(Colour colour, Board *board);
-~Pawn();
+virtual ~Pawn() = default;
 
-bool enpassent;
+bool enpassent();
 bool isValidMove(char newC, int newI);
 };
 
