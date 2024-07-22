@@ -6,8 +6,8 @@
 class Pawn : public Piece{
 public: 
 
-Pawn();
-virtual ~Pawn() = default;
+Pawn(Colour colour, char type, Chessboard *board, char cPos, int iPos);
+~Pawn();
 
 bool enpassent();
 bool isValidMove(char newC, int newI);

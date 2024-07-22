@@ -1,6 +1,6 @@
 #include "king.h"
 
-King::King(Colour colour, char type, Board *board, char cPos, int iPos) : Piece(colour, type, board) {
+King::King(Colour colour, char type, Chessboard*board, char cPos, int iPos) : Piece(colour, type, board, iPos, cPos) {
     Piece::setPos(cPos, iPos);
 }
 
