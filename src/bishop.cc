@@ -21,7 +21,7 @@ bool Bishop::isValidMove(char newC, int newI) {
         currentRow += rowStep;
         
         if (board->captures(currentCol, currentRow)) {
-                return true; 
+            return true; 
         } else if (board->occupied(currentCol, currentRow)) {
             return false; 
         }

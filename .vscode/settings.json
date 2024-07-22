@@ -3,6 +3,10 @@
         "vector": "cpp",
         "iosfwd": "cpp",
         "iterator": "cpp",
-        "tuple": "cpp"
+        "tuple": "cpp",
+        "__locale": "cpp",
+        "ios": "cpp",
+        "ostream": "cpp",
+        "iostream": "cpp"
     }
 }
