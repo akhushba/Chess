@@ -6,7 +6,7 @@
 class King : public Piece {
     bool canCastle();
 public:
-    King();
+    King(Colour colour, char type, Board *board, char cPos, int iPos);
     bool isValidMove(char newC, int newI);
     virtual ~King() = default;
 };

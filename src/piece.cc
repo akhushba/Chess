@@ -4,10 +4,11 @@
 
 using namespace std;
 
-Piece::Piece(Colour colour, char type, Board *board) : colour {colour}, type{type}, board{board} {
-
+Piece::Piece(Colour colour, char type, Board *board, char cPos, int iPos) : colour {colour}, type{type}, board{board}, cPos{cPos}, iPos{iPos} {
+    active = true;
 }
 
 void Piece::setPos(char c, int i) {
-    position = make_tuple(c, i);
+    cPos = c;
+    iPos = i;
 }

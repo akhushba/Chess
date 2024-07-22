@@ -12,10 +12,13 @@ protected:
     void captures(Piece *p);
     tuple<char, int> getCoordinate(char c, int i);
 
-    bool Active;
+    bool active;
     Board *board;
-    char type;
     Colour colour;
+    char type;
+
+    char cPos;
+    int iPos;
 public:
     ~Piece();
     Piece(Colour colour, char type, Board *board, char cPos, int iPos);

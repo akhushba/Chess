@@ -5,7 +5,7 @@
 
 class Queen : public Piece {
 public:
-    Queen();
+    Queen(Colour colour, char type, Board *board, char cPos, int iPos);
     bool isValidMove(char newC, int newI);
     virtual ~Queen() = default;
 };
