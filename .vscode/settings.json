@@ -2,6 +2,11 @@
     "files.associations": {
         "vector": "cpp",
         "iosfwd": "cpp",
-        "iterator": "cpp"
+        "iterator": "cpp",
+        "tuple": "cpp",
+        "__locale": "cpp",
+        "ios": "cpp",
+        "ostream": "cpp",
+        "iostream": "cpp"
     }
 }

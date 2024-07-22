@@ -9,6 +9,9 @@ Piece::Piece(Colour colour, char type, Chessboard *board, char cPos, int iPos) :
 }
 
 void Piece::setPos(char c, int i) {
+    if (captures() != nullptr) {
+        captures()->active = false;
+    }
     cPos = c;
     iPos = i;
 }

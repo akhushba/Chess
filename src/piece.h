@@ -1,6 +1,8 @@
 #ifndef PIECE_H
 #define PIECE_H
 #include <string>
+#include <vector>
+#include <tuple>
 #include "colour.h"
 #include "chessboard.h"
 
@@ -8,7 +10,7 @@ using namespace std;
 
 class Piece{
 protected:
-    void captures(Piece *p);
+    Piece* captures();
     tuple<char, int> getCoordinate(char c, int i);
 
     bool active;
