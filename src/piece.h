@@ -2,10 +2,9 @@
 #define PIECE_H
 #include <string>
 #include "colour.h"
+#include "chessboard.h"
 
 using namespace std;
-
-class Board;
 
 class Piece{
 protected:
@@ -13,7 +12,7 @@ protected:
     tuple<char, int> getCoordinate(char c, int i);
 
     bool active;
-    Board *board;
+    Chessboard *board;
     Colour colour;
     char type;
 
@@ -21,7 +20,7 @@ protected:
     int iPos;
 public:
     ~Piece();
-    Piece(Colour colour, char type, Board *board, char cPos, int iPos);
+    Piece(Colour colour, char type, Chessboard *board, char cPos, int iPos);
 
     bool isValidMove(char c, int i);
     void setPos(char c, int i);
