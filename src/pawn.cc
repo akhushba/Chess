@@ -15,7 +15,3 @@ bool Pawn::isValidMove(char newC, int newI) {
     }
 }
 
-
-Pawn::~Pawn() {
-    
-}
