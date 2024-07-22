@@ -7,7 +7,7 @@
 
 class TextDisplay : public Observer {
     BoardDisplay* display;
-    int top = 8, bottom  = 8, left  = 8, right  = 8;
+    int top = 8, bottom = 8, left  = 8, right  = 8;
     std::ostream &out = std::cout;
 
 public:
