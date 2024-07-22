@@ -25,6 +25,7 @@ class Chessboard{
         bool inStalemate();
         bool inCheckmate();
         bool inCheck();
+        bool captures(char c, int i);
         bool occupied(char c, int i);
         void resign();
         void takeInput();

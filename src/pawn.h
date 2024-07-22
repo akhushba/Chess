@@ -4,13 +4,15 @@
 #include "piece.h"
 
 class Pawn : public Piece{
+    bool firstMove = false;
+
 public: 
+    Pawn(Colour colour, char type, Chessboard *board, char cPos, int iPos);
+    ~Pawn();
 
-Pawn(Colour colour, char type, Chessboard *board, char cPos, int iPos);
-~Pawn();
-
-bool enpassent();
-bool isValidMove(char newC, int newI);
+    bool enpassent();
+    bool isValidMove(char newC, int newI) override;
+    void generateMoves() override;
 };
 
 #endif
