@@ -6,7 +6,7 @@
 
 class Bishop : public Piece {
 public:
-    Bishop(Colour colour, char type, Board *board, char cPos, int iPos);
+    Bishop(Colour colour, char type, Chessboard *board, char cPos, int iPos);
     bool isValidMove(char newC, int newI);
     virtual ~Bishop() = default;
 };

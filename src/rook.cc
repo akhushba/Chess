@@ -6,7 +6,7 @@ Rook::Rook(Colour colour, char type, Chessboard *board, char cPos, int iPos) : P
 
 bool Rook::isValidMove(char newC, int newI) {
     //make sure we're moving diagonally
-    if (abs(newC - cPos) != abs(newI - iPos) && newC != cPos && newI != iPos) {
+    if ((newC != cPos && newI != iPos) || (newC == cPos && newI == iPos)) {
         return false;
     }
 
@@ -26,4 +26,8 @@ bool Rook::isValidMove(char newC, int newI) {
     }
 
     return true;
+}
+
+vector<tuple<int, int>> generateMves() {
+    
 }
