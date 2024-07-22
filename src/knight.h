@@ -5,8 +5,8 @@
 
 class Knight : public Piece{
 public: 
-Knight();
-virtual ~Knight() = default;
+Knight(Colour colour, char type, Chessboard *board, char cPos, int iPos);
+~Knight();
 
 bool isValidMove(char newC, int newI);
 };
