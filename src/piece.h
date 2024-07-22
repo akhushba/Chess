@@ -1,6 +1,7 @@
 #ifndef PIECE_H
 #define PIECE_H
 #include <string>
+#include "colour.h"
 
 using namespace std;
 
@@ -14,15 +15,18 @@ protected:
 
     bool Active;
     Board *board;
-    char Type;
+    char type;
+    Colour colour;
 public:
     ~Piece();
-    Piece();
-    Piece(enum colour, char type, Board *board);
+    Piece(Colour colour, char type, Board *board);
 
     bool isValidMove(char c, int i);
+<<<<<<< HEAD
     enum Colour{WHITE,BLACK};
     void setPos(char c, int i);
+=======
+>>>>>>> 773a4667d3e2a5e3f4dde85ddf0447ab3b464238
 };
 
 #endif
