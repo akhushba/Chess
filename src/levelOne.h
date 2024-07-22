@@ -1,6 +1,7 @@
 #ifndef LEVELONE_H
 #define LEVELONE_H
 
+#include "player.h"
 #include "computer.h"
 
 class LevelOne : public Computer {
