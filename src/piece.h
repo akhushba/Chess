@@ -8,7 +8,7 @@ using namespace std;
 
 class Piece{
 protected:
-    void captures(Piece *p);
+    Piece* captures();
     tuple<char, int> getCoordinate(char c, int i);
 
     bool active;
