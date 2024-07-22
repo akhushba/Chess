@@ -1,15 +1,16 @@
 #include "rook.h"
+#include <cstdlib>
 
-Rook::Rook(Colour colour, char type, Board *board, char cPos, int iPos) : Piece(colour, type, board) {
-    Piece::setPos(cPos, iPos);
+Rook::Rook(Colour colour, char type, Board *board, char cPos, int iPos) : Piece(colour, type, board, cPos, iPos) {
 }
 
 bool Rook::isValidMove(char newC, int newI) {
-    if(get<0>(Piece::position) == newC || get<1>(Piece::position) == newI) 
+    //make sure we're moving diagonally
+    if (abs(newC - cPos) != abs(newI - iPos) && (newC - cPos)!=0 && (newI - iPos) != 0) {
         return false;
-    else if {
-        
     }
+
+    
 }
 
 Rook::~Rook() {
