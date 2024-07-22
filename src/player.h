@@ -12,10 +12,11 @@ protected:
     string name;
     vector<Piece*> pieceSet; 
 public:
-    Player(string name, vector<Piece*> pieceSet) : name{name}, pieceSet{pieceSet} {};
+    Player() {}
+    Player(string name, vector<Piece*> pieceSet) : name{name}, pieceSet{pieceSet} {}
     virtual void move(Piece* p , char c, int i);
     virtual void move();
-    virtual ~Player() = 0;
+    virtual ~Player() {};
 };
 
 #endif

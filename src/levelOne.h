@@ -5,9 +5,9 @@
 
 class LevelOne : public Computer {
 public:
-    LevelOne();
+    LevelOne(string name, vector<Piece*> pieceSet) : Player(name, pieceSet) {}
     void move() override;
-    ~LevelOne() override;
+    ~LevelOne() override {};
 };
 
 #endif
