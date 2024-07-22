@@ -9,13 +9,14 @@ bool Pawn::enpassent() {
 }
 
 bool Pawn::isValidMove(char newC, int newI) {
-    if(newI - iPos > 2 || newI - iPos <= 0) return false;
-    if(newI - iPos == 2) {
+    int direction = (colour == Colour::WHITE) ? 1 : -1;
+    if(newI - iPos > 2*direction || newI - iPos <= 0) return false;
+    if(newI - iPos == 2*direction) {
         if(abs(newC - cPos) != 1) return false;
         else if(board->captures(newC, newI)) return true;
         else return false;
     }
-    else if (newI - iPos == 1) {
+    else if (newI - iPos == direction) {
         if(newC != cPos) return false;
         else if(board->captures(newC, newI)) return false;
         else return true;
@@ -23,9 +24,28 @@ bool Pawn::isValidMove(char newC, int newI) {
     return false;
 }
 
-void generateMoves() {
-    // validPosVec.clear();
-    // validPosVec.push_back(make_tuple('a', 1));
+void Pawn::generateMoves() {
+    validPosVec.clear();
+    int direction = (colour == Colour::WHITE) ? 1 : -1;
+    char nextC = cPos;
+    int nextI = iPos + direction;
+    if (isValidMove(nextC, nextI)) {
+        validPosVec.emplace_back(nextC, nextI);
+    }
+    if (firstMove) {
+        nextI = iPos + 2 * direction;
+        if (isValidMove(nextC, nextI)) {
+            validPosVec.emplace_back(nextC, nextI);
+        }
+    }
+    char diagC = cPos;
+    int diagI = iPos + direction;
+    if (isValidMove(diagC + 1, diagI)) {
+        validPosVec.emplace_back(diagC + 1, diagI);
+    }
+    if (isValidMove(diagC - 1, diagI)) {
+        validPosVec.emplace_back(diagC - 1, diagI);
+    }
 }
 
 Pawn::~Pawn() {
