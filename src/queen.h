@@ -6,7 +6,7 @@
 class Queen : public Piece {
 public:
     Queen();
-    bool isValidMove(<char newC, int newI>);
+    bool isValidMove(char newC, int newI);
     virtual ~Queen() = default;
 };
 #endif

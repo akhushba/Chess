@@ -4,10 +4,6 @@ Queen::Queen() {
 
 }
 
-bool Queen::isValidMove(<char newC, int newI>) {
+bool Queen::isValidMove(char newC, int newI) {
 
-}
-
-Queen::~Queen() {
-    
 }

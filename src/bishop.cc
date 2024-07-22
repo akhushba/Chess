@@ -4,10 +4,6 @@ Bishop::Bishop() {
 
 }
 
-bool Bishop::isValidMove*(<char newC, int newI>) {
-
-}
-
-Biship::~Bishop{
+bool Bishop::isValidMove(char newC, int newI) {
 
 }

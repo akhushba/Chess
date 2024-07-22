@@ -7,7 +7,7 @@ class King : public Piece {
     bool canCastle();
 public:
     King();
-    bool isValidMove(<char newC, int newI>);
+    bool isValidMove(char newC, int newI);
     virtual ~King() = default;
 };
 #endif

@@ -6,7 +6,7 @@
 class Bishop : public Piece {
 public:
     Bishop();
-    bool isValidMove(<char newC, int newI>);
+    bool isValidMove(char newC, int newI);
     virtual ~Bishop() = default;
 };
 #endif
