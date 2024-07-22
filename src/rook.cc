@@ -27,7 +27,3 @@ bool Rook::isValidMove(char newC, int newI) {
 
     return true;
 }
-
-Rook::~Rook() {
-    
-}

@@ -22,7 +22,7 @@ public:
     ~Piece();
     Piece(Colour colour, char type, Chessboard *board, char cPos, int iPos);
 
-    bool isValidMove(char c, int i);
+    virtual bool isValidMove(char c, int i);
     void setPos(char c, int i);
 };
 
