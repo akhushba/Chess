@@ -6,7 +6,8 @@
 class Bishop : public Piece {
 public:
     Bishop(Colour colour, char type, Chessboard *board, char cPos, int iPos);
-    bool isValidMove(char newC, int newI);
+    bool isValidMove(char newC, int newI) override;
+    void generateMoves() override;
     ~Bishop();
 };
 #endif
