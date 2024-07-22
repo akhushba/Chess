@@ -5,9 +5,9 @@
 
 class Computer : public Player {
 public:
-    Computer() : Player() {}
+    Computer(string name, vector<Piece*> pieceSet) : Player(name, pieceSet) {}
     virtual void move() override = 0;
-    virtual ~Computer() override {};
+    virtual ~Computer() override {}
 };
 
 #endif
