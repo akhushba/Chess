@@ -4,12 +4,10 @@
 #include "player.h"
 
 class Computer : public Player {
-protected:
-    int level;
 public:
-    Computer(int level);
+    Computer() : Player() {}
     virtual void move() override = 0;
-    virtual ~Computer() = 0;
+    virtual ~Computer() override {};
 };
 
 #endif

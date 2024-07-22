@@ -22,11 +22,8 @@ public:
     Piece(Colour colour, char type, Board *board);
 
     bool isValidMove(char c, int i);
-<<<<<<< HEAD
     enum Colour{WHITE,BLACK};
     void setPos(char c, int i);
-=======
->>>>>>> 773a4667d3e2a5e3f4dde85ddf0447ab3b464238
 };
 
 #endif
