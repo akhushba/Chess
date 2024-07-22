@@ -8,9 +8,9 @@ class Board;
 
 class Piece{
 protected:
-    tuple<char, int> position();
+    tuple<char, int> position;
     void captures(Piece *p);
-    tuple<int, int> getCoordinate(char c, int i);
+    tuple<char, int> getCoordinate(char c, int i);
 
     bool Active;
     Board *board;
@@ -22,6 +22,7 @@ public:
 
     bool isValidMove(char c, int i);
     enum Colour{WHITE,BLACK};
+    void setPos(char c, int i);
 };
 
 #endif

@@ -13,7 +13,7 @@ protected:
     vector<Piece*> pieceSet; 
 public:
     Player(string name, vector<Piece*> pieceSet) : name{name}, pieceSet{pieceSet} {};
-    virtual void move(Piece* p , int x, int y);
+    virtual void move(Piece* p , char c, int i);
     virtual void move();
     virtual ~Player() = 0;
 };
