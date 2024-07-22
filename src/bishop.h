@@ -3,7 +3,7 @@
 
 #include "piece.h"
 
-class Bishop : Public Piece {
+class Bishop : public Piece {
 public:
     Bishop();
     bool isValidMove(<char newC, int newI>);

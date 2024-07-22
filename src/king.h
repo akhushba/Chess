@@ -3,7 +3,7 @@
 
 #include "piece.h"
 
-class King : Public Piece {
+class King : public Piece {
     bool canCastle();
 public:
     King();
