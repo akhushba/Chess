@@ -24,8 +24,8 @@ bool Pawn::isValidMove(char newC, int newI) {
 }
 
 void generateMoves() {
-    validPosVec.push_back(make_tuple('a', 1));
-    validPosVec.clear();
+    // validPosVec.clear();
+    // validPosVec.push_back(make_tuple('a', 1));
 }
 
 Pawn::~Pawn() {
