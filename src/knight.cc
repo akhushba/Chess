@@ -15,7 +15,7 @@ bool Knight::isValidMove(char newC, int newI) {
    if(newC < 'a' || newC> 'h' || newI < 1 || newI > 8){ //out of bounds 
         return false;
    }
-    if (board->captures(newC, newI)) {
+    if (board->capture(newC, newI)) {
         return true; 
     } else if (board->occupied(newC, newI)) {
         return false; 

@@ -13,12 +13,12 @@ bool Pawn::isValidMove(char newC, int newI) {
     if(newI - iPos > 2*direction || newI - iPos <= 0) return false;
     if(newI - iPos == 2*direction) {
         if(abs(newC - cPos) != 1) return false;
-        else if(board->captures(newC, newI)) return true;
+        else if(board->capture(newC, newI)) return true;
         else return false;
     }
     else if (newI - iPos == direction) {
         if(newC != cPos) return false;
-        else if(board->captures(newC, newI)) return false;
+        else if(board->capture(newC, newI)) return false;
         else return true;
     }
     return false;

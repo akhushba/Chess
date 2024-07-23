@@ -12,7 +12,7 @@ bool King::isValidMove(char newC, int newI) {
     if(newC == cPos && newI == iPos) return false;
     if(abs(newC - cPos) != 1 && abs(newI - iPos) != 1) return false;
 
-    if (board->captures(newC, newI)) {
+    if (board->capture(newC, newI)) {
         return true; 
     } else if (board->occupied(newC, newI)) {
         return false; 

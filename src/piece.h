@@ -27,7 +27,8 @@ public:
     virtual void generateMoves() = 0;
     void setPos(char c, int i);
     void setActiveStatus(bool newStatus);
-    Piece* captures(char c, int i);
+    Piece* capture(char c, int i);
+    Player* getOpponent();
 
     ~Piece();
 };

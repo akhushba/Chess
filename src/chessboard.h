@@ -14,7 +14,6 @@ class Chessboard{
     Player*** board;
     Player* WhitePlayer;
     Player* BlackPlayer;
-    GameInfo* info;
 
     vector<vector<Piece *>> board;
     bool gameOver;
@@ -26,10 +25,12 @@ class Chessboard{
         bool inStalemate();
         bool inCheckmate();
         bool inCheck();
-        bool captures(char c, int i);
+        bool capture(char c, int i);
         bool occupied(char c, int i);
         void resign();
         void takeInput();
+        Player* getWhitePlayer();
+        Player* getBlackPlayer();
 };
 
 #endif

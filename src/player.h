@@ -11,7 +11,6 @@ using namespace std;
 class Player {
 protected:
     string name;
-    GameInfo* info;
 public:
     vector<Piece*> pieceSet; 
     Player() {}

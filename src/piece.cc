@@ -9,8 +9,8 @@ Piece::Piece(Colour colour, char type, Chessboard *board, char cPos, int iPos) :
 }
 
 void Piece::setPos(char c, int i) {
-    if (captures(c, i) != nullptr) {
-        captures(c, i)->active = false;
+    if (capture(c, i) != nullptr) {
+        capture(c, i)->active = false;
     }
     cPos = c;
     iPos = i;
@@ -18,4 +18,12 @@ void Piece::setPos(char c, int i) {
 
 void Piece::setActiveStatus(bool newStatus) {
     active = newStatus;
+}
+
+Player* Piece::getOpponent() {
+    if (colour == WHITE) {
+        return board->getBlackPlayer();
+    } else if (colour == BLACK) {
+        return board->getWhitePlayer();
+    }
 }

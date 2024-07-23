@@ -26,8 +26,8 @@ void LevelTwo::move() {
         for (int j = 0; j < pieceSet[i]->validPosVec.size(); j++) {
             newC = get<0>(pieceSet[i]->validPosVec[j]);
             newI = get<1>(pieceSet[i]->validPosVec[j]);
-            if (pieceSet[i]->captures(newC, newI) != nullptr) {
-                pieceSet[i]->captures(newC, newI)->setActiveStatus(false);
+            if (pieceSet[i]->capture(newC, newI) != nullptr) {
+                pieceSet[i]->capture(newC, newI)->setActiveStatus(false);
                 pieceSet[i]->setPos(newC, newI);
                 return;
             }

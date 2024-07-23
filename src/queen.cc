@@ -22,7 +22,7 @@ bool Queen::isValidMove(char newC, int newI) {
             currentCol += colStep;
             currentRow += rowStep;
             
-            if (board->captures(currentCol, currentRow)) {
+            if (board->capture(currentCol, currentRow)) {
                 return true; 
             } else if (board->occupied(currentCol, currentRow)) {
                 return false; 
@@ -41,7 +41,7 @@ bool Queen::isValidMove(char newC, int newI) {
             currentCol += colStep;
             currentRow += rowStep;
             
-            if (board->captures(currentCol, currentRow)) {
+            if (board->capture(currentCol, currentRow)) {
                 return true; 
             } else if (board->occupied(currentCol, currentRow)) {
                 return false; 

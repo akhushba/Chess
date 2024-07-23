@@ -23,7 +23,7 @@ bool Rook::isValidMove(char newC, int newI) {
         if (board->occupied(currentCol, currentRow)) {
             return false; 
         }
-        else if(board->captures(currentCol, currentRow)){
+        else if(board->capture(currentCol, currentRow)){
             return true;
         }
     }
