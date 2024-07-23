@@ -8,7 +8,6 @@ using namespace std;
 
 class Piece{
 protected:
-    Piece* captures();
     tuple<char, int> getCoordinate(char c, int i);
 
     bool active;
@@ -19,13 +18,16 @@ protected:
     char cPos;
     int iPos;
 public:
-    ~Piece();
     Piece(Colour colour, char type, Chessboard *board, char cPos, int iPos);
 
     vector<tuple<char, int>> validPosVec;
     virtual bool isValidMove(char c, int i) = 0;
     virtual void generateMoves() = 0;
     void setPos(char c, int i);
+    void setActiveStatus(bool newStatus);
+    Piece* captures(char c, int i);
+
+    ~Piece();
 };
 
 #endif

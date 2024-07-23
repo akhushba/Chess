@@ -5,7 +5,7 @@
 
 class LevelThree : public Computer {
 public:
-    LevelThree();
+    LevelThree(string name, vector<Piece*> pieceSet);
     void move() override;
     ~LevelThree() override;
 };

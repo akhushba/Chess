@@ -3,6 +3,7 @@
         "vector": "cpp",
         "iosfwd": "cpp",
         "iterator": "cpp",
-        "tuple": "cpp"
+        "tuple": "cpp",
+        "random": "cpp"
     }
 }
