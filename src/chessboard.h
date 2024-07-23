@@ -4,6 +4,7 @@
 #include "colour.h"
 #include "player.h"
 #include "piece.h"
+#include "gameinfo.h"
 #include <vector>
 
 using namespace std;
@@ -13,7 +14,7 @@ class Chessboard{
     Player*** board;
     Player* WhitePlayer;
     Player* BlackPlayer;
-    Player* turn;
+    GameInfo* info;
 
     vector<vector<Piece *>> board;
     bool gameOver;
