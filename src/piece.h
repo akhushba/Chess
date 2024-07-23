@@ -1,6 +1,8 @@
 #ifndef PIECE_H
 #define PIECE_H
 #include <string>
+#include <vector>
+#include <tuple>
 #include "colour.h"
 #include "chessboard.h"
 

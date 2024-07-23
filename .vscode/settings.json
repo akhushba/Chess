@@ -4,6 +4,10 @@
         "iosfwd": "cpp",
         "iterator": "cpp",
         "tuple": "cpp",
-        "random": "cpp"
+        "random": "cpp",
+        "__locale": "cpp",
+        "ios": "cpp",
+        "ostream": "cpp",
+        "iostream": "cpp"
     }
 }
