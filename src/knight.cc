@@ -23,7 +23,13 @@ bool Knight::isValidMove(char newC, int newI) {
    return true;
 }
 
-vector<tuple<int, int>> generateMves() {
-     // keep i pos the same and go through a-h for cpos and call is valid move
-    //keep cpos the same and go though 1-8 for ipos and call is calid move
+void Knight::generateMoves() {
+    validPosVec.clear();
+
+    int directions[8][2] = {{2, 1}, {2, -1}, {-2, 1}, {-2, -1}, {1, 2}, {-1, 2}, {1, -2}, {-1, -2}};
+
+    for(auto& d : directions) {
+        if(isValidMove(cPos + d[0], iPos + d[1])) 
+            validPosVec.emplace_back(make_tuple(cPos + d[0], iPos + d[1]));
+    }
 }

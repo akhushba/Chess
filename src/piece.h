@@ -19,6 +19,7 @@ protected:
 
     char cPos;
     int iPos;
+    
 public:
     Piece(Colour colour, char type, Chessboard *board, char cPos, int iPos);
 
@@ -30,7 +31,7 @@ public:
     Piece* capture(char c, int i);
     Player* getOpponent();
 
-    ~Piece();
+    virtual ~Piece();
 };
 
 #endif

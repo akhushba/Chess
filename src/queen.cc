@@ -5,6 +5,9 @@ Queen::Queen(Colour colour, char type, Chessboard *board, char cPos, int iPos): 
 }
 
 bool Queen::isValidMove(char newC, int newI) {
+    if(newC < 'a' || newC> 'h' || newI < 1 || newI > 8){ //out of bounds 
+        return false;
+   }
     //not in the same posiiton
     if(newC == cPos && newI == iPos) return false;
 
@@ -51,4 +54,21 @@ bool Queen::isValidMove(char newC, int newI) {
     else return false;
 
     return true;
+}
+
+void Queen::generateMoves() {
+    validPosVec.clear();
+
+    int directions[8][2] = {{1, 1}, {1, -1}, {-1, 1}, {-1, -1}, {0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+
+    for (auto& direction : directions) {
+        char col = cPos;
+        int row = iPos;
+
+        while (row >= 1 && row <= 8 && col >= 'a' && col < 'h') {
+            row += direction[0];
+            col += direction[1];
+            if(isValidMove(col, row)) validPosVec.emplace_back(make_tuple(col, row));
+        }
+    }
 }

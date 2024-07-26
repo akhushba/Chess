@@ -9,6 +9,9 @@ bool Pawn::enpassent() {
 }
 
 bool Pawn::isValidMove(char newC, int newI) {
+    if(newC < 'a' || newC> 'h' || newI < 1 || newI > 8){ //out of bounds 
+        return false;
+    }
     int direction = (colour == Colour::WHITE) ? 1 : -1;
     if(newI - iPos > 2*direction || newI - iPos <= 0) return false;
     if(newI - iPos == 2*direction) {
@@ -46,8 +49,4 @@ void Pawn::generateMoves() {
     if (isValidMove(diagC - 1, diagI)) {
         validPosVec.emplace_back(diagC - 1, diagI);
     }
-}
-
-Pawn::~Pawn() {
-    
 }

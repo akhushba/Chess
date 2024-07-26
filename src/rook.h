@@ -4,11 +4,12 @@
 #include "piece.h"
 
 class Rook : public Piece{
-public: 
-Rook(Colour colour, char type, Chessboard *board, char cPos, int iPos);
-~Rook() = default;
+    public: 
+        Rook(Colour colour, char type, Chessboard *board, char cPos, int iPos);
+        ~Rook() = default;
 
-bool isValidMove(char newC, int newI) override;
+        bool isValidMove(char newC, int newI) override;
+        void generateMoves() override;
 };
 
 #endif
