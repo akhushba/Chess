@@ -9,44 +9,36 @@ bool Pawn::enpassent() {
 }
 
 bool Pawn::isValidMove(char newC, int newI) {
-    if(newC < 'a' || newC> 'h' || newI < 1 || newI > 8){ //out of bounds 
+    if(newC < 'a' || newC> 'h' || newI < 1 || newI > 8){ 
         return false;
     }
     int direction = (colour == Colour::WHITE) ? 1 : -1;
+
     if(newI - iPos > 2*direction || newI - iPos <= 0) return false;
-    if(newI - iPos == 2*direction) {
-        if(abs(newC - cPos) != 1) return false;
-        else if(board->capture(newC, newI)) return true;
+    else if(newI - iPos == 2*direction) {
+        if(firstMove && newC == cPos) return true;
         else return false;
-    }
-    else if (newI - iPos == direction) {
-        if(newC != cPos) return false;
-        else if(board->capture(newC, newI)) return false;
-        else return true;
+    } else if (newI - iPos == direction) {
+        if(newC != cPos && board->capture(newC, newI)) return true;
+        else if(newC == cPos && !(board->occupied(newC, newI))) return true;
+        else return false;
     }
     return false;
 }
 
 void Pawn::generateMoves() {
     validPosVec.clear();
-    int direction = (colour == Colour::WHITE) ? 1 : -1;
-    char nextC = cPos;
-    int nextI = iPos + direction;
-    if (isValidMove(nextC, nextI)) {
-        validPosVec.emplace_back(nextC, nextI);
-    }
+    int boardPosition = (colour == Colour::WHITE) ? 1 : -1;
+
     if (firstMove) {
-        nextI = iPos + 2 * direction;
-        if (isValidMove(nextC, nextI)) {
-            validPosVec.emplace_back(nextC, nextI);
+        if (isValidMove(cPos, iPos + 2 * boardPosition)) {
+            validPosVec.emplace_back(cPos, iPos + 2 * boardPosition);
         }
     }
-    char diagC = cPos;
-    int diagI = iPos + direction;
-    if (isValidMove(diagC + 1, diagI)) {
-        validPosVec.emplace_back(diagC + 1, diagI);
-    }
-    if (isValidMove(diagC - 1, diagI)) {
-        validPosVec.emplace_back(diagC - 1, diagI);
+
+    int directions[4][2] = {{0, boardPosition}, {1, boardPosition}, {-1, boardPosition}};
+    for(auto& d : directions) {
+        if(isValidMove(cPos + d[0], iPos + d[1])) 
+            validPosVec.emplace_back(make_tuple(cPos + d[0], iPos + d[1]));
     }
 }
