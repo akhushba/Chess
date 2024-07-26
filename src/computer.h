@@ -4,9 +4,10 @@
 #include "player.h"
 
 class Computer : public Player {
+
 public:
     Computer(string name, vector<Piece*> pieceSet) : Player(name, pieceSet) {}
-    virtual void move() override = 0;
+    virtual void move(Piece* p = nullptr, char c = '\0', int i = -1) override = 0;
     virtual ~Computer() override {}
 };
 

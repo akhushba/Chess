@@ -6,7 +6,7 @@
 class LevelFour : public Computer {
 public:
     LevelFour();
-    void move() override;
+    void move(Piece* p = nullptr, char c = '\0', int i = -1) override;
     ~LevelFour() override;
 };
 
