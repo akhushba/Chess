@@ -51,7 +51,7 @@ class BoardDisplay final: public Subject {
     //for the chessboard
     bool simulateInCheck(Piece*, char newC, int newI);
     void setState(Piece* p, char cPos, int iPos);
-    void canCapture(char cPos, int iPos);
+    bool canCapture(Colour pieceColour, char cPos, int iPos);
     void as(char cPos, int iPos, Piece* p);
 
     BoardDisplay(Chessboard* b, Colour c);
