@@ -4,7 +4,7 @@
 
 using namespace std;
 
-Piece::Piece(Colour colour, char type, Chessboard *board, char cPos, int iPos, int pieceValue) : colour {colour}, type{type}, board{board}, cPos{cPos}, iPos{iPos}, pieceValue{pieceValue} {
+Piece::Piece(Colour colour, char type, Chessboard *board, char cPos, int iPos, int pieceValue) : colour {colour}, type{colour == BLACK ? type : type - 32}, board{board}, cPos{cPos}, iPos{iPos}, pieceValue{pieceValue} {
     active = true;
 }
 

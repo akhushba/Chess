@@ -1,4 +1,3 @@
-// Color.h
 #ifndef COLOUR_H
 #define COLOUR_H
 
@@ -7,4 +6,4 @@ enum Colour {
     BLACK
 };
 
-#endif // COLOR_H
+#endif 

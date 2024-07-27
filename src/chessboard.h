@@ -1,7 +1,6 @@
 #ifndef CHESSBOARD_H
 #define CHESSBOARD_H
 #include <string>
-#include "colour.h"
 #include "player.h"
 #include "piece.h"
 #include "gameinfo.h"
@@ -28,6 +27,7 @@ class Chessboard{
         Colour occupied(char c, int i);
         void resign();
         void takeInput();
+        void setCheck(bool inCheck, Colour c);
         Player* getWhitePlayer();
         Player* getBlackPlayer();
 };

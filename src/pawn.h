@@ -7,7 +7,7 @@ class Pawn : public Piece {
     bool firstMove = false;
 
 public: 
-    Pawn(Colour colour, char type, Chessboard *board, char cPos, int iPos);
+    Pawn(Colour colour, Chessboard *board, char cPos, int iPos);
     ~Pawn() = default;
 
     bool enpassent();

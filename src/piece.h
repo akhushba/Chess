@@ -3,8 +3,10 @@
 #include <string>
 #include <vector>
 #include <tuple>
+#include <utility>
 #include "colour.h"
 #include "chessboard.h"
+#include "boarddisplay.h"
 
 using namespace std;
 
@@ -14,12 +16,12 @@ protected:
 
     bool active;
     Chessboard *board;
-    Colour colour;
-    char type;
+    const Colour colour;
+    const char type;
 
     char cPos;
     int iPos;
-    int pieceValue;
+    const int pieceValue;
     
 public:
     Piece(Colour colour, char type, Chessboard *board, char cPos, int iPos, int pieceValue);
@@ -33,7 +35,13 @@ public:
     Player* getOpponent();
     int getPieceValue();
 
+    pair<char,int> getPosition() {return {cPos, iPos};}
+    Colour getColour() {return colour;}
+    char getType() {return type;}
+
     virtual ~Piece();
+
+
 };
 
 #endif
