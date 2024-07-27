@@ -8,7 +8,8 @@ using namespace std;
 
 LevelTwo::LevelTwo(string name, vector<Piece*> pieceSet) : Computer(name, pieceSet) {}
 
-void LevelTwo::move() {
+void LevelTwo::move(Piece* p = nullptr, char c = '\0', int i = -1) {
+    if(p != nullptr && c != '\0' && i != -1) throw CustomException("An error occured while trying call move function on computer instead of human");
     int numPieces = pieceSet.size();
     char newC;
     int newI;

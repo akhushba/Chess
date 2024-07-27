@@ -5,6 +5,9 @@ Rook::Rook(Colour colour, char type, Chessboard *board, char cPos, int iPos) : P
 }
 
 bool Rook::isValidMove(char newC, int newI) {
+    if(newC < 'a' || newC> 'h' || newI < 1 || newI > 8){ //out of bounds 
+        return false;
+   }
     //make sure we're moving horizontally or vertically
     if ((newC != cPos && newI != iPos) || (newC == cPos && newI == iPos)) {
         return false;
@@ -31,7 +34,19 @@ bool Rook::isValidMove(char newC, int newI) {
     return true;
 }
 
-vector<tuple<int, int>> generateMves() {
-     // keep i pos the same and go through a-h for cpos and call is valid move
-    //keep cpos the same and go though 1-8 for ipos and call is calid move
+void Rook::generateMoves() {
+    validPosVec.clear();
+
+    int directions[4][2] = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+
+    for (auto& direction : directions) {
+        char col = cPos;
+        int row = iPos;
+
+        while (row >= 1 && row <= 8 && col >= 'a' && col < 'h') {
+            row += direction[0];
+            col += direction[1];
+            if(isValidMove(col, row)) validPosVec.emplace_back(make_tuple(col, row));
+        }
+    }
 }
