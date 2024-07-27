@@ -4,7 +4,6 @@
 #include <iostream>
 #include <vector>
 #include "piece.h"
-#include "gameinfo.h"
 
 using namespace std;
 

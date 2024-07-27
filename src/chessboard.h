@@ -3,7 +3,6 @@
 #include <string>
 #include "player.h"
 #include "piece.h"
-#include "gameinfo.h"
 #include <vector>
 
 using namespace std;
