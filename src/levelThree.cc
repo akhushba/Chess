@@ -40,18 +40,8 @@ void LevelThree::move(Piece* p = nullptr, char c = '\0', int i = -1) {
 
             // iterate through the vector of the opponents pieces
             for (int k = 0; k < pieceSet[i]->getOpponent()->pieceSet.size(); k++) {
-                // check to see that if the position currently holds an opponent piece
-                // if so, temporarily set this piece to inactive
-               
-                
-                if (pieceSet[i]->getOpponent()->pieceSet[k]->isValidMove(newC, newI) == true) {
-                    goodMove = false;
-                    break;
-                }
-
-                // ignore this!! (below)
                 // check first that the position in question is a valid capture move
-                if (pieceSet[i]->isValidMove(newC, newI)) {
+                if (pieceSet[i]->capture(newC, newI) != nullptr) {
                     // temporarily set this captured opponent piece to inactive
                     pieceSet[i]->capture(newC, newI)->setActiveStatus(false);
                     // we need to check that this position can not be moved to by any of the opponent's players
@@ -61,17 +51,19 @@ void LevelThree::move(Piece* p = nullptr, char c = '\0', int i = -1) {
                     }
                     // set captured opponent back to active
                     pieceSet[i]->capture(newC, newI)->setActiveStatus(true);
+                // if no pieces can be captured, just move somewhere where we are safe
+                } else {
+                    if (pieceSet[i]->getOpponent()->pieceSet[k]->isValidMove(newC, newI) == true) {
+                        goodMove = false;
+                        break;
+                    }
                 }
             }
 
             if (goodMove) {
                 pieceSet[i]->setPos(newC, newI);
-
-                goto jump;
+                return;
             }
         }
     }
-
-    jump:
-
 }
