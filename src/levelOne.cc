@@ -26,25 +26,4 @@ void LevelOne::move(Piece* p = nullptr, char c = '\0', int i = -1) {
     newC = get<0>(pieceSet[0]->validPosVec[0]);
     newI = get<1>(pieceSet[0]->validPosVec[0]);
     pieceSet[0]->setPos(newC, newI);
-
-
-    // int randPiece;
-    // int numPieces = pieceSet.size();
-    // int numValidPos;
-    // int randPos;
-    // char newC;
-    // int newI;
-
-    // srand(time(0));
-    // randPiece = rand() % numPieces;
-
-    // pieceSet[randPiece]->generateMoves();
-    // numValidPos = pieceSet[randPiece]->validPosVec.size();
-    
-    // srand(time(0));
-    // randPos = 1 + (rand() % numValidPos);
-    // newC = get<0>(pieceSet[randPiece]->validPosVec[randPos]);
-    // newI = get<1>(pieceSet[randPiece]->validPosVec[randPos]);
-
-    // pieceSet[randPiece]->setPos(newC, newI);
 }

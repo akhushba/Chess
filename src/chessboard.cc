@@ -1,11 +1,7 @@
 #include "chessboard.h"
 
-bool Chessboard::capture(char c, int i){
-    return false;
-}
-
-bool Chessboard::occupied(char c, int i){
-    return false;
+Colour Chessboard::occupied(char c, int i){
+    return BLACK;
 }
 
 Player* Chessboard::getWhitePlayer() {
