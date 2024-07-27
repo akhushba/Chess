@@ -22,21 +22,22 @@ void LevelTwo::move(Piece* p = nullptr, char c = '\0', int i = -1) {
 
     for (int i = 0; i < numPieces; i++) {
         // randomly shuffle the validPosVec vector
-        shuffle(pieceSet[i]->validPosVec.begin(), pieceSet[i]->validPosVec.end(), g);
+        shuffle(pieceSet.at(i)->validPosVec.begin(), pieceSet.at(i)->validPosVec.end(), g);
 
-        for (int j = 0; j < pieceSet[i]->validPosVec.size(); j++) {
-            newC = get<0>(pieceSet[i]->validPosVec[j]);
-            newI = get<1>(pieceSet[i]->validPosVec[j]);
-            if (pieceSet[i]->capture(newC, newI) != nullptr) {
-                pieceSet[i]->capture(newC, newI)->setActiveStatus(false);
-                pieceSet[i]->setPos(newC, newI);
+        for (int j = 0; j < pieceSet.at(i)->validPosVec.size(); j++) {
+            newC = get<0>(pieceSet.at(i)->validPosVec[j]);
+            newI = get<1>(pieceSet.at(i)->validPosVec[j]);
+            if (pieceSet.at(i)->capture(newC, newI) != nullptr) {
+                pieceSet.at(i)->capture(newC, newI)->setActiveStatus(false);
+                pieceSet.at(i)->setPos(newC, newI);
                 return;
             }
         }
     }
     
-    // we can just use index 0 since the vectors are already shuffled/randomized
-    newC = get<0>(pieceSet[0]->validPosVec[0]);
-    newI = get<1>(pieceSet[0]->validPosVec[0]);
+    // if we have reached this point, there are no moves that can capture another piece
+    // so we can just use index 0 to choose a random move since the vectors are already shuffled/randomized
+    newC = get<0>(pieceSet.at(0)->validPosVec.at(0));
+    newI = get<1>(pieceSet.at(0)->validPosVec.at(0));
     pieceSet[0]->setPos(newC, newI);
 }
