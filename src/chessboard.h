@@ -28,6 +28,7 @@ class Chessboard{
         bool occupied(char c, int i);
         void resign();
         void takeInput();
+        void setCheck(bool inCheck, Colour c);
         Player* getWhitePlayer();
         Player* getBlackPlayer();
 };

@@ -25,7 +25,7 @@ void BoardDisplay::notifyObservers() {
 }
 
 //character is the column, int is the row
-void BoardDisplay::setState(char cPos, int iPos, Piece* p) {
+void BoardDisplay::setState(Piece* p, char cPos, int iPos) {
     //figure out
     board[iPos - 1][cPos - 'a']->piece = p;
 
@@ -36,27 +36,29 @@ void BoardDisplay::setState(char cPos, int iPos, Piece* p) {
 }
 
 char BoardDisplay::getState(int row, int col) const {
-    //figure out
+    
 }
 
 bool BoardDisplay::simulateInCheck(Piece* p, char newC, int newI) {
     pair<char, int> currentPosition = p->getPosition();
 
     Piece* tempCapture = board[newI - 1][newC - 'a']->piece;
-    setState(newI, newC, p);
-    setState(currentPosition.second, currentPosition.first, nullptr);
+    setState(p, newC, newI);
+    setState(nullptr, currentPosition.first, currentPosition.second);
 
     PlayerInfo* oppositePlayer = p->getColour() == BLACK ? blackPlayer : whitePlayer;
     PlayerInfo* currentPlayer = p->getColour() == BLACK ? blackPlayer : whitePlayer;
 
     bool canCheck = false;
 
-    for(const auto& piece : oppositePlayer->pieces) {
+    for(const auto& piece : oppositePlayer->activePieces) {
+        boardState->setCheck(false, currentPlayer->colour);
         canCheck = piece->isValidMove(currentPlayer->kingPosition.first, currentPlayer->kingPosition.second);
+        boardState->setCheck(true, currentPlayer->colour);
     }
     
-    setState(newI, newC, tempCapture);
-    setState(currentPosition.second, currentPosition.first, p);
+    setState(tempCapture, newC, newI);
+    setState(p, currentPosition.first, currentPosition.second);
 
     return canCheck;
 }
