@@ -38,9 +38,9 @@ class BoardDisplay final: public Subject {
   PlayerInfo* whitePlayer;
   PlayerInfo* blackPlayer;
 
-  vector<string> messages;
 
   public:
+    vector<string> messages;
     
     //observer pattern
     void attach(Observer *o) override;
@@ -52,7 +52,8 @@ class BoardDisplay final: public Subject {
     bool simulateInCheck(Piece*, char newC, int newI);
     void setState(Piece* p, char cPos, int iPos);
     bool canCapture(Colour pieceColour, char cPos, int iPos);
-    void as(char cPos, int iPos, Piece* p);
+    bool inCheck(Colour c);
+    Colour occupied(char c, int i);
 
     BoardDisplay(Chessboard* b, Colour c);
     ~BoardDisplay() = default;

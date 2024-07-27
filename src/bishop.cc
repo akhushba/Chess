@@ -5,31 +5,31 @@ Bishop::Bishop(Colour colour, Chessboard *board, char cPos, int iPos): Piece(col
 }
 
 bool Bishop::isValidMove(char newC, int newI) {
-    if(newC < 'a' || newC> 'h' || newI < 1 || newI > 8){ //out of bounds 
-        return false;
-   }
+    //bound checking
+    if(newC < 'a' || newC> 'h' || newI < 1 || newI > 8) return false;
+
+    //can't stay in the same place
+    if (newC == cPos && newI == iPos) return false;
     //make sure we're moving diagonally
-    if (abs(newC - cPos) != abs(newI - iPos) && (newC != cPos && newI != iPos)) {
+    if (abs(newC - cPos) != abs(newI - iPos) && newC != cPos && newI != iPos)
         return false;
-    }
+    // Final position must not have a piece of the same colour
+    if (board->occupied(newC, newI) == colour) return false;
 
     int colStep = (newC > cPos) ? 1 : -1;
     int rowStep = (newI > iPos) ? 1 : -1;
 
+    //make sure all squares inbetween are unoccupied
     char currentCol = cPos;
     int currentRow = iPos;
-
     while (currentCol != newC && currentRow != newI) {
         currentCol += colStep;
         currentRow += rowStep;
         
-        if (board->capture(currentCol, currentRow)) {
-            return true; 
-        } else if (board->occupied(currentCol, currentRow)) {
-            return false; 
-        }
+        if (board->occupied(currentCol, currentRow) == colour) return false;
     }
 
+    if(boardInfo->simulateInCheck(this, newC, newI)) return false;
     return true;
 }
 

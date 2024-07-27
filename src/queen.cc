@@ -5,56 +5,39 @@ Queen::Queen(Colour colour, Chessboard *board, char cPos, int iPos): Piece(colou
 }
 
 bool Queen::isValidMove(char newC, int newI) {
-    if(newC < 'a' || newC> 'h' || newI < 1 || newI > 8){ //out of bounds 
-        return false;
-   }
-    //not in the same posiiton
-    if(newC == cPos && newI == iPos) return false;
+    // Boundary checking
+    if (newC < 'a' || newC > 'h' || newI < 1 || newI > 8) return false;
 
-    //behave like a rook
-    if(newC == cPos || newI == iPos) {
-        int colStep = 0;
-        int rowStep = 0;
-        if(newC == cPos) rowStep = (newI > iPos) ? 1 : -1;
-        else colStep = (newC > cPos) ? 1 : -1;
+    // Check if not moving
+    if (newC == cPos && newI == iPos) return false;
+    // Final position must not have a piece of the same colour
+    if (board->occupied(newC, newI) == colour) return false;
 
-        char currentCol = cPos;
-        int currentRow = iPos;
+    // Determine movement direction
+    int colDiff = newC - cPos;
+    int rowDiff = newI - iPos;
+    int colStep = (colDiff == 0) ? 0 : (colDiff > 0) ? 1 : -1;
+    int rowStep = (rowDiff == 0) ? 0 : (rowDiff > 0) ? 1 : -1;
 
-        while (currentCol != newC && currentRow != newI) {
-            currentCol += colStep;
-            currentRow += rowStep;
-            
-            if (board->capture(currentCol, currentRow)) {
-                return true; 
-            } else if (board->occupied(currentCol, currentRow)) {
-                return false; 
-            }
-        }
-    } 
-    //behave like a bishop
-    else if (abs(newC - cPos) == abs(newI - iPos)) {
-        int colStep = (newC > cPos) ? 1 : -1;
-        int rowStep = (newI > iPos) ? 1 : -1;
+    // Check if move is along a valid path for a Queen
+    if ((colDiff != 0 && rowDiff != 0 && abs(colDiff) != abs(rowDiff)) || (colDiff == 0 && rowDiff == 0)) return false;
 
-        char currentCol = cPos;
-        int currentRow = iPos;
-
-        while (currentCol != newC && currentRow != newI) {
-            currentCol += colStep;
-            currentRow += rowStep;
-            
-            if (board->capture(currentCol, currentRow)) {
-                return true; 
-            } else if (board->occupied(currentCol, currentRow)) {
-                return false; 
-            }
-        }
+    //make sure all squares inbetween are unoccupied
+    char currentCol = cPos;
+    int currentRow = iPos;
+    while (currentCol != newC && currentRow != newI) {
+        currentCol += colStep;
+        currentRow += rowStep;
+        
+        if (board->occupied(currentCol, currentRow) == colour) return false;
     }
-    else return false;
+
+    // Ensure the move doesn't put the player's king in check
+    if (boardInfo->simulateInCheck(this, newC, newI)) return false;
 
     return true;
 }
+
 
 void Queen::generateMoves() {
     validPosVec.clear();

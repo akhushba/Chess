@@ -8,21 +8,25 @@ bool Pawn::enpassent() {
 }
 
 bool Pawn::isValidMove(char newC, int newI) {
-    if(newC < 'a' || newC> 'h' || newI < 1 || newI > 8){ 
-        return false;
-    }
+    //bound checking
+    if(newC < 'a' || newC> 'h' || newI < 1 || newI > 8) return false;
+
     int direction = (colour == Colour::WHITE) ? 1 : -1;
 
+    //must move forward 1 or 2 spaces
     if(newI - iPos > 2*direction || newI - iPos <= 0) return false;
-    else if(newI - iPos == 2*direction) {
-        if(firstMove && newC == cPos) return true;
-        else return false;
-    } else if (newI - iPos == direction) {
-        if(newC != cPos && board->capture(newC, newI)) return true;
-        else if(newC == cPos && !(board->occupied(newC, newI))) return true;
-        else return false;
-    }
-    return false;
+    //trying to move 2 spaces after first move
+    else if(newI - iPos == 2*direction && !firstMove) return false;
+    //moving diagonally but can't capture
+    else if (newC != cPos && (boardInfo->occupied(newC, newI) != colour || boardInfo->occupied(newC, newI) == NULL_C)) 
+        return false;
+    //moving forward blocked
+    else if(newC == cPos && boardInfo->occupied(newC, newI) != NULL_C)
+        return false;
+
+    //avoid being in check logic, simulateInCheck returns true if King is in check
+    if(boardInfo->simulateInCheck(this, newC, newI)) return false;
+    return true;
 }
 
 void Pawn::generateMoves() {

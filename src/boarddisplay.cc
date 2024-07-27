@@ -36,9 +36,11 @@ void BoardDisplay::setState(Piece* p, char cPos, int iPos) {
 }
 
 char BoardDisplay::getState(int row, int col) const {
-    
+    if(board[row][col]->piece == nullptr) return board[row][col]->colour == BLACK ? '_' : ' ';
+    else return board[row][col]->piece->getType();
 }
 
+//check to see if the next move puts you in check, returns true if you remain in check
 bool BoardDisplay::simulateInCheck(Piece* p, char newC, int newI) {
     pair<char, int> currentPosition = p->getPosition();
 
@@ -49,18 +51,22 @@ bool BoardDisplay::simulateInCheck(Piece* p, char newC, int newI) {
     PlayerInfo* oppositePlayer = p->getColour() == BLACK ? blackPlayer : whitePlayer;
     PlayerInfo* currentPlayer = p->getColour() == BLACK ? blackPlayer : whitePlayer;
 
-    bool canCheck = false;
+    bool remainsInCheck = false;
 
+    bool checkState = currentPlayer->inCheck;
+    boardState->setCheck(false, currentPlayer->colour);
     for(const auto& piece : oppositePlayer->activePieces) {
-        boardState->setCheck(false, currentPlayer->colour);
-        canCheck = piece->isValidMove(currentPlayer->kingPosition.first, currentPlayer->kingPosition.second);
-        boardState->setCheck(true, currentPlayer->colour);
+        if(piece->isValidMove(currentPlayer->kingPosition.first, currentPlayer->kingPosition.second)) {
+            remainsInCheck = true;
+            break;
+        }
     }
+    boardState->setCheck(checkState, currentPlayer->colour);
     
     setState(tempCapture, newC, newI);
     setState(p, currentPosition.first, currentPosition.second);
 
-    return canCheck;
+    return remainsInCheck;
 }
 
 BoardDisplay::~BoardDisplay() {
@@ -68,3 +74,4 @@ BoardDisplay::~BoardDisplay() {
         delete[] board[i];
     }
 }
+

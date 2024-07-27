@@ -5,22 +5,22 @@ Knight::Knight(Colour colour, Chessboard *board, char cPos, int iPos): Piece(col
 }
 
 bool Knight::isValidMove(char newC, int newI) {
+    //bound checking
+    if(newC < 'a' || newC> 'h' || newI < 1 || newI > 8) return false;
+
     if(newC == cPos && newI == iPos){
         return false;
     }
-    //make sure that newc is either +- 2 or new i is +- 2
-    if((abs(newC - cPos) != 2 && abs(newI - iPos) != 1 ) || abs(newC - cPos) != 1 && abs(newI - iPos) != 2 ){
-        return false;
-    }
-   if(newC < 'a' || newC> 'h' || newI < 1 || newI > 8){ //out of bounds 
-        return false;
-   }
-    if (board->capture(newC, newI)) {
-        return true; 
-    } else if (board->occupied(newC, newI)) {
-        return false; 
-    }
-   return true;
+    
+    //move in an l shape, 1 position moves 2 spaces, the other moves 1
+    if (abs(newC - cPos) == 2 && abs(newI - iPos) != 1) return false;
+    else if (abs(newI - iPos) == 2 && abs(newC - cPos) != 1) return false;
+    // can't move to a square occupied by your own colour
+    else if (board->occupied(newC, newI) == colour) return false;
+
+    //avoid being in check logic, simulateInCheck returns true if King is in check
+    if(boardInfo->simulateInCheck(this, newC, newI)) return false;
+    return true;
 }
 
 void Knight::generateMoves() {
