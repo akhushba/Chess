@@ -1,7 +1,6 @@
 #ifndef CHESSBOARD_H
 #define CHESSBOARD_H
 #include <string>
-#include "colour.h"
 #include "player.h"
 #include "piece.h"
 #include "gameinfo.h"

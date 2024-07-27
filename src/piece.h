@@ -14,12 +14,12 @@ protected:
 
     bool active;
     Chessboard *board;
-    Colour colour;
-    char type;
+    const Colour colour;
+    const char type;
 
     char cPos;
     int iPos;
-    int pieceValue;
+    const int pieceValue;
     
 public:
     Piece(Colour colour, char type, Chessboard *board, char cPos, int iPos, int pieceValue);

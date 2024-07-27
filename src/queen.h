@@ -5,7 +5,7 @@
 
 class Queen : public Piece {
     public:
-        Queen(Colour colour, char type, Chessboard *board, char cPos, int iPos);
+        Queen(Colour colour, Chessboard *board, char cPos, int iPos);
         bool isValidMove(char newC, int newI) override;
         void generateMoves() override;
         ~Queen() = default;

@@ -10,6 +10,8 @@ class BoardDisplay: public Subject {
   struct BoardSegment {
     Colour colour;
     Piece* piece;
+
+    BoardSegment(Colour c): colour{c}, piece{nullptr} {}
   };
 
   class PlayerInfo {
@@ -20,7 +22,7 @@ class BoardDisplay: public Subject {
         bool canCastle;
   };
 
-  BoardSegment board[8][8];
+  BoardSegment* board[8][8];
 
   void initializeBoard();
 
@@ -32,6 +34,9 @@ class BoardDisplay: public Subject {
     void detach(Observer *o) override;
     void notifyObservers() override;
     virtual char getState(int row, int col) const = 0;
+
+    bool simulateInCheck() ;
+
     virtual ~BoardDisplay() = default;
 };
 #endif

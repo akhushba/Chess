@@ -5,7 +5,7 @@
 
 class Knight : public Piece{
     public: 
-        Knight(Colour colour, char type, Chessboard *board, char cPos, int iPos);
+        Knight(Colour colour, Chessboard *board, char cPos, int iPos);
         ~Knight() = default;
 
         bool isValidMove(char newC, int newI) override;
