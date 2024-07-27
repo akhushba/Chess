@@ -16,6 +16,7 @@ protected:
 
     bool active;
     Chessboard *board;
+    BoardDisplay *boardInfo;
     const Colour colour;
     const char type;
 
