@@ -4,7 +4,7 @@
 
 using namespace std;
 
-Piece::Piece(Colour colour, char type, Chessboard *board, char cPos, int iPos) : colour {colour}, type{type}, board{board}, cPos{cPos}, iPos{iPos} {
+Piece::Piece(Colour colour, char type, Chessboard *board, char cPos, int iPos, int pieceValue) : colour {colour}, type{type}, board{board}, cPos{cPos}, iPos{iPos}, pieceValue{pieceValue} {
     active = true;
 }
 
@@ -26,4 +26,8 @@ Player* Piece::getOpponent() {
     } else if (colour == BLACK) {
         return board->getWhitePlayer();
     }
+}
+
+int Piece::getPieceValue() {
+    return pieceValue;
 }

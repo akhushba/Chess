@@ -1,6 +1,6 @@
 #include "queen.h"
 
-Queen::Queen(Colour colour, char type, Chessboard *board, char cPos, int iPos): Piece(colour, type, board, cPos, iPos) {
+Queen::Queen(Colour colour, char type, Chessboard *board, char cPos, int iPos): Piece(colour, type, board, cPos, iPos, 9) {
     Piece::setPos(cPos, iPos);
 }
 

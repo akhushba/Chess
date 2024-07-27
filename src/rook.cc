@@ -1,7 +1,7 @@
 #include "rook.h"
 #include <cstdlib>
 
-Rook::Rook(Colour colour, char type, Chessboard *board, char cPos, int iPos) : Piece(colour, type, board, cPos, iPos) {
+Rook::Rook(Colour colour, char type, Chessboard *board, char cPos, int iPos) : Piece(colour, type, board, cPos, iPos, 5) {
 }
 
 bool Rook::isValidMove(char newC, int newI) {

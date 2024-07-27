@@ -19,9 +19,10 @@ protected:
 
     char cPos;
     int iPos;
+    int pieceValue;
     
 public:
-    Piece(Colour colour, char type, Chessboard *board, char cPos, int iPos);
+    Piece(Colour colour, char type, Chessboard *board, char cPos, int iPos, int pieceValue);
 
     vector<tuple<char, int>> validPosVec;
     virtual bool isValidMove(char c, int i) = 0;
@@ -30,6 +31,7 @@ public:
     void setActiveStatus(bool newStatus);
     Piece* capture(char c, int i);
     Player* getOpponent();
+    int getPieceValue();
 
     virtual ~Piece();
 };

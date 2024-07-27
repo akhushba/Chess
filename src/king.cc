@@ -1,6 +1,6 @@
 #include "king.h"
 
-King::King(Colour colour, char type, Chessboard*board, char cPos, int iPos) : Piece(colour, type, board, iPos, cPos) {
+King::King(Colour colour, char type, Chessboard*board, char cPos, int iPos) : Piece(colour, type, board, iPos, cPos, 10) {
 }
 
 bool King::canCastle() {
