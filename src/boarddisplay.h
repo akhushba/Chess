@@ -16,10 +16,12 @@ class BoardDisplay: public Subject {
 
   class PlayerInfo {
     public:
-        int score;
-        bool inCheck;
-        bool customSetup;
-        bool canCastle;
+      int score;
+      bool inCheck;
+      bool customSetup;
+      bool canCastle;
+      pair<char, int> kingPosition;
+      vector<Piece*> pieces;
   };
 
   BoardSegment* board[8][8];
@@ -27,15 +29,16 @@ class BoardDisplay: public Subject {
   void initializeBoard();
 
   public:
-    PlayerInfo whitePlayer;
-    PlayerInfo blackPlayer;
+    PlayerInfo* whitePlayer;
+    PlayerInfo* blackPlayer;
     
     void attach(Observer *o) override;
     void detach(Observer *o) override;
     void notifyObservers() override;
     virtual char getState(int row, int col) const = 0;
 
-    bool simulateInCheck() ;
+    bool simulateInCheck(Piece*, char newC, int newI);
+    void setState(char cPos, int iPos, Piece* p);
 
     virtual ~BoardDisplay() = default;
 };
