@@ -51,7 +51,8 @@ class BoardDisplay final: public Subject {
 public:
     std::vector<std::string> messages;
 
-    // For the chessboard
+    //for the chessboard
+    bool simulateAttack(Piece*, char newC, int newI, Piece* reference = nullptr);
     void setState(Piece* p, char cPos, int iPos);
     bool canCapture(Colour pieceColour, char cPos, int iPos);
     Colour occupied(char c, int i);

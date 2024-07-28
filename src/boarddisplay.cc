@@ -59,33 +59,32 @@ Colour BoardDisplay::occupied(char c, int i) {
     else return NULL_C;
 }
 
-bool BoardDisplay::simulateInCheck(Piece* p, char newC, int newI) {
-    // Save the current position and temporarily move the piece
-    auto currentPosition = p->getPosition();
-    Piece* tempCapture = getBoardInfo(newC, newI)->piece;
+bool BoardDisplay::simulateAttack(Piece* p, char newC, int newI, Piece* checkAttack) {
+    pair<char, int> currentPosition = p->getPosition();
+
+    Piece* tempCapture = board[newI - 1][newC - 'a']->piece;
     setState(p, newC, newI);
     setState(nullptr, currentPosition.first, currentPosition.second);
 
-    // Check if the king is in check after the move
-    PlayerInfo* currentPlayer = (p->getColour() == BLACK) ? blackPlayer.get() : whitePlayer.get();
-    PlayerInfo* oppositePlayer = (p->getColour() == BLACK) ? whitePlayer.get() : blackPlayer.get();
+    PlayerInfo* oppositePlayer = p->getColour() == BLACK ? blackPlayer : whitePlayer;
+    PlayerInfo* currentPlayer = p->getColour() == BLACK ? whitePlayer : blackPlayer;
 
-    bool originalCheckState = currentPlayer->inCheck;
-    currentPlayer->inCheck = false;
-    bool remainsInCheck = false;
-    for (const auto& piece : oppositePlayer->activePieces) {
-        if (piece.get()->isValidMove(currentPlayer->kingPosition.first, currentPlayer->kingPosition.second)) {
-            remainsInCheck = true;
-            break;
+    bool canBeAttacked = false;
+
+    for(const auto& piece : oppositePlayer->activePieces) {
+        boardState->setCheck(false, currentPlayer->colour);
+        if (checkAttack) {
+            canBeAttacked = piece->isValidMove(checkAttack->getPosition().first, checkAttack->getPosition().second);
+        } else {
+            canBeAttacked = piece->isValidMove(currentPlayer->kingPosition.first, currentPlayer->kingPosition.second);
         }
+        boardState->setCheck(true, currentPlayer->colour);
     }
-    currentPlayer->inCheck = originalCheckState;
-
-    // Restore the board to its original state
+    
     setState(tempCapture, newC, newI);
     setState(p, currentPosition.first, currentPosition.second);
 
-    return remainsInCheck;
+    return canBeAttacked;
 }
 
 bool BoardDisplay::inCheck(Colour c) {

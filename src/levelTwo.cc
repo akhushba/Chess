@@ -37,7 +37,7 @@ void LevelTwo::move(Piece* p, char c, int i) {
     
     // if we have reached this point, there are no moves that can capture another piece
     // so we can just use index 0 to choose a random move since the vectors are already shuffled/randomized
-    newC = get<0>(pieceSet.at(0)->validPosVec.at(0));
-    newI = get<1>(pieceSet.at(0)->validPosVec.at(0));
+    char newC = std::get<0>(pieceSet.at(0)->validPosVec.at(0));
+    int newI = std::get<1>(pieceSet.at(0)->validPosVec.at(0));
     pieceSet[0]->setPos(newC, newI);
 }

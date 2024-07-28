@@ -12,6 +12,7 @@ class Piece;
 class Player {
 protected:
     string name;
+    BoardDisplay *board;
     class CustomException : public std::exception {
         private:
             std::string message;
@@ -29,6 +30,7 @@ public:
     Player() {}
     Player(string name, vector<Piece*> pieceSet) : name{name}, pieceSet{pieceSet} {}
     virtual void move(Piece* p = nullptr, char c = '\0', int i = -1) = 0;
+    bool callSimulateAttack(Piece*, char newC, int newI, Piece* reference = nullptr);
     virtual ~Player() {}
 };
 
