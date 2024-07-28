@@ -15,6 +15,7 @@ void BoardDisplay::init() {
 
 }
 
+
 BoardDisplay::BoardSegment* BoardDisplay::getBoardInfo(char c, int i) {
     return board[i - 1][c - 'a'].get();
 }
@@ -112,6 +113,7 @@ bool BoardDisplay::canCastle(Colour c) {
     return true;
 }
 
+
 Colour BoardDisplay::occupied(char c, int i) {
     BoardSegment* seg = getBoardInfo(c, i);
     if(seg->piece) return seg->piece->getColour();
@@ -169,15 +171,47 @@ bool BoardDisplay::inCheckmate(Colour c) {
     }
     return allEmpty;
 }
+bool BoardDisplay::inStalemate(Colour c) {
+    // king is not in check since that would get triggered in checkmate
+    // no piece can be moved without putting the king in check 
+    // need to check to see if all no valid pos moves exist
+    if (inCheck(c)){
+        return false;
+    }
+    PlayerInfo* currentPlayer = (c == BLACK) ? blackPlayer.get() : whitePlayer.get();
+    for (auto& p : currentPlayer -> activePieces){
+         if(!p->validPosVec.empty()) {
+            return false;
+         }
+    }
+    return true;
+}
 
-void BoardDisplay::resign() {
+void BoardDisplay::resign(Colour c) {
+    //if black resigns, then white gets +1 score and game ends vice versa if white resigns
+    PlayerInfo* winningPlayer = (c == BLACK) ? whitePlayer.get() : blackPlayer.get();
+    winningPlayer->score++;
+
+    endGame();
+    notifyObservers();
 
 }
 
 void BoardDisplay::endGame() {
-    
+    //need to reset the player info 
+    for(int i = 0; i < 8; ++i) {
+        for(int j = 0; j < 8; ++j) {
+            Colour segmentColor = ((i + j) % 2 == 0) ? WHITE : BLACK;
+            board[i][j] -> setBegin();
+        }
+    }
+    std::unique_ptr<PlayerInfo> resetPlayerWhite = std::make_unique<PlayerInfo>(Colour::WHITE, 'e', 1);
+    std::unique_ptr<PlayerInfo> resetPlayerBlack = std::make_unique<PlayerInfo>(Colour::BLACK, 'e', 8);
+
+    notifyObservers();
 }
 
 void BoardDisplay::endSession() {
-    
+    notifyObservers();
+
 }

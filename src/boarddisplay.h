@@ -22,8 +22,13 @@ class BoardDisplay final: public Subject {
         Colour colour;
         Piece* piece;
 
+        void setBegin(){
+            piece = nullptr;
+        }
         BoardSegment(Colour c) : colour{c}, piece{nullptr} {}
         ~BoardSegment() = default;
+        
+      
     };
 
     class PlayerInfo {
@@ -47,6 +52,7 @@ class BoardDisplay final: public Subject {
 
     void init();
     BoardSegment* getBoardInfo(char c, int i);
+    Colour getCurrentTurn;
 
     // Observer pattern
     void attach(Observer *o) override;
@@ -55,6 +61,21 @@ class BoardDisplay final: public Subject {
     char getState(int row, int col) const;
 public:
     std::vector<std::string> messages;
+    PlayerInfo* getWhitePlayer() {
+        return whitePlayer.get();
+    }
+
+    PlayerInfo* getBlackPlayer() {
+        return blackPlayer.get();
+    }
+    PlayerInfo* getCurrentPlayer() {
+        if(getCurrentTurn== WHITE){
+            return whitePlayer.get();
+        }
+        if(getCurrentTurn== BLACK){
+            return blackPlayer.get();
+        }
+    }
 
     //for the chessboard
     bool simulateAttack(Piece*, char newC, int newI, Piece* reference = nullptr);
@@ -67,7 +88,8 @@ public:
 
     bool inCheck(Colour c);
     bool inCheckmate(Colour c);
-    void resign();
+    bool inStalemate(Colour c);
+    void resign(Colour c);
     void endGame();
     void endSession();
 
