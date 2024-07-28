@@ -41,7 +41,8 @@ private:
     std::unique_ptr<PlayerInfo> whitePlayer; // Use unique_ptr for PlayerInfo
     std::unique_ptr<PlayerInfo> blackPlayer; // Use unique_ptr for PlayerInfo
 
-    void initializeBoard();
+    void init();
+    BoardSegment* getBoardInfo(char c, int i);
 
 public:
     std::vector<std::string> messages;
@@ -53,13 +54,19 @@ public:
     char getState(int row, int col) const;
 
     // For the chessboard
-    bool simulateInCheck(Piece* p, char newC, int newI);
     void setState(Piece* p, char cPos, int iPos);
     bool canCapture(Colour pieceColour, char cPos, int iPos);
-    bool inCheck(Colour c);
     Colour occupied(char c, int i);
+    bool simulateInCheck(Piece* p, char newC, int newI);
 
-    BoardDisplay(Colour c);
+
+    bool inCheck(Colour c);
+    bool inCheckmate(Colour c);
+    void resign();
+    void endGame();
+    void endSession();
+
+    BoardDisplay();
     ~BoardDisplay() = default; 
 };
 
