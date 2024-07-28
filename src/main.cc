@@ -25,6 +25,7 @@ int main () {
         string oldPos, newPos;
         cin >> oldPos >> newPos;
         BoardDisplay::PlayerInfo* currentPlayer= board_Display.getCurrentPlayer();
+        board_Display.makeMove(currentPlayer-> colour, oldPos, newPos);
         if(currentPlayer-> colour == WHITE ){
             board_Display.inCheck(board_Display.getBlackPlayer()->colour);
         }

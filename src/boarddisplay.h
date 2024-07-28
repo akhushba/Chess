@@ -109,6 +109,7 @@ public:
     //for the chessboard
     bool simulateAttack(Piece*, char newC, int newI, Piece* reference = nullptr);
     void setState(Piece* p, char cPos, int iPos, char pawnPromote = '\0');
+    void makeMove(Colour currentColour, string oldpos, string newpos);
     bool canCapture(Colour pieceColour, char cPos, int iPos);
     Colour occupied(char c, int i);
     bool simulateInCheck(Piece* p, char newC, int newI);

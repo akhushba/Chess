@@ -186,7 +186,11 @@ bool BoardDisplay::inStalemate(Colour c) {
     }
     return true;
 }
-
+void BoardDisplay::makeMove(Colour c, string oldPos, string newPos){
+        PlayerInfo* currentPlayer = (c == BLACK) ? blackPlayer.get() : whitePlayer.get();
+        Piece* p = board[(int)oldPos[1]-1][oldPos[0]-'a']->piece;
+        currentPlayer->player.get()->move(p, newPos[0], (int)newPos[1]);
+}
 void BoardDisplay::resign(Colour c) {
     //if black resigns, then white gets +1 score and game ends vice versa if white resigns
     PlayerInfo* winningPlayer = (c == BLACK) ? whitePlayer.get() : blackPlayer.get();
