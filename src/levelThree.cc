@@ -66,4 +66,9 @@ void LevelThree::move(Piece* p = nullptr, char c = '\0', int i = -1) {
             }
         }
     }
+
+    // if there is no safe move, then just choose a random valid move
+    char newC = std::get<0>(pieceSet.at(0)->validPosVec.at(0));
+    int newI = std::get<1>(pieceSet.at(0)->validPosVec.at(0));
+    pieceSet[0]->setPos(newC, newI);
 }

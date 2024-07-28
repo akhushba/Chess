@@ -39,7 +39,7 @@ char BoardDisplay::getState(int row, int col) const {
     
 }
 
-bool BoardDisplay::simulateInCheck(Piece* p, char newC, int newI) {
+bool BoardDisplay::simulateAttack(Piece* p, char newC, int newI, Piece* checkAttack) {
     pair<char, int> currentPosition = p->getPosition();
 
     Piece* tempCapture = board[newI - 1][newC - 'a']->piece;
@@ -47,20 +47,24 @@ bool BoardDisplay::simulateInCheck(Piece* p, char newC, int newI) {
     setState(nullptr, currentPosition.first, currentPosition.second);
 
     PlayerInfo* oppositePlayer = p->getColour() == BLACK ? blackPlayer : whitePlayer;
-    PlayerInfo* currentPlayer = p->getColour() == BLACK ? blackPlayer : whitePlayer;
+    PlayerInfo* currentPlayer = p->getColour() == BLACK ? whitePlayer : blackPlayer;
 
-    bool canCheck = false;
+    bool canBeAttacked = false;
 
     for(const auto& piece : oppositePlayer->activePieces) {
         boardState->setCheck(false, currentPlayer->colour);
-        canCheck = piece->isValidMove(currentPlayer->kingPosition.first, currentPlayer->kingPosition.second);
+        if (checkAttack) {
+            canBeAttacked = piece->isValidMove(checkAttack->getPosition().first, checkAttack->getPosition().second);
+        } else {
+            canBeAttacked = piece->isValidMove(currentPlayer->kingPosition.first, currentPlayer->kingPosition.second);
+        }
         boardState->setCheck(true, currentPlayer->colour);
     }
     
     setState(tempCapture, newC, newI);
     setState(p, currentPosition.first, currentPosition.second);
 
-    return canCheck;
+    return canBeAttacked;
 }
 
 BoardDisplay::~BoardDisplay() {

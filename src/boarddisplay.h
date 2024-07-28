@@ -49,7 +49,7 @@ class BoardDisplay final: public Subject {
     char getState(int row, int col) const;
 
     //for the chessboard
-    bool simulateInCheck(Piece*, char newC, int newI);
+    bool simulateAttack(Piece*, char newC, int newI, Piece* reference = nullptr);
     void setState(Piece* p, char cPos, int iPos);
     bool canCapture(Colour pieceColour, char cPos, int iPos);
     void as(char cPos, int iPos, Piece* p);
