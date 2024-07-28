@@ -8,8 +8,10 @@
 using namespace std;
 
 
+class Player;
+class Piece;
+
 class Chessboard{
-    Player*** board;
     Player* WhitePlayer;
     Player* BlackPlayer;
 

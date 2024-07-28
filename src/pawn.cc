@@ -4,9 +4,6 @@ Pawn::Pawn(Colour colour, Chessboard *board, char cPos, int iPos): Piece(colour,
     setPos(cPos, iPos);
 }
 
-bool Pawn::enpassent() {
-}
-
 bool Pawn::isValidMove(char newC, int newI) {
     //bound checking
     if(newC < 'a' || newC> 'h' || newI < 1 || newI > 8) return false;

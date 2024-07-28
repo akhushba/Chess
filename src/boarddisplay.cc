@@ -1,13 +1,12 @@
 #include "boarddisplay.h"
-#include <utility>
+#include <memory>
 
+// Initialize the board with unique pointers to BoardSegment
 void BoardDisplay::initializeBoard() {
-    for(int i = 0; i < 8; i+=2) {
-        for(int j = 0; j < 8; j+=2) {
-            board[i][j] = new BoardSegment(WHITE);
-            board[i][j+1] = new BoardSegment(BLACK);
-            board[i+1][j] = new BoardSegment(BLACK);
-            board[i+1][j+1] = new BoardSegment(WHITE);
+    for(int i = 0; i < 8; ++i) {
+        for(int j = 0; j < 8; ++j) {
+            Colour segmentColor = ((i + j) % 2 == 0) ? WHITE : BLACK;
+            board[i][j] = std::make_unique<BoardSegment>(segmentColor);
         }
     }
 }
@@ -24,54 +23,50 @@ void BoardDisplay::notifyObservers() {
     Subject::notifyObservers();
 }
 
-//character is the column, int is the row
+// Set the state of a board segment
 void BoardDisplay::setState(Piece* p, char cPos, int iPos) {
-    //figure out
     board[iPos - 1][cPos - 'a']->piece = p;
 
     char type = p->getType();
-    PlayerInfo* currentPlayer = p->getColour() == BLACK ? blackPlayer : whitePlayer;
-
-    if(type == 'k' || type == 'K') currentPlayer->kingPosition = {cPos, iPos};
+    PlayerInfo* currentPlayer = (p->getColour() == BLACK) ? blackPlayer.get() : whitePlayer.get();
+    if(type == 'k' || type == 'K') {
+        currentPlayer->kingPosition = {cPos, iPos};
+    }
 }
 
 char BoardDisplay::getState(int row, int col) const {
-    if(board[row][col]->piece == nullptr) return board[row][col]->colour == BLACK ? '_' : ' ';
-    else return board[row][col]->piece->getType();
+    if (!board[row][col]->piece) {
+        return board[row][col]->colour == BLACK ? '_' : ' ';
+    }
+    return board[row][col]->piece->getType();
 }
 
-//check to see if the next move puts you in check, returns true if you remain in check
-bool BoardDisplay::simulateInCheck(Piece* p, char newC, int newI) {
-    pair<char, int> currentPosition = p->getPosition();
 
+bool BoardDisplay::simulateInCheck(Piece* p, char newC, int newI) {
+    // Save the current position and temporarily move the piece
+    auto currentPosition = p->getPosition();
     Piece* tempCapture = board[newI - 1][newC - 'a']->piece;
     setState(p, newC, newI);
     setState(nullptr, currentPosition.first, currentPosition.second);
 
-    PlayerInfo* oppositePlayer = p->getColour() == BLACK ? blackPlayer : whitePlayer;
-    PlayerInfo* currentPlayer = p->getColour() == BLACK ? blackPlayer : whitePlayer;
+    // Check if the king is in check after the move
+    PlayerInfo* currentPlayer = (p->getColour() == BLACK) ? blackPlayer.get() : whitePlayer.get();
+    PlayerInfo* oppositePlayer = (p->getColour() == BLACK) ? whitePlayer.get() : blackPlayer.get();
 
+    bool originalCheckState = currentPlayer->inCheck;
+    currentPlayer->inCheck = false;
     bool remainsInCheck = false;
-
-    bool checkState = currentPlayer->inCheck;
-    boardState->setCheck(false, currentPlayer->colour);
-    for(const auto& piece : oppositePlayer->activePieces) {
-        if(piece->isValidMove(currentPlayer->kingPosition.first, currentPlayer->kingPosition.second)) {
+    for (const auto& piece : oppositePlayer->activePieces) {
+        if (piece->isValidMove(currentPlayer->kingPosition.first, currentPlayer->kingPosition.second)) {
             remainsInCheck = true;
             break;
         }
     }
-    boardState->setCheck(checkState, currentPlayer->colour);
-    
+    currentPlayer->inCheck = originalCheckState;
+
+    // Restore the board to its original state
     setState(tempCapture, newC, newI);
     setState(p, currentPosition.first, currentPosition.second);
 
     return remainsInCheck;
 }
-
-BoardDisplay::~BoardDisplay() {
-    for(int i = 0; i < 8; i++) {
-        delete[] board[i];
-    }
-}
-

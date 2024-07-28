@@ -7,6 +7,8 @@
 
 using namespace std;
 
+class Piece;
+
 class Player {
 protected:
     string name;

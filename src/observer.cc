@@ -3,7 +3,3 @@
 void Observer::notify() {
 
 }
-
-Observer::~Observer() {
-
-}

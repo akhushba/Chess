@@ -6,7 +6,7 @@
 class Rook : public Piece{
     public: 
         Rook(Colour colour, Chessboard *board, char cPos, int iPos);
-        ~Rook() = default;
+        ~Rook() override= default;
 
         bool isValidMove(char newC, int newI) override;
         void generateMoves() override;

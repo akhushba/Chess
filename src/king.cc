@@ -5,7 +5,7 @@ King::King(Colour colour, Chessboard*board, char cPos, int iPos) : Piece(colour,
 
 bool King::canCastle() {
     if(!firstMove) return false;
-
+    return true;
 }
 
 bool King::isValidMove(char newC, int newI) {
