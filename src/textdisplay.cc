@@ -9,17 +9,11 @@ TextDisplay::~TextDisplay() {
 void TextDisplay::notify() {
     const int SIZE = 8;
 
-    // modify for specific character
     for (int i = SIZE - 1; i >= 0; --i) {
         out << (i + 1) << ' ';
-        bool startWithUnderscore = (i % 2 == 0);
         
         for (int j = 0; j < SIZE; ++j) {
-            if ((j % 2 == 0) == startWithUnderscore) {
-                out << "_";
-            } else {
-                out << " ";
-            }
+            display->getState(i, j);
         }
         out << "\n";
     }
@@ -29,5 +23,7 @@ void TextDisplay::notify() {
         out << c;
     }
     out << "\n";
+
+    for(auto s : display->messages) out << s << "\n";
 
 }

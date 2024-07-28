@@ -1,48 +1,54 @@
 #ifndef _BOARD_DISPLAY_H_
 #define _BOARD_DISPLAY_H_
 
+#include <memory> // Include for unique_ptr
 #include "subject.h"
 #include "colour.h"
 #include "piece.h"
-#include "chessboard.h"
+#include <utility>
+#include <vector>
 
-// class BoardDisplay final;
+class Piece;
 
 class BoardDisplay final: public Subject {
-  struct BoardSegment {
-    Colour colour;
-    Piece* piece;
+public:
+    struct BoardSegment {
+        Colour colour;
+        Piece* piece;
 
-    BoardSegment(Colour c): colour{c}, piece{nullptr} {}
-  };
+        BoardSegment(Colour c) : colour{c}, piece{nullptr} {}
+        ~BoardSegment() = default;
+    };
 
-  class PlayerInfo {
+    class PlayerInfo {
     public:
-      int score;
-      const Colour colour;
-      bool inCheck;
-      bool customSetup;
-      bool canCastle;
-      pair<char, int> kingPosition;
-      vector<Piece*> activePieces;
-      vector<Piece*> inactivePieces;
+        int score;
+        const Colour colour;
+        bool inCheck;
+        bool customSetup;
+        bool canCastle;
+        std::pair<char, int> kingPosition;
+        std::vector<std::unique_ptr<Piece>> activePieces;
+        std::vector<std::unique_ptr<Piece>> inactivePieces;
+        std::vector<std::unique_ptr<Piece>> deactivedPieces;
 
-      PlayerInfo(Colour c, char kingC, int kingI) : score{0}, colour{c}, inCheck{false}, customSetup{false}, canCastle{true} {}
-  };
+        PlayerInfo(Colour c, char kingC, int kingI)
+            : score{0}, colour{c}, inCheck{false}, customSetup{false}, canCastle{true} {}
+        ~PlayerInfo() = default;
+    };
 
-  BoardSegment* board[8][8];
-  Chessboard* boardState;
+private:
+    std::unique_ptr<BoardSegment> board[8][8]; 
+    std::unique_ptr<PlayerInfo> whitePlayer; 
+    std::unique_ptr<PlayerInfo> blackPlayer; 
 
-  void initializeBoard();
+    void init();
+    BoardSegment* getBoardInfo(char c, int i);
 
-  PlayerInfo* whitePlayer;
-  PlayerInfo* blackPlayer;
+public:
+    std::vector<std::string> messages;
 
-  vector<string> messages;
-
-  public:
-    
-    //observer pattern
+    // Observer pattern
     void attach(Observer *o) override;
     void detach(Observer *o) override;
     void notifyObservers() override;
@@ -52,9 +58,18 @@ class BoardDisplay final: public Subject {
     bool simulateAttack(Piece*, char newC, int newI, Piece* reference = nullptr);
     void setState(Piece* p, char cPos, int iPos);
     bool canCapture(Colour pieceColour, char cPos, int iPos);
-    void as(char cPos, int iPos, Piece* p);
+    Colour occupied(char c, int i);
+    bool simulateInCheck(Piece* p, char newC, int newI);
 
-    BoardDisplay(Chessboard* b, Colour c);
-    ~BoardDisplay() = default;
+
+    bool inCheck(Colour c);
+    bool inCheckmate(Colour c);
+    void resign();
+    void endGame();
+    void endSession();
+
+    BoardDisplay();
+    ~BoardDisplay() = default; 
 };
+
 #endif

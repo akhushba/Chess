@@ -1,26 +1,19 @@
-CXX = g++
-CXXFLAGS = -std=c++14 -Wall -g -MMD
-EXEC = chess
+CXX=g++
+CXXFLAGS=-std=c++14 -Wall -g -MMD
+EXEC=chess
+CCFILES=$(wildcard *.cc)
+OBJECTS=${CCFILES:.cc=.o}
+DEPENDS=${CCFILES:.cc=.d}
 
-SRC_DIR = src
-OBJ_DIR = obj
-DEP_DIR = dep
+${EXEC}: ${OBJECTS}
+	${CXX} ${OBJECTS} -lX11 -o ${EXEC}
 
-SRCS = $(wildcard $(SRC_DIR)/*.cc)
-OBJS = $(SRCS:$(SRC_DIR)/%.cc=$(OBJ_DIR)/%.o)
-DEPS = $(SRCS:$(SRC_DIR)/%.cc=$(DEP_DIR)/%.d)
+-include ${DEPENDS}
 
-$(EXEC): $(OBJS)
-	$(CXX) $(OBJS) -lX11 -o $(EXEC)
-
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cc | $(OBJ_DIR)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
-$(OBJ_DIR) $(DEP_DIR):
-	mkdir -p $@
-
--include $(DEPS)
+# Extra recipe that allows us to delete temporary files by saying
+# make clean
 
 .PHONY: clean
+
 clean:
-	rm -f $(OBJ_DIR)/*.o $(DEP_DIR)/*.d $(EXEC)
+	rm ${OBJECTS} ${DEPENDS} ${EXEC}

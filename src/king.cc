@@ -5,22 +5,21 @@ King::King(Colour colour, Chessboard*board, char cPos, int iPos) : Piece(colour,
 
 bool King::canCastle() {
     if(!firstMove) return false;
-
+    return true;
 }
 
 bool King::isValidMove(char newC, int newI) {
-    if(newC < 'a' || newC> 'h' || newI < 1 || newI > 8){ //out of bounds 
-        return false;
-   }
+    //bound checking
+    if(newC < 'a' || newC> 'h' || newI < 1 || newI > 8) return false;
+   
+    //can't stay put
     if(newC == cPos && newI == iPos) return false;
-    if(abs(newC - cPos) != 1 && abs(newI - iPos) != 1) return false;
-
-    if (board->capture(newC, newI)) {
-        return true; 
-    } else if (board->occupied(newC, newI)) {
-        return false; 
-    }
+    //can only move a differnce of 1 from its origianl position
+    else if(abs(newC - cPos) != 1 && abs(newI - iPos) != 1) return false;
+    //cant move to position occupied by its own colour
+    else if (board->occupied(newC, newI) == colour) return false;
     
+    if(boardInfo->simulateInCheck(this, newC, newI)) return false;
     return true;
 }
 

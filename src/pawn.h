@@ -8,9 +8,8 @@ class Pawn : public Piece {
 
 public: 
     Pawn(Colour colour, Chessboard *board, char cPos, int iPos);
-    ~Pawn() = default;
+    ~Pawn() override = default;
 
-    bool enpassent();
     bool isValidMove(char newC, int newI) override;
     void generateMoves() override;
 };

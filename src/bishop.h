@@ -4,10 +4,10 @@
 #include "piece.h"
 #include "colour.h"
 class Bishop : public Piece {
-public:
-    Bishop(Colour colour, Chessboard *board, char cPos, int iPos);
-    bool isValidMove(char newC, int newI) override;
-    void generateMoves() override;
-    ~Bishop() = default;
+    public:
+        Bishop(Colour colour, Chessboard *board, char cPos, int iPos);
+        bool isValidMove(char newC, int newI) override;
+        void generateMoves() override;
+        ~Bishop() override = default;
 };
 #endif

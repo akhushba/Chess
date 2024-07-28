@@ -3,7 +3,8 @@
 
 enum Colour {
     WHITE,
-    BLACK
+    BLACK,
+    NULL_C
 };
 
 #endif 

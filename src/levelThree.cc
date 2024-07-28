@@ -8,7 +8,7 @@ using namespace std;
 
 LevelThree::LevelThree(string name, vector<Piece*> pieceSet) : Computer(name, pieceSet) {}
 
-void LevelThree::move(Piece* p = nullptr, char c = '\0', int i = -1) {
+void LevelThree::move(Piece* p, char c, int i) {
     if(p != nullptr && c != '\0' && i != -1) throw CustomException("An error occured while trying call move function on computer instead of human");
     // choose random piece and valid position
     // iterate through the list of the opponents pieces

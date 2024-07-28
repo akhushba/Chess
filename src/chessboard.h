@@ -3,14 +3,15 @@
 #include <string>
 #include "player.h"
 #include "piece.h"
-#include "gameinfo.h"
 #include <vector>
 
 using namespace std;
 
 
+class Player;
+class Piece;
+
 class Chessboard{
-    Player*** board;
     Player* WhitePlayer;
     Player* BlackPlayer;
 

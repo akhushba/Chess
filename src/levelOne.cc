@@ -8,7 +8,7 @@ using namespace std;
 
 LevelOne::LevelOne(string name, vector<Piece*> pieceSet) : Computer(name, pieceSet) {}
 
-void LevelOne::move(Piece* p = nullptr, char c = '\0', int i = -1) {
+void LevelOne::move(Piece* p, char c, int i) {
     if(p != nullptr && c != '\0' && i != -1) throw CustomException("An error occured while trying call move function on computer instead of human");
 
     int numPieces = pieceSet.size();

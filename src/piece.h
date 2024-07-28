@@ -10,6 +10,10 @@
 
 using namespace std;
 
+class Chessboard;
+class BoardDisplay;
+class Player;
+
 class Piece{
 protected:
     tuple<char, int> getCoordinate(char c, int i);

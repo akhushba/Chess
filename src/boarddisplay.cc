@@ -1,15 +1,22 @@
 #include "boarddisplay.h"
-#include <utility>
+#include <memory>
 
-void BoardDisplay::initializeBoard() {
-    for(int i = 0; i < 8; i+=2) {
-        for(int j = 0; j < 8; j+=2) {
-            board[i][j] = new BoardSegment(WHITE);
-            board[i][j+1] = new BoardSegment(BLACK);
-            board[i+1][j] = new BoardSegment(BLACK);
-            board[i+1][j+1] = new BoardSegment(WHITE);
+// Initialize the board with unique pointers to BoardSegment
+void BoardDisplay::init() {
+    for(int i = 0; i < 8; ++i) {
+        for(int j = 0; j < 8; ++j) {
+            Colour segmentColor = ((i + j) % 2 == 0) ? WHITE : BLACK;
+            board[i][j] = std::make_unique<BoardSegment>(segmentColor);
         }
     }
+
+    whitePlayer = std::make_unique<PlayerInfo>(Colour::WHITE, 'e', 1);
+    blackPlayer = std::make_unique<PlayerInfo>(Colour::BLACK, 'e', 8);
+
+}
+
+BoardDisplay::BoardSegment* BoardDisplay::getBoardInfo(char c, int i) {
+    return board[i - 1][c - 'a'].get();
 }
 
 void BoardDisplay::attach(Observer* o) {
@@ -24,19 +31,32 @@ void BoardDisplay::notifyObservers() {
     Subject::notifyObservers();
 }
 
-//character is the column, int is the row
+char BoardDisplay::getState(int row, int col) const {
+    if (!board[row][col]->piece) {
+        return board[row][col]->colour == BLACK ? '_' : ' ';
+    }
+    return board[row][col]->piece->getType();
+}
+
+// Set the state of a board segment
 void BoardDisplay::setState(Piece* p, char cPos, int iPos) {
-    //figure out
     board[iPos - 1][cPos - 'a']->piece = p;
 
     char type = p->getType();
-    PlayerInfo* currentPlayer = p->getColour() == BLACK ? blackPlayer : whitePlayer;
-
-    if(type == 'k' || type == 'K') currentPlayer->kingPosition = {cPos, iPos};
+    PlayerInfo* currentPlayer = (p->getColour() == BLACK) ? blackPlayer.get() : whitePlayer.get();
+    if(type == 'k' || type == 'K') {
+        currentPlayer->kingPosition = {cPos, iPos};
+    }
 }
 
-char BoardDisplay::getState(int row, int col) const {
+bool BoardDisplay::canCapture(Colour pieceColour, char cPos, int iPos) {
     
+}
+
+Colour BoardDisplay::occupied(char c, int i) {
+    BoardSegment* seg = getBoardInfo(c, i);
+    if(seg->piece) return seg->piece->getColour();
+    else return NULL_C;
 }
 
 bool BoardDisplay::simulateAttack(Piece* p, char newC, int newI, Piece* checkAttack) {
@@ -67,8 +87,35 @@ bool BoardDisplay::simulateAttack(Piece* p, char newC, int newI, Piece* checkAtt
     return canBeAttacked;
 }
 
-BoardDisplay::~BoardDisplay() {
-    for(int i = 0; i < 8; i++) {
-        delete[] board[i];
+bool BoardDisplay::inCheck(Colour c) {
+    PlayerInfo* currentPlayer = (c == BLACK) ? blackPlayer.get() : whitePlayer.get();
+    PlayerInfo* oppositePlayer = (c == BLACK) ? whitePlayer.get() : blackPlayer.get();
+
+    bool inCheck = false;
+    for(auto& p : oppositePlayer->activePieces) {
+        if(p.get()->isValidMove(currentPlayer->kingPosition.first, currentPlayer->kingPosition.second)) inCheck = true;
     }
+    return inCheck;
+}
+
+bool BoardDisplay::inCheckmate(Colour c) {
+    PlayerInfo* currentPlayer = (c == BLACK) ? blackPlayer.get() : whitePlayer.get();
+    bool allEmpty = true;
+    for(auto& p : currentPlayer->activePieces) {
+        p.get()->generateMoves();
+        if(!p.get()->validPosVec.empty()) allEmpty = false;
+    }
+    return allEmpty;
+}
+
+void BoardDisplay::resign() {
+
+}
+
+void BoardDisplay::endGame() {
+    
+}
+
+void BoardDisplay::endSession() {
+    
 }

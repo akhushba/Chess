@@ -10,10 +10,10 @@ class TextDisplay : public Observer {
     int top = 8, bottom = 8, left  = 8, right  = 8;
     std::ostream &out = std::cout;
 
-public:
-    TextDisplay(BoardDisplay* display);
-    ~TextDisplay();
-    void notify() override;
+    public:
+        TextDisplay(BoardDisplay* display);
+        ~TextDisplay() override;
+        void notify() override;
 };
 
 #endif

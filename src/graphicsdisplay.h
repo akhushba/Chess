@@ -13,7 +13,7 @@ class GraphicsDisplay : public Observer {
 
 public:
     GraphicsDisplay(BoardDisplay* display);
-    ~GraphicsDisplay();
+    ~GraphicsDisplay() override;
     void notify() override;
 };
 
