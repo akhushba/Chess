@@ -11,7 +11,6 @@
 class Piece;
 
 class BoardDisplay final: public Subject {
-public:
     struct BoardSegment {
         Colour colour;
         Piece* piece;
@@ -37,7 +36,6 @@ public:
         ~PlayerInfo() = default;
     };
 
-private:
     std::unique_ptr<BoardSegment> board[8][8]; 
     std::unique_ptr<PlayerInfo> whitePlayer; 
     std::unique_ptr<PlayerInfo> blackPlayer; 
@@ -45,14 +43,13 @@ private:
     void init();
     BoardSegment* getBoardInfo(char c, int i);
 
-public:
-    std::vector<std::string> messages;
-
     // Observer pattern
     void attach(Observer *o) override;
     void detach(Observer *o) override;
     void notifyObservers() override;
     char getState(int row, int col) const;
+public:
+    std::vector<std::string> messages;
 
     // For the chessboard
     void setState(Piece* p, char cPos, int iPos);

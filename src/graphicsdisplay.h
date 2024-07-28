@@ -5,16 +5,20 @@
 #include "boarddisplay.h"
 #include "window.h"
 #include <iostream>
+#include <memory>
+
+class XWindow;
 
 class GraphicsDisplay : public Observer {
     BoardDisplay* display;
-    Xwindow xw;
-    int top = 8, bottom = 8, left = 8, right = 8;
+    std::unique_ptr<Xwindow> xw;
+    const int top = 0, bottom = 85, left = 0, right = 145;
+    const int cellSize = 100;  // Set the size of each square
 
-public:
-    GraphicsDisplay(BoardDisplay* display);
-    ~GraphicsDisplay() override;
-    void notify() override;
+    public:
+        GraphicsDisplay(BoardDisplay* display);
+        ~GraphicsDisplay() override = default;
+        void notify() override;
 };
 
 #endif
