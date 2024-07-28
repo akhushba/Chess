@@ -74,7 +74,7 @@ bool BoardDisplay::simulateInCheck(Piece* p, char newC, int newI) {
     currentPlayer->inCheck = false;
     bool remainsInCheck = false;
     for (const auto& piece : oppositePlayer->activePieces) {
-        if (piece->isValidMove(currentPlayer->kingPosition.first, currentPlayer->kingPosition.second)) {
+        if (piece.get()->isValidMove(currentPlayer->kingPosition.first, currentPlayer->kingPosition.second)) {
             remainsInCheck = true;
             break;
         }
@@ -94,7 +94,7 @@ bool BoardDisplay::inCheck(Colour c) {
 
     bool inCheck = false;
     for(auto& p : oppositePlayer->activePieces) {
-        if(p->isValidMove(currentPlayer->kingPosition.first, currentPlayer->kingPosition.second)) inCheck = true;
+        if(p.get()->isValidMove(currentPlayer->kingPosition.first, currentPlayer->kingPosition.second)) inCheck = true;
     }
     return inCheck;
 }
@@ -103,8 +103,8 @@ bool BoardDisplay::inCheckmate(Colour c) {
     PlayerInfo* currentPlayer = (c == BLACK) ? blackPlayer.get() : whitePlayer.get();
     bool allEmpty = true;
     for(auto& p : currentPlayer->activePieces) {
-        p->generateMoves();
-        if(!p->validPosVec.empty()) allEmpty = false;
+        p.get()->generateMoves();
+        if(!p.get()->validPosVec.empty()) allEmpty = false;
     }
     return allEmpty;
 }

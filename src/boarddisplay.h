@@ -28,8 +28,9 @@ public:
         bool customSetup;
         bool canCastle;
         std::pair<char, int> kingPosition;
-        std::vector<Piece*> activePieces;
-        std::vector<Piece*> inactivePieces;
+        std::vector<std::unique_ptr<Piece>> activePieces;
+        std::vector<std::unique_ptr<Piece>> inactivePieces;
+        std::vector<std::unique_ptr<Piece>> deactivedPieces;
 
         PlayerInfo(Colour c, char kingC, int kingI)
             : score{0}, colour{c}, inCheck{false}, customSetup{false}, canCastle{true} {}
@@ -37,9 +38,9 @@ public:
     };
 
 private:
-    std::unique_ptr<BoardSegment> board[8][8]; // Use unique_ptr for board segments
-    std::unique_ptr<PlayerInfo> whitePlayer; // Use unique_ptr for PlayerInfo
-    std::unique_ptr<PlayerInfo> blackPlayer; // Use unique_ptr for PlayerInfo
+    std::unique_ptr<BoardSegment> board[8][8]; 
+    std::unique_ptr<PlayerInfo> whitePlayer; 
+    std::unique_ptr<PlayerInfo> blackPlayer; 
 
     void init();
     BoardSegment* getBoardInfo(char c, int i);
