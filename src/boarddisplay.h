@@ -37,7 +37,7 @@ class BoardDisplay final: public Subject {
         ~BoardSegment() = default;
       
     };
-
+public:
     class PlayerInfo {
         public:
             std::unique_ptr<Player> player;

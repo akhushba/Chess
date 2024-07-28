@@ -18,7 +18,8 @@ int main () {
         board_Display.addBlackPlayer(playerTwo);
     }
     else if (command == "resign") {
-        //board_Display.resign(c);
+        BoardDisplay::PlayerInfo* currentPlayer= board_Display.getCurrentPlayer();
+        board_Display.resign(currentPlayer->colour);
     }
     else if (command == "move") {
         string oldPos, newPos;
