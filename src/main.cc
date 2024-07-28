@@ -14,7 +14,8 @@ int main () {
     if (command == "game" ) {
         string playerOne, playerTwo;
         cin >> playerOne >> playerTwo;
-
+        board_Display.addWhitePlayer(playerOne);
+        board_Display.addBlackPlayer(playerTwo);
     }
     else if (command == "resign") {
         //board_Display.resign(c);

@@ -6,6 +6,7 @@
 #include "colour.h"
 #include "piece.h"
 #include <utility>
+#include <string>
 #include <vector>
 #include "queen.h"
 #include "rook.h"
@@ -13,6 +14,13 @@
 #include "knight.h"
 #include "king.h"
 #include "pawn.h"
+#include "human.h"
+#include "levelOne.h"
+#include "levelTwo.h"
+#include "levelThree.h"
+#include "levelFour.h"
+
+using namespace std;
 
 class Piece;
 
@@ -27,23 +35,35 @@ class BoardDisplay final: public Subject {
         }
         BoardSegment(Colour c) : colour{c}, piece{nullptr} {}
         ~BoardSegment() = default;
-        
       
     };
 
     class PlayerInfo {
-    public:
-        int score;
-        const Colour colour;
-        bool inCheck;
-        std::pair<char, int> kingPosition;
-        std::vector<std::unique_ptr<Piece>> activePieces;
-        std::vector<std::unique_ptr<Piece>> inactivePieces;
-        std::vector<std::unique_ptr<Piece>> deactivedPieces;
+        public:
+            std::unique_ptr<Player> player;
+            int score;
+            const Colour colour;
+            bool inCheck;
+            std::pair<char, int> kingPosition;
+            std::vector<std::unique_ptr<Piece>> activePieces;
+            std::vector<std::unique_ptr<Piece>> inactivePieces;
+            std::vector<std::unique_ptr<Piece>> deactivedPieces;
 
-        PlayerInfo(Colour c, char kingC, int kingI)
-            : score{0}, colour{c}, inCheck{false} {}
-        ~PlayerInfo() = default;
+            PlayerInfo(Colour c, char kingC, int kingI, std::string playerType)
+                : score{0}, colour{c}, inCheck{false} {
+                    if(playerType == "human") {
+
+                    } else if (playerType == "computer1") {
+
+                    } else if (playerType == "computer2") {
+
+                    } else if (playerType == "computer3") {
+
+                    } else if (playerType == "computer4") {
+
+                    } 
+                }
+            ~PlayerInfo() = default;
     };
 
     std::unique_ptr<BoardSegment> board[8][8]; 
@@ -75,6 +95,15 @@ public:
         if(getCurrentTurn== BLACK){
             return blackPlayer.get();
         }
+    }
+
+    void addWhitePlayer(string playerType) {
+        whitePlayer = make_unique<PlayerInfo>(WHITE, 'e', 'f', playerType);
+    }
+
+    void addBlackPlayer(string playerType) {
+        blackPlayer = make_unique<PlayerInfo>(BLACK, 'e', 'f', playerType);
+        
     }
 
     //for the chessboard
