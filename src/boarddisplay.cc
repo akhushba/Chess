@@ -71,15 +71,19 @@ bool BoardDisplay::simulateAttack(Piece* p, char newC, int newI, Piece* checkAtt
 
     bool canBeAttacked = false;
 
+    bool originalCheckState = currentPlayer->inCheck;
+    currentPlayer->inCheck = false;
+    bool remainsInCheck = false;
+
     for(const auto& piece : oppositePlayer->activePieces) {
-        boardState->setCheck(false, currentPlayer->colour);
         if (checkAttack) {
             canBeAttacked = piece->isValidMove(checkAttack->getPosition().first, checkAttack->getPosition().second);
         } else {
             canBeAttacked = piece->isValidMove(currentPlayer->kingPosition.first, currentPlayer->kingPosition.second);
         }
-        boardState->setCheck(true, currentPlayer->colour);
     }
+
+    currentPlayer->inCheck = originalCheckState;
     
     setState(tempCapture, newC, newI);
     setState(p, currentPosition.first, currentPosition.second);
