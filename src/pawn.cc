@@ -13,7 +13,7 @@ bool Pawn::isValidMove(char newC, int newI) {
     //must move forward 1 or 2 spaces
     if(newI - iPos > 2*direction || newI - iPos <= 0) return false;
     //trying to move 2 spaces after first move
-    else if(newI - iPos == 2*direction && !firstMove) return false;
+    else if(newI - iPos == 2*direction && !hasMoved) return false;
     //moving diagonally but can't capture
     else if (newC != cPos && (boardInfo->occupied(newC, newI) != colour || boardInfo->occupied(newC, newI) == NULL_C)) 
         return false;
@@ -30,7 +30,7 @@ void Pawn::generateMoves() {
     validPosVec.clear();
     int boardPosition = (colour == Colour::WHITE) ? 1 : -1;
 
-    if (firstMove) {
+    if (hasMoved) {
         if (isValidMove(cPos, iPos + 2 * boardPosition)) {
             validPosVec.emplace_back(cPos, iPos + 2 * boardPosition);
         }

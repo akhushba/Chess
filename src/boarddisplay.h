@@ -7,10 +7,17 @@
 #include "piece.h"
 #include <utility>
 #include <vector>
+#include "queen.h"
+#include "rook.h"
+#include "bishop.h"
+#include "knight.h"
+#include "king.h"
+#include "pawn.h"
 
 class Piece;
 
 class BoardDisplay final: public Subject {
+    bool customSetup;
     struct BoardSegment {
         Colour colour;
         Piece* piece;
@@ -24,15 +31,13 @@ class BoardDisplay final: public Subject {
         int score;
         const Colour colour;
         bool inCheck;
-        bool customSetup;
-        bool canCastle;
         std::pair<char, int> kingPosition;
         std::vector<std::unique_ptr<Piece>> activePieces;
         std::vector<std::unique_ptr<Piece>> inactivePieces;
         std::vector<std::unique_ptr<Piece>> deactivedPieces;
 
         PlayerInfo(Colour c, char kingC, int kingI)
-            : score{0}, colour{c}, inCheck{false}, customSetup{false}, canCastle{true} {}
+            : score{0}, colour{c}, inCheck{false} {}
         ~PlayerInfo() = default;
     };
 
@@ -53,10 +58,11 @@ public:
 
     //for the chessboard
     bool simulateAttack(Piece*, char newC, int newI, Piece* reference = nullptr);
-    void setState(Piece* p, char cPos, int iPos);
+    void setState(Piece* p, char cPos, int iPos, char pawnPromote = '\0');
     bool canCapture(Colour pieceColour, char cPos, int iPos);
     Colour occupied(char c, int i);
     bool simulateInCheck(Piece* p, char newC, int newI);
+    bool canCastle(Colour c);
 
 
     bool inCheck(Colour c);

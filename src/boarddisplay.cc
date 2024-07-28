@@ -39,18 +39,77 @@ char BoardDisplay::getState(int row, int col) const {
 }
 
 // Set the state of a board segment
-void BoardDisplay::setState(Piece* p, char cPos, int iPos) {
-    board[iPos - 1][cPos - 'a']->piece = p;
+void BoardDisplay::setState(Piece* p, char cPos, int iPos, char pawnPromote) {
 
     char type = p->getType();
     PlayerInfo* currentPlayer = (p->getColour() == BLACK) ? blackPlayer.get() : whitePlayer.get();
     if(type == 'k' || type == 'K') {
+        if(abs(p->getPosition().first - cPos) == 2) {
+            if(p->getColour() == WHITE) {
+                setState(board[1-1]['h'-'a']->piece, 'f', 1);
+            } else {
+                setState(board[8-1]['h'-'a']->piece, 'f', 8);
+            }
+        }
         currentPlayer->kingPosition = {cPos, iPos};
+    } else if (type == 'p' || type == 'P') {
+        // Handle pawn promotion
+        if ((p->getColour() == WHITE && iPos == 8) || (p->getColour() == BLACK && iPos == 1)) {
+            // Move the current pawn to deactivedPieces
+            auto& activePieces = currentPlayer->activePieces;
+            auto it = std::find_if(activePieces.begin(), activePieces.end(),
+                [&p](const std::unique_ptr<Piece>& piece) {
+                    return piece.get() == p;
+                });
+            if (it != activePieces.end()) {
+                currentPlayer->deactivedPieces.push_back(std::move(*it));
+                activePieces.erase(it);
+            }
+            std::unique_ptr<Piece> newPiece;
+            if (pawnPromote == 'Q' || pawnPromote == 'q') {
+                newPiece = std::make_unique<Queen>(p->getColour(), nullptr, cPos, iPos);
+            } else if (pawnPromote == 'R'  || pawnPromote == 'r') {
+                newPiece = std::make_unique<Rook>(p->getColour(), nullptr, cPos, iPos);
+            } else if (pawnPromote == 'B'  || pawnPromote == 'b') {
+                newPiece = std::make_unique<Bishop>(p->getColour(), nullptr, cPos, iPos);
+            } else if (pawnPromote == 'N'  || pawnPromote == 'n') {
+                newPiece = std::make_unique<Knight>(p->getColour(), nullptr, cPos, iPos);
+            } else {
+                newPiece = std::make_unique<Queen>(p->getColour(), nullptr, cPos, iPos);
+            }
+            currentPlayer->activePieces.push_back(std::move(newPiece));
+        }
     }
+
+    board[iPos - 1][cPos - 'a']->piece = p;
+    p->setPos(cPos, iPos);
+    p->hasMoved = true;
 }
 
 bool BoardDisplay::canCapture(Colour pieceColour, char cPos, int iPos) {
     
+}
+
+bool BoardDisplay::canCastle(Colour c) {
+    if(customSetup) return false;
+
+    if(c == WHITE) {
+        Piece* potentialKing = board[1-1]['e'-'a']->piece;
+        Piece* potentialRook = board[1-1]['h'-'a']->piece;
+        if(!potentialKing && potentialKing->getType() != 'K' && !potentialKing->hasMoved) 
+            return false;
+        else if(!potentialRook && potentialRook->getType() != 'R' && !potentialRook->hasMoved) 
+            return false;
+    } else {
+        Piece* potentialKing = board[8-1]['e'-'a']->piece;
+        Piece* potentialRook = board[8-1]['h'-'a']->piece;
+        if(!potentialKing && potentialKing->getType() != 'k' && !potentialKing->hasMoved) 
+            return false;
+        else if(!potentialRook && potentialRook->getType() != 'r' && !potentialRook->hasMoved) 
+            return false;
+    }
+
+    return true;
 }
 
 Colour BoardDisplay::occupied(char c, int i) {

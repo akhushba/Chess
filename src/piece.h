@@ -29,6 +29,7 @@ protected:
     const int pieceValue;
     
 public:
+    bool hasMoved = false;
     Piece(Colour colour, char type, Chessboard *board, char cPos, int iPos, int pieceValue);
 
     vector<tuple<char, int>> validPosVec;

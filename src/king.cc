@@ -3,17 +3,14 @@
 King::King(Colour colour, Chessboard*board, char cPos, int iPos) : Piece(colour, 'k', board, iPos, cPos, 10) {
 }
 
-bool King::canCastle() {
-    if(!firstMove) return false;
-    return true;
-}
-
 bool King::isValidMove(char newC, int newI) {
     //bound checking
     if(newC < 'a' || newC> 'h' || newI < 1 || newI > 8) return false;
-   
+    int direction = (colour == Colour::WHITE) ? 1 : -1;
     //can't stay put
     if(newC == cPos && newI == iPos) return false;
+    //can only castle in certain conditions
+    else if (abs(newC - cPos) == 2 && newI == iPos && !boardInfo->canCastle(colour)) return false;
     //can only move a differnce of 1 from its origianl position
     else if(abs(newC - cPos) != 1 && abs(newI - iPos) != 1) return false;
     //cant move to position occupied by its own colour
