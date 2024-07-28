@@ -62,18 +62,16 @@ Colour BoardDisplay::occupied(char c, int i) {
 bool BoardDisplay::simulateAttack(Piece* p, char newC, int newI, Piece* checkAttack) {
     pair<char, int> currentPosition = p->getPosition();
 
-    Piece* tempCapture = board[newI - 1][newC - 'a']->piece;
+    Piece* tempCapture = getBoardInfo(newC, newI)->piece;
     setState(p, newC, newI);
     setState(nullptr, currentPosition.first, currentPosition.second);
 
-    PlayerInfo* oppositePlayer = p->getColour() == BLACK ? blackPlayer : whitePlayer;
-    PlayerInfo* currentPlayer = p->getColour() == BLACK ? whitePlayer : blackPlayer;
+    PlayerInfo* currentPlayer = (p->getColour() == BLACK) ? blackPlayer.get() : whitePlayer.get();
+    PlayerInfo* oppositePlayer = (p->getColour() == BLACK) ? whitePlayer.get() : blackPlayer.get();
 
     bool canBeAttacked = false;
-
     bool originalCheckState = currentPlayer->inCheck;
     currentPlayer->inCheck = false;
-    bool remainsInCheck = false;
 
     for(const auto& piece : oppositePlayer->activePieces) {
         if (checkAttack) {
@@ -81,6 +79,7 @@ bool BoardDisplay::simulateAttack(Piece* p, char newC, int newI, Piece* checkAtt
         } else {
             canBeAttacked = piece->isValidMove(currentPlayer->kingPosition.first, currentPlayer->kingPosition.second);
         }
+        if(canBeAttacked) break;
     }
 
     currentPlayer->inCheck = originalCheckState;
