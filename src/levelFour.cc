@@ -1,3 +1,4 @@
+#include "computer.h"
 #include "levelFour.h"
 #include <algorithm>
 #include <iostream>
@@ -109,25 +110,34 @@ void LevelFour::move(Piece* p = nullptr, char c = '\0', int i = -1) {
         }
     }
 
-    if (safeCaptureAndCenter.size() == 0 && safeAndCapture.size() == 0) {
+    if (safeOptions.size() == 0) {
+        // no safe options then just do smth random
+        shuffle(pieceSet.begin(), pieceSet.end(), g);
+        char newC = std::get<0>(pieceSet.at(0)->validPosVec.at(0));
+        int newI = std::get<1>(pieceSet.at(0)->validPosVec.at(0));
+        board->setState(pieceSet.at(0), newC, newI);
+    } else if (safeCaptureAndCenter.size() == 0 && safeAndCapture.size() == 0) {
         // no overlap in any of the vectors
         shuffle(pieceSet.begin(), pieceSet.end(), g);
         newC = get<0>(get<1>(safeOptions[0]));
         newI = get<1>(get<1>(safeOptions[0]));
-        pieceSet[0]->setPos(newC, newI);
+        board->setState(pieceSet.at(0), newC, newI);
+        // pieceSet[0]->setPos(newC, newI);
     } else if (safeCaptureAndCenter.size() == 0) {
         // smth exists in 2 of the vectors
         index = getMaxPieceValue(safeAndCapture);
         newC = get<0>(get<1>(safeAndCapture[index]));
         newI = get<1>(get<1>(safeAndCapture[index]));
-        pieceSet[index]->setPos(newC, newI);
+        board->setState(pieceSet.at(index), newC, newI);
+        // pieceSet[index]->setPos(newC, newI);
         pieceSet[index]->capture(newC, newI)->setActiveStatus(false);
     } else {
         // there is smth that exists in all 3 vectors
         index = getMaxPieceValue(safeCaptureAndCenter);
         newC = get<0>(get<1>(safeCaptureAndCenter[index]));
         newI = get<1>(get<1>(safeCaptureAndCenter[index]));
-        pieceSet[index]->setPos(newC, newI);
+        board->setState(pieceSet.at(index), newC, newI);
+        // pieceSet[index]->setPos(newC, newI);
         pieceSet[index]->capture(newC, newI)->setActiveStatus(false);
     }
 }

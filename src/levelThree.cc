@@ -1,3 +1,4 @@
+#include "computer.h"
 #include "levelThree.h"
 #include <iostream>
 #include <random>
@@ -61,7 +62,8 @@ void LevelThree::move(Piece* p, char c, int i) {
             }
 
             if (goodMove) {
-                pieceSet[i]->setPos(newC, newI);
+                board->setState(pieceSet[i], newC, newI);
+                // pieceSet[i]->setPos(newC, newI);
                 return;
             }
         }
@@ -70,5 +72,6 @@ void LevelThree::move(Piece* p, char c, int i) {
     // if there is no safe move, then just choose a random valid move
     char newC = std::get<0>(pieceSet.at(0)->validPosVec.at(0));
     int newI = std::get<1>(pieceSet.at(0)->validPosVec.at(0));
-    pieceSet[0]->setPos(newC, newI);
+    board->setState(pieceSet[0], newC, newI);
+    // pieceSet[0]->setPos(newC, newI);
 }

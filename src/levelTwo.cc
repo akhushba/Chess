@@ -1,3 +1,4 @@
+#include "computer.h"
 #include "levelTwo.h"
 #include <iostream>
 #include <random>
@@ -29,7 +30,8 @@ void LevelTwo::move(Piece* p, char c, int i) {
             newI = get<1>(pieceSet.at(i)->validPosVec[j]);
             if (pieceSet.at(i)->capture(newC, newI) != nullptr) {
                 pieceSet.at(i)->capture(newC, newI)->setActiveStatus(false);
-                pieceSet.at(i)->setPos(newC, newI);
+                board->setState(pieceSet.at(i), newC, newI);
+                // pieceSet.at(i)->setPos(newC, newI);
                 return;
             }
         }
@@ -39,5 +41,6 @@ void LevelTwo::move(Piece* p, char c, int i) {
     // so we can just use index 0 to choose a random move since the vectors are already shuffled/randomized
     char newC = std::get<0>(pieceSet.at(0)->validPosVec.at(0));
     int newI = std::get<1>(pieceSet.at(0)->validPosVec.at(0));
-    pieceSet[0]->setPos(newC, newI);
+    board->setState(pieceSet[0], newC, newI);
+    // pieceSet[0]->setPos(newC, newI);
 }

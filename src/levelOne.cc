@@ -1,3 +1,5 @@
+#include "computer.h"
+#include "player.h"
 #include "levelOne.h"
 #include <iostream>
 #include <random>
@@ -25,5 +27,6 @@ void LevelOne::move(Piece* p, char c, int i) {
 
     newC = get<0>(pieceSet[0]->validPosVec[0]);
     newI = get<1>(pieceSet[0]->validPosVec[0]);
-    pieceSet[0]->setPos(newC, newI);
+    board->setState(pieceSet[0], newC, newI);
+    // pieceSet[0]->setPos(newC, newI);
 }
