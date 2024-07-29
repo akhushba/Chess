@@ -48,7 +48,6 @@ vector <pair<char,int>> Pawn::generate(){
     vector <pair<char,int>> possible;
     int boardPosition = (colour == Colour::WHITE) ? 1 : -1;
     if (!hasMoved) {
-        std::cout << cPos << iPos + 2 * boardPosition << "new " << std::endl;
         if(!(cPos < 'a' || cPos > 'h' || iPos + 2 * boardPosition < 1 || iPos + 2 * boardPosition > 8))
         possible.emplace_back(make_pair(cPos, iPos + 2 * boardPosition));
     }

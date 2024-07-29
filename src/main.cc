@@ -10,11 +10,14 @@ using namespace std;
 int main () {
 
     BoardDisplay board_Display;
-    board_Display.defaultBoard();
-    Piece* p  = board_Display.getBoardInfo('b', 2);
-    cout << board_Display.checkValid(p, 'e', 2) << endl;
+    board_Display.addPiece('R', "a1");
+    board_Display.addPiece('R', "a6");
+    board_Display.notifyObservers();
+    Piece* p  = board_Display.getBoardInfo('a', 1);
+    cout << p->getType() << p->getPosition().first << p->getPosition().second << endl;
+
+    cout << board_Display.checkValid(p, 'a', 6) << endl;
 
     //  cout << p->isValidMove('a', 3) << endl;
-    // cout << p->getType() << p->getPosition().first << p->getPosition().second << endl;
 }
 
