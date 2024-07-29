@@ -6,10 +6,10 @@
 class Computer : public Player {
 
 public:
-    Computer(string name, vector<Piece*> pieceSet) : Player(name, pieceSet) {}
+    Computer(string name, vector<Piece*> pieceSet) {}
     virtual void move(Piece* p = nullptr, char c = '\0', int i = -1) override = 0;
     virtual int getMaxPieceValue(vector<pair<Piece*, tuple<char, int>>>);
-    virtual ~Computer() override {}
+    virtual ~Computer() override = default;
 };
 
 #endif

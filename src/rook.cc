@@ -28,7 +28,7 @@ bool Rook::isValidMove(char newC, int newI) {
         if (boardInfo->occupied(currentCol, currentRow) == colour) return false;
     }
 
-    if(boardInfo->simulateInCheck(this, newC, newI)) return false;
+    if(boardInfo->simulateAttack(this, newC, newI)) return false;
     return true;
 }
 

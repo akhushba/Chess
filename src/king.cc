@@ -16,7 +16,7 @@ bool King::isValidMove(char newC, int newI) {
     //cant move to position occupied by its own colour
     else if (boardInfo->occupied(newC, newI) == colour) return false;
     
-    if(boardInfo->simulateInCheck(this, newC, newI)) return false;
+    if(boardInfo->simulateAttack(this, newC, newI)) return false;
     return true;
 }
 

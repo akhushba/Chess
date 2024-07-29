@@ -18,8 +18,8 @@ bool Knight::isValidMove(char newC, int newI) {
     // can't move to a square occupied by your own colour
     else if (boardInfo->occupied(newC, newI) == colour) return false;
 
-    //avoid being in check logic, simulateInCheck returns true if King is in check
-    if(boardInfo->simulateInCheck(this, newC, newI)) return false;
+    //avoid being in check logic, simulateAttack returns true if King is in check
+    if(boardInfo->simulateAttack(this, newC, newI)) return false;
     return true;
 }
 

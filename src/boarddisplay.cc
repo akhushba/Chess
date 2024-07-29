@@ -1,5 +1,4 @@
 #include "boarddisplay.h"
-
 #include "colour.h"
 #include "piece.h"
 #include "player.h"
@@ -24,37 +23,36 @@ void BoardDisplay::BoardSegment::setBegin() {
 }
 
 BoardDisplay::PlayerInfo::PlayerInfo(Colour c, char kingC, int kingI, string playerType)
-                : score{0}, colour{c}, inCheck{false} {
-    if(playerType == "human") {
-
+    : player(nullptr), score{0}, colour{c}, inCheck{false}, kingPosition{kingC, kingI} {
+    if (playerType == "human") {
+        player = new Human("human", {});
     } else if (playerType == "computer1") {
-
+        player = new LevelOne("level one", {});
     } else if (playerType == "computer2") {
-
+        player = new LevelTwo("level two", {});
     } else if (playerType == "computer3") {
-
+        player = new LevelThree("level three", {});
     } else if (playerType == "computer4") {
-
-    } 
+        player = new LevelFour("level four", {});
+    }
 }
 
-// Initialize the board with unique pointers to BoardSegment
+// Initialize the board
 void BoardDisplay::init() {
-    for(int i = 0; i < 8; ++i) {
-        for(int j = 0; j < 8; ++j) {
+    for (int i = 0; i < 8; ++i) {
+        for (int j = 0; j < 8; ++j) {
             Colour segmentColor = ((i + j) % 2 == 0) ? WHITE : BLACK;
-            board[i][j] = std::make_unique<BoardSegment>(segmentColor);
+            board[i][j] = BoardSegment(segmentColor);
         }
     }
 
-    whitePlayer = std::make_unique<PlayerInfo>(Colour::WHITE, 'e', 1, "human");
-    blackPlayer = std::make_unique<PlayerInfo>(Colour::BLACK, 'e', 8, "human");
+    whitePlayer = new PlayerInfo(Colour::WHITE, 'e', 1, "human");
+    blackPlayer = new PlayerInfo(Colour::BLACK, 'e', 8, "human");
     getCurrentTurn = WHITE;
 }
 
-
 Piece* BoardDisplay::getBoardInfo(char c, int i) {
-    return board[i - 1][c - 'a'].get()->piece;
+    return board[i - 1][c - 'a'].piece;
 }
 
 void BoardDisplay::attach(Observer* o) {
@@ -70,144 +68,95 @@ void BoardDisplay::notifyObservers() {
 }
 
 char BoardDisplay::getState(int row, int col) const {
-    if (!board[row][col]->piece) {
-        return board[row][col]->colour == BLACK ? '_' : ' ';
+    if (!board[row][col].piece) {
+        return board[row][col].colour == BLACK ? '_' : ' ';
     }
-    return board[row][col]->piece->getType();
+    return board[row][col].piece->getType();
 }
 
 void BoardDisplay::addPiece(char type, string pos) {
     Colour c = std::islower(type) ? BLACK : WHITE;
     char cPos = pos[0];
-    int iPos = (int)pos[1];
+    int iPos = pos[1] - '0';
 
-    std::unique_ptr<Piece> newPiece;
-        if (type == 'Q' || type == 'q') {
-            newPiece = std::make_unique<Queen>(c, nullptr, cPos, iPos);
-        } else if (type == 'R'  || type == 'r') {
-            newPiece = std::make_unique<Rook>(c, nullptr, cPos, iPos);
-        } else if (type == 'B'  || type == 'b') {
-            newPiece = std::make_unique<Bishop>(c, nullptr, cPos, iPos);
-        } else if (type == 'N'  || type == 'n') {
-            newPiece = std::make_unique<Knight>(c, nullptr, cPos, iPos);
-        } else if (type == 'N'  || type == 'n') {
-            newPiece = std::make_unique<Queen>(c, nullptr, cPos, iPos);
-        } else if (type == 'K'  || type == 'k') {
-            newPiece = std::make_unique<King>(c, nullptr, cPos, iPos);
-        } else if (type == 'P'  || type == 'p') {
-            newPiece = std::make_unique<Pawn>(c, nullptr, cPos, iPos);
-        }
-    PlayerInfo* currentPlayer = (c == BLACK) ? blackPlayer.get() : whitePlayer.get();
-    setState(newPiece.get(), cPos, iPos);
-    currentPlayer->activePieces.push_back(std::move(newPiece));
+    Piece* newPiece = nullptr;
+    if (type == 'Q' || type == 'q') {
+        newPiece = new Queen(c, nullptr, cPos, iPos);
+    } else if (type == 'R' || type == 'r') {
+        newPiece = new Rook(c, nullptr, cPos, iPos);
+    } else if (type == 'B' || type == 'b') {
+        newPiece = new Bishop(c, nullptr, cPos, iPos);
+    } else if (type == 'N' || type == 'n') {
+        newPiece = new Knight(c, nullptr, cPos, iPos);
+    } else if (type == 'K' || type == 'k') {
+        newPiece = new King(c, nullptr, cPos, iPos);
+    } else if (type == 'P' || type == 'p') {
+        newPiece = new Pawn(c, nullptr, cPos, iPos);
+    }
+
+    PlayerInfo* currentPlayer = (c == BLACK) ? blackPlayer : whitePlayer;
+    setState(newPiece, cPos, iPos);
+    currentPlayer->activePieces.push_back(newPiece);
 }
 
 void BoardDisplay::removePiece(string pos) {
-    Piece* p = board[(int)pos[1] - 1][pos[0] - 'a']->piece;
-    if(p) {
-        PlayerInfo* currentPlayer = (p->getColour() == BLACK) ? blackPlayer.get() : whitePlayer.get();
+    Piece* p = board[pos[1] - '0' - 1][pos[0] - 'a'].piece;
+    if (p) {
+        PlayerInfo* currentPlayer = (p->getColour() == BLACK) ? blackPlayer : whitePlayer;
         auto& activePieces = currentPlayer->activePieces;
-        auto it = std::find_if(activePieces.begin(), activePieces.end(),
-            [&p](const std::unique_ptr<Piece>& piece) {
-                return piece.get() == p;
-            });
+        auto it = std::find(activePieces.begin(), activePieces.end(), p);
         if (it != activePieces.end()) {
-            currentPlayer->inactivePieces.push_back(std::move(*it));
+            currentPlayer->inactivePieces.push_back(*it);
             activePieces.erase(it);
         }
     }
 }
 
-// Set the state of a board segment
 void BoardDisplay::setState(Piece* p, char cPos, int iPos, char pawnPromote) {
+    PlayerInfo* currentPlayer = (p->getColour() == BLACK) ? blackPlayer : whitePlayer;
 
-    char type = p->getType();
-    PlayerInfo* currentPlayer = (p->getColour() == BLACK) ? blackPlayer.get() : whitePlayer.get();
-    if(type == 'k' || type == 'K') {
-        if(abs(p->getPosition().first - cPos) == 2) {
-            if(p->getColour() == WHITE) {
-                setState(board[1-1]['h'-'a']->piece, 'f', 1);
-            } else {
-                setState(board[8-1]['h'-'a']->piece, 'f', 8);
-            }
-        }
+    if (p->getType() == 'K' || p->getType() == 'k') {
         currentPlayer->kingPosition = {cPos, iPos};
-    } else if (type == 'p' || type == 'P') {
-        // Handle pawn promotion
-        if ((p->getColour() == WHITE && iPos == 8) || (p->getColour() == BLACK && iPos == 1)) {
-            // Move the current pawn to inactivePieces
-            auto& activePieces = currentPlayer->activePieces;
-            auto it = std::find_if(activePieces.begin(), activePieces.end(),
-                [&p](const std::unique_ptr<Piece>& piece) {
-                    return piece.get() == p;
-                });
-            if (it != activePieces.end()) {
-                currentPlayer->inactivePieces.push_back(std::move(*it));
-                activePieces.erase(it);
-            }
-            std::string combinedP(1, cPos);  // Create a string with the first char
-            combinedP += (char)iPos;              
-            addPiece(pawnPromote, combinedP);
-            board[iPos - 1][cPos - 'a']->piece = p;
-            p->setPos(cPos, iPos);
-            return;
-        }
     }
 
-    Piece* capturePiece = board[iPos - 1][cPos - 'a']->piece;
-    if(capturePiece) {
-        auto& activePieces = currentPlayer->activePieces;
-        auto it = std::find_if(activePieces.begin(), activePieces.end(),
-            [&capturePiece](const std::unique_ptr<Piece>& piece) {
-                return piece.get() == capturePiece;
-            });
-        if (it != activePieces.end()) {
-            currentPlayer->inactivePieces.push_back(std::move(*it));
-            activePieces.erase(it);
-        }
+    board[iPos - 1][cPos - 'a'].piece = p;
+    if (p) {
+        p->setPos(cPos, iPos);
+        p->hasMoved = true;
     }
-
-    board[iPos - 1][cPos - 'a']->piece = p;
-    p->setPos(cPos, iPos);
-    p->hasMoved = true;
 }
 
 bool BoardDisplay::canCapture(Colour pieceColour, char cPos, int iPos) {
-    
+    Piece* piece = getBoardInfo(cPos, iPos);
+    return piece && piece->getColour() != pieceColour;
 }
 
 bool BoardDisplay::canCastle(Colour c) {
-    if(customSetup) return false;
+    if (customSetup) return false;
 
-    if(c == WHITE) {
-        Piece* potentialKing = board[1-1]['e'-'a']->piece;
-        Piece* potentialRook = board[1-1]['h'-'a']->piece;
-        if(!potentialKing && potentialKing->getType() != 'K' && !potentialKing->hasMoved) 
-            return false;
-        else if(!potentialRook && potentialRook->getType() != 'R' && !potentialRook->hasMoved) 
-            return false;
-        else if (board[1-1]['f'-'a']->piece != nullptr || board[1-1]['g'-'a']->piece != nullptr) 
-            return false;
+    if (c == WHITE) {
+        Piece* king = getBoardInfo('e', 1);
+        Piece* rook = getBoardInfo('h', 1);
+        if (!king || king->getType() != 'K' || king->hasMoved) return false;
+        if (!rook || rook->getType() != 'R' || rook->hasMoved) return false;
+        if (getBoardInfo('f', 1) || getBoardInfo('g', 1)) return false;
     } else {
-        Piece* potentialKing = board[8-1]['e'-'a']->piece;
-        Piece* potentialRook = board[8-1]['h'-'a']->piece;
-        if(!potentialKing && potentialKing->getType() != 'k' && !potentialKing->hasMoved) 
-            return false;
-        else if(!potentialRook && potentialRook->getType() != 'r' && !potentialRook->hasMoved) 
-            return false;
-        else if (board[8-1]['f'-'a']->piece != nullptr || board[8-1]['g'-'a']->piece != nullptr) 
-            return false;
+        Piece* king = getBoardInfo('e', 8);
+        Piece* rook = getBoardInfo('h', 8);
+        if (!king || king->getType() != 'k' || king->hasMoved) return false;
+        if (!rook || rook->getType() != 'r' || rook->hasMoved) return false;
+        if (getBoardInfo('f', 8) || getBoardInfo('g', 8)) return false;
     }
 
     return true;
 }
 
-
 Colour BoardDisplay::occupied(char c, int i) {
     Piece* p = getBoardInfo(c, i);
-    if(p) return p->getColour();
-    else return NULL_C;
+    if (p) return p->getColour();
+    return NULL_C;
 }
+
 
 bool BoardDisplay::simulateAttack(Piece* p, char newC, int newI, Piece* checkAttack) {
     pair<char, int> currentPosition = p->getPosition();
@@ -216,8 +165,8 @@ bool BoardDisplay::simulateAttack(Piece* p, char newC, int newI, Piece* checkAtt
     setState(p, newC, newI);
     setState(nullptr, currentPosition.first, currentPosition.second);
 
-    PlayerInfo* currentPlayer = (p->getColour() == BLACK) ? blackPlayer.get() : whitePlayer.get();
-    PlayerInfo* oppositePlayer = (p->getColour() == BLACK) ? whitePlayer.get() : blackPlayer.get();
+    PlayerInfo* currentPlayer = (p->getColour() == BLACK) ? blackPlayer : whitePlayer;
+    PlayerInfo* oppositePlayer = (p->getColour() == BLACK) ? whitePlayer : blackPlayer;
 
     bool canBeAttacked = false;
     bool originalCheckState = currentPlayer->inCheck;
@@ -241,96 +190,84 @@ bool BoardDisplay::simulateAttack(Piece* p, char newC, int newI, Piece* checkAtt
 }
 
 bool BoardDisplay::inCheck(Colour c) {
-    PlayerInfo* currentPlayer = (c == BLACK) ? blackPlayer.get() : whitePlayer.get();
-    PlayerInfo* oppositePlayer = (c == BLACK) ? whitePlayer.get() : blackPlayer.get();
+    PlayerInfo* currentPlayer = (c == BLACK) ? blackPlayer : whitePlayer;
+    PlayerInfo* oppositePlayer = (c == BLACK) ? whitePlayer : blackPlayer;
 
-    bool inCheck = false;
-    for(auto& p : oppositePlayer->activePieces) {
-        if(p.get()->isValidMove(currentPlayer->kingPosition.first, currentPlayer->kingPosition.second)) inCheck = true;
+    for (auto& p : oppositePlayer->activePieces) {
+        if (p->isValidMove(currentPlayer->kingPosition.first, currentPlayer->kingPosition.second)) return true;
     }
-    return inCheck;
+    return false;
 }
+
 
 bool BoardDisplay::inCheckmate(Colour c) {
-    PlayerInfo* currentPlayer = (c == BLACK) ? blackPlayer.get() : whitePlayer.get();
-    bool allEmpty = true;
-    for(auto& p : currentPlayer->activePieces) {
-        p.get()->generateMoves();
-        if(!p.get()->validPosVec.empty()) allEmpty = false;
-    }
-    return allEmpty;
-}
-bool BoardDisplay::inStalemate(Colour c) {
-    // king is not in check since that would get triggered in checkmate
-    // no piece can be moved without putting the king in check 
-    // need to check to see if all no valid pos moves exist
-    if (inCheck(c)){
-        return false;
-    }
-    PlayerInfo* currentPlayer = (c == BLACK) ? blackPlayer.get() : whitePlayer.get();
-    for (auto& p : currentPlayer -> activePieces){
-         if(!p->validPosVec.empty()) {
-            return false;
-         }
+    PlayerInfo* currentPlayer = (c == BLACK) ? blackPlayer : whitePlayer;
+    for (auto& p : currentPlayer->activePieces) {
+        p->generateMoves();
+        if (!p->validPosVec.empty()) return false;
     }
     return true;
 }
 
-void BoardDisplay::setUpGame(){
-        string setupCommand;
-        while(cin >> setupCommand) {
-            if(setupCommand == "+"){
-                char addnewPiece;
-                string addPos;
-                cin >> addnewPiece >> addPos;
-                addPiece(addnewPiece, addPos);
-            }
-            else if(setupCommand == "-"){
-                string removePos;
-                cin >> removePos;
-                removePiece(removePos);
-            }
-            else if(setupCommand == "="){
-                string colour;
-                cin >> colour;
-                if(colour == "WHITE"){
-                   getCurrentTurn = WHITE;
-                }
-                if(colour == "Black"){
-                    getCurrentTurn = BLACK;
-                }
-            }
-            else if(setupCommand == "done"){
-                break;
-            }
-        }
-}
-void BoardDisplay::resign(Colour c) {
-    //if black resigns, then white gets +1 score and game ends vice versa if white resigns
-    PlayerInfo* winningPlayer = (c == BLACK) ? whitePlayer.get() : blackPlayer.get();
-    winningPlayer->score++;
+    // king is not in check since that would get triggered in checkmate
+    // no piece can be moved without putting the king in check 
+    // need to check to see if all no valid pos moves exist
+bool BoardDisplay::inStalemate(Colour c) {
+    if (inCheck(c)) return false;
 
+    PlayerInfo* currentPlayer = (c == BLACK) ? blackPlayer : whitePlayer;
+    for (auto& p : currentPlayer->activePieces) {
+        if (!p->validPosVec.empty()) return false;
+    }
+    return true;
+}
+
+
+void BoardDisplay::setUpGame() {
+    string setupCommand;
+    while (cin >> setupCommand) {
+        if (setupCommand == "+") {
+            char addnewPiece;
+            string addPos;
+            cin >> addnewPiece >> addPos;
+            addPiece(addnewPiece, addPos);
+        } else if (setupCommand == "-") {
+            string removePos;
+            cin >> removePos;
+            removePiece(removePos);
+        } else if (setupCommand == "=") {
+            string colour;
+            cin >> colour;
+            getCurrentTurn = (colour == "WHITE") ? WHITE : BLACK;
+        } else if (setupCommand == "done") {
+            break;
+        }
+    }
+}
+
+//if black resigns, then white gets +1 score and game ends vice versa if white resigns
+void BoardDisplay::resign(Colour c) {
+    PlayerInfo* winningPlayer = (c == BLACK) ? whitePlayer : blackPlayer;
+    winningPlayer->score++;
     endGame();
     notifyObservers();
-
 }
 
 void BoardDisplay::PlayerInfo::reset() {
     inCheck = false;
-    kingPosition = (colour == WHITE) ? make_pair('e', 1) :  make_pair('e', 8);
+    kingPosition = (colour == WHITE) ? make_pair('e', 1) : make_pair('e', 8);
 }
 
+
 void BoardDisplay::endGame() {
-    //need to reset the player info 
-    for(int i = 0; i < 8; ++i) {
-        for(int j = 0; j < 8; ++j) {
-            board[i][j] -> setBegin();
+    for (int i = 0; i < 8; ++i) {
+        for (int j = 0; j < 8; ++j) {
+            board[i][j].setBegin();
         }
     }
-
-    getWhitePlayer()->reset();
-    getBlackPlayer()->reset();
-
+    whitePlayer->reset();
+    blackPlayer->reset();
+    customSetup = false;
     notifyObservers();
 }
 
@@ -340,22 +277,22 @@ void BoardDisplay::endSession() {
 
 
 BoardDisplay::PlayerInfo* BoardDisplay::getWhitePlayer() {
-    return whitePlayer.get();
+    return whitePlayer;
 }
 
 BoardDisplay::PlayerInfo* BoardDisplay::getBlackPlayer() {
-    return blackPlayer.get();
+    return blackPlayer;
 }
 
 BoardDisplay::PlayerInfo* BoardDisplay::getCurrentPlayer() {
-    return getCurrentTurn == WHITE ? whitePlayer.get() : blackPlayer.get();
+    return getCurrentTurn == WHITE ? whitePlayer : blackPlayer;
 }
 
 void BoardDisplay::addWhitePlayer(string playerType) {
-    whitePlayer = make_unique<PlayerInfo>(WHITE, 'e', 'f', playerType);
+    whitePlayer = new PlayerInfo(WHITE, 'e', 'f', playerType);
 }
 
 void BoardDisplay::addBlackPlayer(string playerType) {
-    blackPlayer = make_unique<PlayerInfo>(BLACK, 'e', 'f', playerType);
+    blackPlayer = new PlayerInfo(BLACK, 'e', 'f', playerType);
         
 }
