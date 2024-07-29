@@ -1,7 +1,6 @@
 #include "knight.h"
 
 Knight::Knight(Colour colour, BoardDisplay *board, char cPos, int iPos): Piece(colour, 'n', board, cPos, iPos, 3)  {
-    setPos(cPos, iPos);
 }
 
 bool Knight::isValidMove(char newC, int newI) {

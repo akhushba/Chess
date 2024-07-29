@@ -1,7 +1,6 @@
 #include "queen.h"
 
 Queen::Queen(Colour colour, BoardDisplay *board, char cPos, int iPos): Piece(colour, 'q', board, cPos, iPos, 9) {
-    Piece::setPos(cPos, iPos);
 }
 
 bool Queen::isValidMove(char newC, int newI) {
