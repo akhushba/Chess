@@ -161,19 +161,14 @@ void BoardDisplay::removePiece(string pos) {
 }
 
 void BoardDisplay::setState(Piece* p, char cPos, int iPos, char pawnPromote) {
-    // cout << "HERE " << endl;
-    PlayerInfo* currentPlayer = (p->getColour() == BLACK) ? blackPlayer : whitePlayer;
+    if (p) {
+        PlayerInfo* currentPlayer = (p->getColour() == BLACK) ? blackPlayer : whitePlayer;
+        if (p->getType() == 'K' || p->getType() == 'k') {
+            currentPlayer->kingPosition = {cPos, iPos};
 
-    if (p->getType() == 'K' || p->getType() == 'k') {
-        currentPlayer->kingPosition = {cPos, iPos};
-
+        }
     }
-    board[iPos - 1][cPos - 'a']->piece = p;
-    // if (p != nullptr) {
-    //     p->setPos(cPos, iPos);
-    //     p->hasMoved = true;
-    // }
-    // cout << "END " << endl;
+     board[iPos - 1][cPos - 'a']->piece = p;
 }
 
 bool BoardDisplay::canCapture(Colour pieceColour, char cPos, int iPos) {
@@ -420,13 +415,14 @@ bool BoardDisplay::checkValid(Piece* p, char cPos, int iPos){
         }
 
     }
-    // simulateAttack2(p, cPos, iPos);
+    simulateAttack2(p, cPos, iPos);
     // run in check simulation
     return true;
 }
 
 bool BoardDisplay::simulateAttack2(Piece* p, char newC, int newI, Piece* checkAttack) {
     pair<char, int> currentPosition = p->getPosition();
+    bool canBeAttacked = false;
 
     Piece* tempCapture = getBoardInfo(newC, newI);
     setState(p, newC, newI);
@@ -435,7 +431,6 @@ bool BoardDisplay::simulateAttack2(Piece* p, char newC, int newI, Piece* checkAt
     PlayerInfo* currentPlayer = (p->getColour() == BLACK) ? blackPlayer : whitePlayer;
     PlayerInfo* oppositePlayer = (p->getColour() == BLACK) ? whitePlayer : blackPlayer;
 
-    bool canBeAttacked = false;
     bool originalCheckState = currentPlayer->inCheck;
     currentPlayer->inCheck = false;
 
