@@ -41,6 +41,43 @@ void BoardDisplay::init() {
     whitePlayer = new PlayerInfo(Colour::WHITE, 'e', 1);
     blackPlayer = new PlayerInfo(Colour::BLACK, 'e', 8);
     getCurrentTurn = WHITE;
+
+    // White pieces
+    addPiece('R', "a1"); // Rook
+    addPiece('N', "b1"); // Knight
+    addPiece('B', "c1"); // Bishop
+    addPiece('Q', "d1"); // Queen
+    addPiece('K', "e1"); // King
+    addPiece('B', "f1"); // Bishop
+    addPiece('N', "g1"); // Knight
+    addPiece('R', "h1"); // Rook
+    addPiece('P', "a2"); // Pawns
+    addPiece('P', "b2");
+    addPiece('P', "c2");
+    addPiece('P', "d2");
+    addPiece('P', "e2");
+    addPiece('P', "f2");
+    addPiece('P', "g2");
+    addPiece('P', "h2");
+
+    // Black pieces
+    addPiece('r', "a8"); // Rook
+    addPiece('n', "b8"); // Knight
+    addPiece('b', "c8"); // Bishop
+    addPiece('q', "d8"); // Queen
+    addPiece('k', "e8"); // King
+    addPiece('b', "f8"); // Bishop
+    addPiece('n', "g8"); // Knight
+    addPiece('r', "h8"); // Rook
+    addPiece('p', "a7"); // Pawns
+    addPiece('p', "b7");
+    addPiece('p', "c7");
+    addPiece('p', "d7");
+    addPiece('p', "e7");
+    addPiece('p', "f7");
+    addPiece('p', "g7");
+    addPiece('p', "h7");
+
 }
 
 Piece* BoardDisplay::getBoardInfo(char c, int i) {
