@@ -89,6 +89,7 @@ public:
         if(getCurrentTurn== BLACK){
             return blackPlayer.get();
         }
+        return 0;
     }
 
     void addWhitePlayer(string playerType) {
