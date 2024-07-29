@@ -33,7 +33,7 @@ bool Queen::isValidMove(char newC, int newI) {
     }
 
     // Ensure the move doesn't put the player's king in check
-    if (boardInfo->simulateInCheck(this, newC, newI)) return false;
+    if (boardInfo->simulateAttack(this, newC, newI)) return false;
 
     return true;
 }

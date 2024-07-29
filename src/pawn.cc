@@ -21,8 +21,8 @@ bool Pawn::isValidMove(char newC, int newI) {
     else if(newC == cPos && boardInfo->occupied(newC, newI) != NULL_C)
         return false;
 
-    //avoid being in check logic, simulateInCheck returns true if King is in check
-    if(boardInfo->simulateInCheck(this, newC, newI)) return false;
+    //avoid being in check logic, simulateAttack returns true if King is in check
+    if(boardInfo->simulateAttack(this, newC, newI)) return false;
     return true;
 }
 

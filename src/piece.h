@@ -33,9 +33,9 @@ public:
     virtual void generateMoves() = 0;
     void setPos(char c, int i);
     void setActiveStatus(bool state);
+    Piece* capture(char c, int i);
     Player* getOpponent();
     int getPieceValue();
-    Piece* capture(char newC, int newI);
 
     std::pair<char, int> getPosition() const { return {cPos, iPos}; }
     Colour getColour() const { return colour; }

@@ -14,5 +14,3 @@ void Human::move(Piece* p, char c, int i) {
         // p->setPos(c, i);
     }
 }
-
-Human::~Human() {}
