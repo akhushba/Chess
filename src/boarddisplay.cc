@@ -16,43 +16,72 @@
 #include "levelThree.h"
 #include "levelFour.h"
 
+#include "textdisplay.h"
+#include "graphicsdisplay.h"
+
 BoardDisplay::BoardSegment::BoardSegment(Colour c) : colour{c}, piece{nullptr} {}
 
 void BoardDisplay::BoardSegment::setBegin() {
     piece = nullptr;
 }
 
-BoardDisplay::PlayerInfo::PlayerInfo(Colour c, char kingC, int kingI, string playerType)
+BoardDisplay::PlayerInfo::PlayerInfo(Colour c, char kingC, int kingI)
     : player(nullptr), score{0}, colour{c}, inCheck{false}, kingPosition{kingC, kingI} {
-    if (playerType == "human") {
-        player = new Human("human", {});
-    } else if (playerType == "computer1") {
-        player = new LevelOne("level one", {});
-    } else if (playerType == "computer2") {
-        player = new LevelTwo("level two", {});
-    } else if (playerType == "computer3") {
-        player = new LevelThree("level three", {});
-    } else if (playerType == "computer4") {
-        player = new LevelFour("level four", {});
-    }
 }
 
 // Initialize the board
 void BoardDisplay::init() {
     for (int i = 0; i < 8; ++i) {
         for (int j = 0; j < 8; ++j) {
-            Colour segmentColor = ((i + j) % 2 == 0) ? WHITE : BLACK;
-            board[i][j] = BoardSegment(segmentColor);
+            Colour segmentColor = ((i + j) % 2 == 0) ? BLACK : WHITE;
+            board[i][j] = new BoardSegment(segmentColor);
         }
     }
 
-    whitePlayer = new PlayerInfo(Colour::WHITE, 'e', 1, "human");
-    blackPlayer = new PlayerInfo(Colour::BLACK, 'e', 8, "human");
+    whitePlayer = new PlayerInfo(Colour::WHITE, 'e', 1);
+    blackPlayer = new PlayerInfo(Colour::BLACK, 'e', 8);
     getCurrentTurn = WHITE;
+
+    // White pieces
+    addPiece('R', "a1"); // Rook
+    addPiece('N', "b1"); // Knight
+    addPiece('B', "c1"); // Bishop
+    addPiece('Q', "d1"); // Queen
+    addPiece('K', "e1"); // King
+    addPiece('B', "f1"); // Bishop
+    addPiece('N', "g1"); // Knight
+    addPiece('R', "h1"); // Rook
+    addPiece('P', "a2"); // Pawns
+    addPiece('P', "b2");
+    addPiece('P', "c2");
+    addPiece('P', "d2");
+    addPiece('P', "e2");
+    addPiece('P', "f2");
+    addPiece('P', "g2");
+    addPiece('P', "h2");
+
+    // Black pieces
+    addPiece('r', "a8"); // Rook
+    addPiece('n', "b8"); // Knight
+    addPiece('b', "c8"); // Bishop
+    addPiece('q', "d8"); // Queen
+    addPiece('k', "e8"); // King
+    addPiece('b', "f8"); // Bishop
+    addPiece('n', "g8"); // Knight
+    addPiece('r', "h8"); // Rook
+    addPiece('p', "a7"); // Pawns
+    addPiece('p', "b7");
+    addPiece('p', "c7");
+    addPiece('p', "d7");
+    addPiece('p', "e7");
+    addPiece('p', "f7");
+    addPiece('p', "g7");
+    addPiece('p', "h7");
+
 }
 
 Piece* BoardDisplay::getBoardInfo(char c, int i) {
-    return board[i - 1][c - 'a'].piece;
+    return board[i - 1][c - 'a']->piece;
 }
 
 void BoardDisplay::attach(Observer* o) {
@@ -68,18 +97,21 @@ void BoardDisplay::notifyObservers() {
 }
 
 char BoardDisplay::getState(int row, int col) const {
-    if (!board[row][col].piece) {
-        return board[row][col].colour == BLACK ? '_' : ' ';
+    if (!board[row][col]->piece) {
+        return board[row][col]->colour == BLACK ? '_' : ' ';
     }
-    return board[row][col].piece->getType();
+    return board[row][col]->piece->getType();
 }
 
 void BoardDisplay::addPiece(char type, string pos) {
     Colour c = std::islower(type) ? BLACK : WHITE;
     char cPos = pos[0];
     int iPos = pos[1] - '0';
-
+    int countWhite;
+    int countBlack;
     Piece* newPiece = nullptr;
+    if(cPos < 'a' || cPos > 'h' || iPos < 1 || iPos > 8) 
+        return;
     if (type == 'Q' || type == 'q') {
         newPiece = new Queen(c, nullptr, cPos, iPos);
     } else if (type == 'R' || type == 'r') {
@@ -89,9 +121,33 @@ void BoardDisplay::addPiece(char type, string pos) {
     } else if (type == 'N' || type == 'n') {
         newPiece = new Knight(c, nullptr, cPos, iPos);
     } else if (type == 'K' || type == 'k') {
+        if(c == BLACK && countBlack == 1 || c == WHITE && countWhite ==1){
+            cout << "invalid number of kings"<<endl;
+            return;
+        }
+        if (inCheck(c)){
+            cout<<"invalid, king is incheck"<<endl;
+        }
         newPiece = new King(c, nullptr, cPos, iPos);
-    } else if (type == 'P' || type == 'p') {
+        if (c == WHITE){
+            countWhite += 1;
+        }
+        else{
+            countBlack += 1;    
+        }  
+
+        //need to make sure neither kings are in check
+        //exactly one black king and one white king
+
+    }  else if (type == 'P' || type == 'p') {
+        cout << "AHHAFHAHSD \t" << cPos << iPos << endl;
+        if('a' <= cPos && cPos >= 'h' && 2 <= iPos && iPos >= 7){
+        //ensure that no pawns are in the first or last row of board
         newPiece = new Pawn(c, nullptr, cPos, iPos);
+        }
+        else{
+            cout<<"invalid placement of pawn"<<endl;
+        }
     }
 
     PlayerInfo* currentPlayer = (c == BLACK) ? blackPlayer : whitePlayer;
@@ -100,7 +156,7 @@ void BoardDisplay::addPiece(char type, string pos) {
 }
 
 void BoardDisplay::removePiece(string pos) {
-    Piece* p = board[pos[1] - '0' - 1][pos[0] - 'a'].piece;
+    Piece* p = board[pos[1] - '0' - 1][pos[0] - 'a']->piece;
     if (p) {
         PlayerInfo* currentPlayer = (p->getColour() == BLACK) ? blackPlayer : whitePlayer;
         auto& activePieces = currentPlayer->activePieces;
@@ -119,7 +175,7 @@ void BoardDisplay::setState(Piece* p, char cPos, int iPos, char pawnPromote) {
         currentPlayer->kingPosition = {cPos, iPos};
     }
 
-    board[iPos - 1][cPos - 'a'].piece = p;
+    board[iPos - 1][cPos - 'a']->piece = p;
     if (p) {
         p->setPos(cPos, iPos);
         p->hasMoved = true;
@@ -240,8 +296,10 @@ void BoardDisplay::setUpGame() {
             cin >> colour;
             getCurrentTurn = (colour == "WHITE") ? WHITE : BLACK;
         } else if (setupCommand == "done") {
+            notifyObservers();
             break;
         }
+        notifyObservers();
     }
 }
 
@@ -262,7 +320,7 @@ void BoardDisplay::PlayerInfo::reset() {
 void BoardDisplay::endGame() {
     for (int i = 0; i < 8; ++i) {
         for (int j = 0; j < 8; ++j) {
-            board[i][j].setBegin();
+            board[i][j]->setBegin();
         }
     }
     whitePlayer->reset();
@@ -276,6 +334,12 @@ void BoardDisplay::endSession() {
 }
 
 
+void BoardDisplay::makeMove(Colour c, string oldPos, string newPos){
+        PlayerInfo* currentPlayer = (c == BLACK) ? blackPlayer : whitePlayer;
+        Piece* p = getBoardInfo(oldPos[0], (int)oldPos[1]);
+        currentPlayer->player->move(p, newPos[0], (int)newPos[1]);
+}
+
 BoardDisplay::PlayerInfo* BoardDisplay::getWhitePlayer() {
     return whitePlayer;
 }
@@ -288,11 +352,30 @@ BoardDisplay::PlayerInfo* BoardDisplay::getCurrentPlayer() {
     return getCurrentTurn == WHITE ? whitePlayer : blackPlayer;
 }
 
-void BoardDisplay::addWhitePlayer(string playerType) {
-    whitePlayer = new PlayerInfo(WHITE, 'e', 'f', playerType);
+BoardDisplay::BoardDisplay() {
+    init();
+    attach(new TextDisplay(this));
+    notifyObservers();
+
 }
 
-void BoardDisplay::addBlackPlayer(string playerType) {
-    blackPlayer = new PlayerInfo(BLACK, 'e', 'f', playerType);
-        
+void BoardDisplay::setPlayer(Colour c, string playerType) {
+    Player* p = c == WHITE ? whitePlayer->player : blackPlayer->player;
+    if(p) delete p;
+    if (playerType == "human") {
+        p = new Human("human", {});
+    } else if (playerType == "computer1") {
+        p = new LevelOne("level one", {});
+    } else if (playerType == "computer2") {
+        p = new LevelTwo("level two", {});
+    } else if (playerType == "computer3") {
+        p = new LevelThree("level three", {});
+    } else if (playerType == "computer4") {
+        p = new LevelFour("level four", {});
+    }
+}
+
+void BoardDisplay::setPlayers(string playerOne, string playerTwo) {
+    setPlayer(WHITE, playerOne);
+    setPlayer(BLACK, playerTwo);
 }
