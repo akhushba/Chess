@@ -45,7 +45,7 @@ public:
     BoardSegment* board[8][8];
     PlayerInfo* whitePlayer = nullptr; 
     PlayerInfo* blackPlayer = nullptr; 
-    Colour getCurrentTurn= WHITE;
+    Colour getCurrentTurn = WHITE;
 
     void defaultBoard();
     Piece* getBoardInfo(char c, int i);
@@ -76,7 +76,7 @@ public:
     bool simulateInCheck(Piece* p, char newC, int newI);
     bool canCastle(Colour c);
     void setPlayers(string playerOne, string playerTwo);
-    void setPlayer(Colour c, string playerType);
+    Player* setPlayer(Colour c, string playerType);
 
     bool inCheck(Colour c);
     bool inCheckmate(Colour c);
