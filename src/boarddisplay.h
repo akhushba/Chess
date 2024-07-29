@@ -51,6 +51,8 @@ public:
             std::vector<std::unique_ptr<Piece>> activePieces;
             std::vector<std::unique_ptr<Piece>> inactivePieces;
 
+            void reset();
+
             PlayerInfo(Colour c, char kingC, int kingI, std::string playerType);
             ~PlayerInfo() = default;
     };

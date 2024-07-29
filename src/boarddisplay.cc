@@ -23,7 +23,7 @@ void BoardDisplay::BoardSegment::setBegin() {
     piece = nullptr;
 }
 
-BoardDisplay::PlayerInfo::PlayerInfo(Colour c, char kingC, int kingI, std::string playerType)
+BoardDisplay::PlayerInfo::PlayerInfo(Colour c, char kingC, int kingI, string playerType)
                 : score{0}, colour{c}, inCheck{false} {
     if(playerType == "human") {
 
@@ -47,8 +47,8 @@ void BoardDisplay::init() {
         }
     }
 
-    whitePlayer = std::make_unique<PlayerInfo>(Colour::WHITE, 'e', 1);
-    blackPlayer = std::make_unique<PlayerInfo>(Colour::BLACK, 'e', 8);
+    whitePlayer = std::make_unique<PlayerInfo>(Colour::WHITE, 'e', 1, 'human');
+    blackPlayer = std::make_unique<PlayerInfo>(Colour::BLACK, 'e', 8, 'human');
     getCurrentTurn = WHITE;
 }
 
@@ -315,6 +315,11 @@ void BoardDisplay::resign(Colour c) {
 
 }
 
+void BoardDisplay::PlayerInfo::reset() {
+    inCheck = false;
+    kingPosition = (colour == WHITE) ? make_pair('e', 1) :  make_pair('e', 8);
+}
+
 void BoardDisplay::endGame() {
     //need to reset the player info 
     for(int i = 0; i < 8; ++i) {
@@ -323,8 +328,10 @@ void BoardDisplay::endGame() {
             board[i][j] -> setBegin();
         }
     }
-    std::unique_ptr<PlayerInfo> resetPlayerWhite = std::make_unique<PlayerInfo>(Colour::WHITE, 'e', 1);
-    std::unique_ptr<PlayerInfo> resetPlayerBlack = std::make_unique<PlayerInfo>(Colour::BLACK, 'e', 8);
+
+
+    getWhitePlayer()->reset();
+    getBlackPlayer()->reset();
 
     notifyObservers();
 }
