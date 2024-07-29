@@ -5,7 +5,7 @@
 
 class King : public Piece {
     public:
-        King(Colour colour, Chessboard *board, char cPos, int iPos);
+        King(Colour colour, BoardDisplay *board, char cPos, int iPos);
         bool isValidMove(char newC, int newI) override;
         void generateMoves() override;
         ~King() override = default;

@@ -1,7 +1,7 @@
 #include "rook.h"
 #include <cstdlib>
 
-Rook::Rook(Colour colour, Chessboard *board, char cPos, int iPos) : Piece(colour, 'r', board, cPos, iPos, 5) {
+Rook::Rook(Colour colour, BoardDisplay *board, char cPos, int iPos) : Piece(colour, 'r', board, cPos, iPos, 5) {
 }
 
 bool Rook::isValidMove(char newC, int newI) {
@@ -13,7 +13,7 @@ bool Rook::isValidMove(char newC, int newI) {
     //make sure we're moving horizontally or vertically
     else if (newC != cPos && newI != iPos) return false;
     // Final position must not have a piece of the same colour
-    if (board->occupied(newC, newI) == colour) return false;
+    if (boardInfo->occupied(newC, newI) == colour) return false;
 
     int colStep = (newC == cPos) ? 0 : (newC > cPos) ? 1 : -1;
     int rowStep = (newC == cPos) ? 0 : (newI > iPos) ? 1 : -1;
@@ -25,7 +25,7 @@ bool Rook::isValidMove(char newC, int newI) {
         currentCol += colStep;
         currentRow += rowStep;
         
-        if (board->occupied(currentCol, currentRow) == colour) return false;
+        if (boardInfo->occupied(currentCol, currentRow) == colour) return false;
     }
 
     if(boardInfo->simulateInCheck(this, newC, newI)) return false;

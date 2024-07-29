@@ -1,6 +1,6 @@
 #include "king.h"
 
-King::King(Colour colour, Chessboard*board, char cPos, int iPos) : Piece(colour, 'k', board, iPos, cPos, 10) {
+King::King(Colour colour, BoardDisplay*board, char cPos, int iPos) : Piece(colour, 'k', board, iPos, cPos, 10) {
 }
 
 bool King::isValidMove(char newC, int newI) {
@@ -14,7 +14,7 @@ bool King::isValidMove(char newC, int newI) {
     //can only move a differnce of 1 from its origianl position
     else if(abs(newC - cPos) != 1 && abs(newI - iPos) != 1) return false;
     //cant move to position occupied by its own colour
-    else if (board->occupied(newC, newI) == colour) return false;
+    else if (boardInfo->occupied(newC, newI) == colour) return false;
     
     if(boardInfo->simulateInCheck(this, newC, newI)) return false;
     return true;

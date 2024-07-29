@@ -1,7 +1,7 @@
 #include "bishop.h"
 #include "piece.h"
 
-Bishop::Bishop(Colour colour, Chessboard *board, char cPos, int iPos): Piece(colour, 'b', board, cPos, iPos, 3)  {
+Bishop::Bishop(Colour colour, BoardDisplay *board, char cPos, int iPos): Piece(colour, 'b', board, cPos, iPos, 3)  {
 }
 
 bool Bishop::isValidMove(char newC, int newI) {
@@ -14,7 +14,7 @@ bool Bishop::isValidMove(char newC, int newI) {
     if (abs(newC - cPos) != abs(newI - iPos) && newC != cPos && newI != iPos)
         return false;
     // Final position must not have a piece of the same colour
-    if (board->occupied(newC, newI) == colour) return false;
+    if (boardInfo->occupied(newC, newI) == colour) return false;
 
     int colStep = (newC > cPos) ? 1 : -1;
     int rowStep = (newI > iPos) ? 1 : -1;
@@ -26,7 +26,7 @@ bool Bishop::isValidMove(char newC, int newI) {
         currentCol += colStep;
         currentRow += rowStep;
         
-        if (board->occupied(currentCol, currentRow) == colour) return false;
+        if (boardInfo->occupied(currentCol, currentRow) == colour) return false;
     }
 
     if(boardInfo->simulateInCheck(this, newC, newI)) return false;

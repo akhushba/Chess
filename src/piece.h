@@ -5,12 +5,10 @@
 #include <tuple>
 #include <utility>
 #include "colour.h"
-#include "chessboard.h"
 #include "boarddisplay.h"
 
 using namespace std;
 
-class Chessboard;
 class BoardDisplay;
 class Player;
 
@@ -19,7 +17,6 @@ protected:
     tuple<char, int> getCoordinate(char c, int i);
 
     bool active;
-    Chessboard *board;
     BoardDisplay *boardInfo;
     const Colour colour;
     const char type;
@@ -30,7 +27,7 @@ protected:
     
 public:
     bool hasMoved = false;
-    Piece(Colour colour, char type, Chessboard *board, char cPos, int iPos, int pieceValue);
+    Piece(Colour colour, char type, BoardDisplay *board, char cPos, int iPos, int pieceValue);
 
     vector<tuple<char, int>> validPosVec;
     virtual bool isValidMove(char c, int i) = 0;

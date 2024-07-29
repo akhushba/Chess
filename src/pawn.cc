@@ -1,6 +1,6 @@
 #include "pawn.h"
 
-Pawn::Pawn(Colour colour, Chessboard *board, char cPos, int iPos): Piece(colour, 'p', board, cPos, iPos, 1)  {
+Pawn::Pawn(Colour colour, BoardDisplay *board, char cPos, int iPos): Piece(colour, 'p', board, cPos, iPos, 1)  {
     setPos(cPos, iPos);
 }
 

@@ -4,8 +4,8 @@
 
 using namespace std;
 
-Piece::Piece(Colour colour, char type, Chessboard *board, char cPos, int iPos, int pieceValue) 
-    : colour{colour}, board{board}, cPos{cPos}, iPos{iPos}, pieceValue{pieceValue}, 
+Piece::Piece(Colour colour, char type, BoardDisplay *board, char cPos, int iPos, int pieceValue) 
+    : colour{colour}, boardInfo{boardInfo}, cPos{cPos}, iPos{iPos}, pieceValue{pieceValue}, 
       type{colour == BLACK ? type : static_cast<char>(type - 32)} {
     active = true;
 }
@@ -24,9 +24,9 @@ void Piece::setActiveStatus(bool newStatus) {
 
 Player* Piece::getOpponent() {
     if (colour == WHITE) {
-        return board->getBlackPlayer();
+        return boardInfo->getBlackPlayer()->player.get();
     } else if (colour == BLACK) {
-        return board->getWhitePlayer();
+        return boardInfo->getWhitePlayer()->player.get();
     }
 }
 
