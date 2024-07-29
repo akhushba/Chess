@@ -389,11 +389,11 @@ void BoardDisplay::setPlayers(string playerOne, string playerTwo) {
 bool BoardDisplay::checkValid(Piece* p, char cPos, int iPos){
     vector<pair<char,int>> possible = p->generate();
 
-    // //find pair <cpos,iPos>
-    // auto foundPair = findPair(possible, cPos, iPos);
-    // if (foundPair.first == 'i') {
-    //     return false;
-    // }
+    //find pair <cpos,iPos>
+    auto foundPair = findPair(possible, cPos, iPos);
+    if (foundPair.first == 'i') {
+        return false;
+    }
     // if(p->getType() == 'N') {
     //     //only check end
     //     if(occupied(cPos, iPos) == p->getColour()) return false;
@@ -459,8 +459,8 @@ bool BoardDisplay::simulateAttack2(Piece* p, char newC, int newI, Piece* checkAt
 
 std::pair<char, int> BoardDisplay::findPair(const std::vector<std::pair<char, int>>& vec, char cPos, int iPos) {
     for (const auto& pair : vec) {
+        cout << pair.first << pair.second << endl;
         if (pair.first == cPos && pair.second == iPos) {
-            cout << pair.first << pair.second << endl;
             return pair;
         }
     }
