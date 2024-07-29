@@ -8,9 +8,8 @@
 #include <vector>
 
 #include "subject.h"
-
+#include "colour.h"
 class Subject;
-enum Colour;
 class Piece;
 class Player;
 
@@ -30,7 +29,6 @@ class LevelFour;
 using namespace std;
 
 class Piece;
-
 class BoardDisplay final: public Subject {
     bool customSetup;
     struct BoardSegment {
