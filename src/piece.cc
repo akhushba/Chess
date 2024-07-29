@@ -23,3 +23,7 @@ int Piece::getPieceValue() {
 }
 
 bool Piece::isValidMove(char c, int i) {}
+
+Piece* Piece::capture(char newC, int newI) {
+    // return boardInfo->getBoardInfo(newC, newI);
+}
