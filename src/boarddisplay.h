@@ -47,7 +47,6 @@ public:
             std::pair<char, int> kingPosition;
             std::vector<std::unique_ptr<Piece>> activePieces;
             std::vector<std::unique_ptr<Piece>> inactivePieces;
-            std::vector<std::unique_ptr<Piece>> deactivedPieces;
 
             PlayerInfo(Colour c, char kingC, int kingI, std::string playerType)
                 : score{0}, colour{c}, inCheck{false} {
@@ -79,6 +78,9 @@ public:
     void detach(Observer *o) override;
     void notifyObservers() override;
     char getState(int row, int col) const;
+
+    void addPiece(char type, string pos);
+    void removePiece(string pos);
 public:
     std::vector<std::string> messages;
     PlayerInfo* getWhitePlayer() {
