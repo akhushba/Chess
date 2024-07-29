@@ -203,8 +203,7 @@ bool BoardDisplay::canCastle(Colour c) {
 
 Colour BoardDisplay::occupied(char c, int i) {
     Piece* p = getBoardInfo(c, i);
-    cout<<"hello"<<endl;
-    if ( p== nullptr) return p->getColour();
+    if(p) return p->getColour();
     return NULL_C;
 }
 
@@ -394,33 +393,33 @@ bool BoardDisplay::checkValid(Piece* p, char cPos, int iPos){
     if (foundPair.first == 'i') {
         return false;
     }
-    // if(p->getType() == 'N') {
-    //     //only check end
-    //     if(occupied(cPos, iPos) == p->getColour()) return false;
-    // } else {
-    //     char currC = p->getPosition().first;
-    //     int currI = p->getPosition().second;
-    //     // check all square in between
-    //     // Determine movement direction
-    // int colDiff = cPos - currC;
-    // int rowDiff = iPos - currI;
-    // int colStep = (colDiff == 0) ? 0 : (colDiff > 0) ? 1 : -1;
-    // int rowStep = (rowDiff == 0) ? 0 : (rowDiff > 0) ? 1 : -1;
+    if(p->getType() == 'N' || p->getType() == 'n') {
+        //only check end
+        if(occupied(cPos, iPos) == p->getColour()) return false;
+    } else {
+        char currC = p->getPosition().first;
+        int currI = p->getPosition().second;
+        // check all square in between
+        // Determine movement direction
+        int colDiff = cPos - currC;
+        int rowDiff = iPos - currI;
+        int colStep = (colDiff == 0) ? 0 : (colDiff > 0) ? 1 : -1;
+        int rowStep = (rowDiff == 0) ? 0 : (rowDiff > 0) ? 1 : -1;
 
-    // // Check if move is along a valid path for a Queen
-    // if ((colDiff != 0 && rowDiff != 0 && abs(colDiff) != abs(rowDiff)) || (colDiff == 0 && rowDiff == 0)) return false;
+        //make sure all squares inbetween are unoccupied
+        char currentCol = currC;  // Start with the next position
+        int currentRow = currI ;
 
-    // //make sure all squares inbetween are unoccupied
-    // char currentCol = currC;
-    // int currentRow = currI;
-    // while (currentCol != cPos && currentRow != iPos) {
-    //     currentCol += colStep;
-    //     currentRow += rowStep;
-        
-    //     if (occupied(currentCol, currentRow) == p->getColour()) return false;
-    // }
+        while (currentCol != cPos || currentRow != iPos) {
+            currentCol += colStep;
+            currentRow += rowStep;
+            cout << currentCol << currentRow << "\t" << occupied(currentCol, currentRow) << endl;
+            if (occupied(currentCol, currentRow) == p->getColour()) return false;
+            if ((p->getType() == 'P' || p->getType() == 'p') && colDiff != 0 && occupied(currentCol, currentRow) == NULL_C) return false;
 
-    // }
+        }
+
+    }
     // simulateAttack2(p, cPos, iPos);
     // run in check simulation
     return true;
@@ -459,7 +458,7 @@ bool BoardDisplay::simulateAttack2(Piece* p, char newC, int newI, Piece* checkAt
 
 std::pair<char, int> BoardDisplay::findPair(const std::vector<std::pair<char, int>>& vec, char cPos, int iPos) {
     for (const auto& pair : vec) {
-        cout << pair.first << pair.second << endl;
+        // cout << pair.first << pair.second << endl;
         if (pair.first == cPos && pair.second == iPos) {
             return pair;
         }

@@ -16,6 +16,5 @@ int main () {
     cout << board_Display.checkValid(p, 'e', 2) << endl;
 
     //  cout << p->isValidMove('a', 3) << endl;
-    // cout << p->getType() << p->getPosition().first << p->getPosition().second << endl;
 }
 
