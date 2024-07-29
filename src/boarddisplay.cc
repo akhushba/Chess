@@ -81,7 +81,8 @@ void BoardDisplay::addPiece(char type, string pos) {
     Colour c = std::islower(type) ? BLACK : WHITE;
     char cPos = pos[0];
     int iPos = pos[1] - '0';
-
+    int countWhite;
+    int countBlack;
     Piece* newPiece = nullptr;
     if (type == 'Q' || type == 'q') {
         newPiece = new Queen(c, nullptr, cPos, iPos);
@@ -92,9 +93,32 @@ void BoardDisplay::addPiece(char type, string pos) {
     } else if (type == 'N' || type == 'n') {
         newPiece = new Knight(c, nullptr, cPos, iPos);
     } else if (type == 'K' || type == 'k') {
+        if(c == BLACK && countBlack == 1 || c == WHITE && countWhite ==1){
+            cout << "invalid number of kings"<<endl;
+            return;
+        }
+        if (inCheck(c)){
+            cout<<"invalid, king is incheck"<<endl;
+        }
         newPiece = new King(c, nullptr, cPos, iPos);
+        if (c == WHITE){
+            countWhite += 1;
+        }
+        else{
+            countBlack += 1;    
+        }  
+
+        //need to make sure neither kings are in check
+        //exactly one black king and one white king
+
     } else if (type == 'P' || type == 'p') {
+        if('a' <= cPos <= 'h' && 2 <= iPos <= 8){
+        //ensure that no pawns are in the first or last row of board
         newPiece = new Pawn(c, nullptr, cPos, iPos);
+        }
+        else{
+            cout<<"invalid placement of pawn"<<endl;
+        }
     }
 
     PlayerInfo* currentPlayer = (c == BLACK) ? blackPlayer : whitePlayer;
