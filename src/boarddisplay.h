@@ -2,19 +2,23 @@
 #define _BOARD_DISPLAY_H_
 
 #include <memory> // Include for unique_ptr
-#include "subject.h"
-#include "colour.h"
-#include "piece.h"
 #include <utility>
 #include <string>
 #include <algorithm>
 #include <vector>
+
+#include "subject.h"
+#include "colour.h"
+#include "piece.h"
+#include "player.h"
+
+#include "bishop.h"
+#include "king.h"
+#include "knight.h"
+#include "pawn.h"
 #include "queen.h"
 #include "rook.h"
-#include "bishop.h"
-#include "knight.h"
-#include "king.h"
-#include "pawn.h"
+
 #include "human.h"
 #include "levelOne.h"
 #include "levelTwo.h"

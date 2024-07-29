@@ -2,7 +2,8 @@
 #define _QUEEN_H_
 
 #include "piece.h"
-#include "boarddisplay.h"
+
+class BoardDisplay;
 
 class Queen : public Piece {
 public:

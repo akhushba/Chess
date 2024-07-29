@@ -2,7 +2,9 @@
 #define _BISHOP_H_
 
 #include "piece.h"
-#include "colour.h"
+
+class BoardDisplay;
+
 class Bishop : public Piece {
     public:
         Bishop(Colour colour, BoardDisplay *board, char cPos, int iPos);

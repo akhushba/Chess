@@ -32,8 +32,6 @@ public:
     virtual bool isValidMove(char c, int i) = 0;
     virtual void generateMoves() = 0;
     void setPos(char c, int i);
-    void setActiveStatus(bool newStatus);
-    Piece* capture(char c, int i);
     Player* getOpponent();
     int getPieceValue();
 
@@ -41,7 +39,7 @@ public:
     Colour getColour() const { return colour; }
     char getType() const { return type; }
 
-    virtual ~Piece();
+    virtual ~Piece() = 0;
 };
 
 #endif // PIECE_H
