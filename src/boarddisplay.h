@@ -7,6 +7,7 @@
 #include "piece.h"
 #include <utility>
 #include <string>
+#include <algorithm>
 #include <vector>
 #include "queen.h"
 #include "rook.h"
