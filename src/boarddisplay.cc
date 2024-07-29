@@ -47,8 +47,8 @@ void BoardDisplay::init() {
         }
     }
 
-    whitePlayer = std::make_unique<PlayerInfo>(Colour::WHITE, 'e', 1, 'human');
-    blackPlayer = std::make_unique<PlayerInfo>(Colour::BLACK, 'e', 8, 'human');
+    whitePlayer = std::make_unique<PlayerInfo>(Colour::WHITE, 'e', 1, "human");
+    blackPlayer = std::make_unique<PlayerInfo>(Colour::BLACK, 'e', 8, "human");
     getCurrentTurn = WHITE;
 }
 
@@ -327,7 +327,6 @@ void BoardDisplay::endGame() {
             board[i][j] -> setBegin();
         }
     }
-
 
     getWhitePlayer()->reset();
     getBlackPlayer()->reset();

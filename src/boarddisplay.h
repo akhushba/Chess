@@ -9,7 +9,7 @@
 
 #include "subject.h"
 #include "colour.h"
-class Subject;
+
 class Piece;
 class Player;
 
