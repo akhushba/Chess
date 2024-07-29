@@ -44,39 +44,39 @@ void BoardDisplay::init() {
 
     // White pieces
     addPiece('R', "a1"); // Rook
-    addPiece('N', "b1"); // Knight
     addPiece('B', "c1"); // Bishop
-    addPiece('Q', "d1"); // Queen
+    // addPiece('Q', "d1"); // Queen
     addPiece('K', "e1"); // King
     addPiece('B', "f1"); // Bishop
-    addPiece('N', "g1"); // Knight
     addPiece('R', "h1"); // Rook
-    addPiece('P', "a2"); // Pawns
-    addPiece('P', "b2");
-    addPiece('P', "c2");
-    addPiece('P', "d2");
-    addPiece('P', "e2");
-    addPiece('P', "f2");
-    addPiece('P', "g2");
-    addPiece('P', "h2");
+    // addPiece('N', "b1"); // Knight
+    // addPiece('N', "g1"); // Knight
+    // addPiece('P', "b2");
+    // addPiece('P', "a2"); // Pawns
+    // addPiece('P', "c2");
+    // addPiece('P', "d2");
+    // addPiece('P', "e2");
+    // addPiece('P', "f2");
+    // addPiece('P', "g2");
+    // addPiece('P', "h2");
 
-    // Black pieces
-    addPiece('r', "a8"); // Rook
-    addPiece('n', "b8"); // Knight
-    addPiece('b', "c8"); // Bishop
-    addPiece('q', "d8"); // Queen
-    addPiece('k', "e8"); // King
-    addPiece('b', "f8"); // Bishop
-    addPiece('n', "g8"); // Knight
-    addPiece('r', "h8"); // Rook
-    addPiece('p', "a7"); // Pawns
-    addPiece('p', "b7");
-    addPiece('p', "c7");
-    addPiece('p', "d7");
-    addPiece('p', "e7");
-    addPiece('p', "f7");
-    addPiece('p', "g7");
-    addPiece('p', "h7");
+    // // Black pieces
+    // addPiece('r', "a8"); // Rook
+    // addPiece('n', "b8"); // Knight
+    // addPiece('b', "c8"); // Bishop
+    // addPiece('q', "d8"); // Queen
+    // addPiece('k', "e8"); // King
+    // addPiece('b', "f8"); // Bishop
+    // addPiece('n', "g8"); // Knight
+    // addPiece('r', "h8"); // Rook
+    // addPiece('p', "a7"); // Pawns
+    // addPiece('p', "b7");
+    // addPiece('p', "c7");
+    // addPiece('p', "d7");
+    // addPiece('p', "e7");
+    // addPiece('p', "f7");
+    // addPiece('p', "g7");
+    // addPiece('p', "h7");
 
 }
 
@@ -103,57 +103,55 @@ char BoardDisplay::getState(int row, int col) const {
     return board[row][col]->piece->getType();
 }
 
-void BoardDisplay::addPiece(char type, string pos) {
+void BoardDisplay::addPiece(char type, const std::string pos) {
     Colour c = std::islower(type) ? BLACK : WHITE;
     char cPos = pos[0];
-    int iPos = pos[1] - '0';
+    int iPos = pos[1] - '0'; // Convert char to int
+
+    // Check for valid positions
+    if (iPos < 1 || iPos > 8 || cPos < 'a' || cPos > 'h') {
+        cout << "Invalid position: " << pos << endl;
+        return;
+    }
+
     int countWhite;
     int countBlack;
+
     Piece* newPiece = nullptr;
-    if(cPos < 'a' || cPos > 'h' || iPos < 1 || iPos > 8) 
-        return;
-    if (type == 'Q' || type == 'q') {
-        newPiece = new Queen(c, nullptr, cPos, iPos);
-    } else if (type == 'R' || type == 'r') {
-        newPiece = new Rook(c, nullptr, cPos, iPos);
-    } else if (type == 'B' || type == 'b') {
-        newPiece = new Bishop(c, nullptr, cPos, iPos);
-    } else if (type == 'N' || type == 'n') {
-        newPiece = new Knight(c, nullptr, cPos, iPos);
-    } else if (type == 'K' || type == 'k') {
-        if(c == BLACK && countBlack == 1 || c == WHITE && countWhite ==1){
-            cout << "invalid number of kings"<<endl;
+    switch (type) {
+        case 'Q': case 'q': newPiece = new Queen(c, this, cPos, iPos); break;
+        case 'R': case 'r': newPiece = new Rook(c, this, cPos, iPos); break;
+        case 'B': case 'b': newPiece = new Bishop(c, this, cPos, iPos); break;
+        case 'N': case 'n': newPiece = new Knight(c, this, cPos, iPos); break;
+        case 'K': case 'k': 
+            if ((c == BLACK && countBlack >= 1) || (c == WHITE && countWhite >= 1)) {
+                cout << "Invalid number of kings" << endl;
+                return;
+            }
+            if (inCheck(c)) {
+                cout << "Invalid, king is in check" << endl;
+                return;
+            }
+            newPiece = new King(c, this, cPos, iPos);
+            (c == WHITE ? countWhite : countBlack)++;
+            break;
+        case 'P': case 'p':
+            if (iPos == 1 || iPos == 8) {
+                cout << "Invalid placement of pawn" << endl;
+                return;
+            }
+            newPiece = new Pawn(c, this, cPos, iPos);
+            break;
+        default:
+            cout << "Unknown piece type: " << type << endl;
             return;
-        }
-        if (inCheck(c)){
-            cout<<"invalid, king is incheck"<<endl;
-        }
-        newPiece = new King(c, nullptr, cPos, iPos);
-        if (c == WHITE){
-            countWhite += 1;
-        }
-        else{
-            countBlack += 1;    
-        }  
-
-        //need to make sure neither kings are in check
-        //exactly one black king and one white king
-
-    }  else if (type == 'P' || type == 'p') {
-        cout << "AHHAFHAHSD \t" << cPos << iPos << endl;
-        if('a' <= cPos && cPos >= 'h' && 2 <= iPos && iPos >= 7){
-        //ensure that no pawns are in the first or last row of board
-        newPiece = new Pawn(c, nullptr, cPos, iPos);
-        }
-        else{
-            cout<<"invalid placement of pawn"<<endl;
-        }
     }
 
     PlayerInfo* currentPlayer = (c == BLACK) ? blackPlayer : whitePlayer;
     setState(newPiece, cPos, iPos);
     currentPlayer->activePieces.push_back(newPiece);
 }
+
 
 void BoardDisplay::removePiece(string pos) {
     Piece* p = board[pos[1] - '0' - 1][pos[0] - 'a']->piece;
@@ -169,17 +167,19 @@ void BoardDisplay::removePiece(string pos) {
 }
 
 void BoardDisplay::setState(Piece* p, char cPos, int iPos, char pawnPromote) {
+    cout << "HERE " << endl;
     PlayerInfo* currentPlayer = (p->getColour() == BLACK) ? blackPlayer : whitePlayer;
 
     if (p->getType() == 'K' || p->getType() == 'k') {
         currentPlayer->kingPosition = {cPos, iPos};
-    }
 
-    board[iPos - 1][cPos - 'a']->piece = p;
-    if (p) {
-        p->setPos(cPos, iPos);
-        p->hasMoved = true;
     }
+    board[iPos - 1][cPos - 'a']->piece = p;
+    // if (p != nullptr) {
+    //     p->setPos(cPos, iPos);
+    //     p->hasMoved = true;
+    // }
+    cout << "END " << endl;
 }
 
 bool BoardDisplay::canCapture(Colour pieceColour, char cPos, int iPos) {
