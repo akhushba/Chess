@@ -22,11 +22,12 @@ int main () {
             if (setup == "setup") {
                 board_Display.setUpGame();
             } else {
-                
+                board_Display.defaultBoard();
                 command = setup;
             }
     }
-    else if (command == "resign") {
+    
+    if (command == "resign") {
         BoardDisplay::PlayerInfo* currentPlayer= board_Display.getCurrentPlayer();
         board_Display.resign(currentPlayer->colour);
     }

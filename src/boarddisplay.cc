@@ -66,6 +66,9 @@ void BoardDisplay::defaultBoard() {
     addPiece('p', "f7");
     addPiece('p', "g7");
     addPiece('p', "h7");
+
+    getWhitePlayer()->player->pieceSet = &(getWhitePlayer()->activePieces);
+    getBlackPlayer()->player->pieceSet = &(getBlackPlayer()->activePieces);
 }
 
 Piece* BoardDisplay::getBoardInfo(char c, int i) {
