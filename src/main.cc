@@ -15,8 +15,7 @@ int main () {
     if (command == "game" ) {
         string playerOne, playerTwo;
         cin >> playerOne >> playerTwo;
-        board_Display.addWhitePlayer(playerOne);
-        board_Display.addBlackPlayer(playerTwo);
+        board_Display.setPlayers(playerOne, playerTwo);
     }
     else if (command == "resign") {
         BoardDisplay::PlayerInfo* currentPlayer= board_Display.getCurrentPlayer();

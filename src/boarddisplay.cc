@@ -106,7 +106,7 @@ char BoardDisplay::getState(int row, int col) const {
 void BoardDisplay::addPiece(char type, string pos) {
     Colour c = std::islower(type) ? BLACK : WHITE;
     char cPos = pos[0];
-    int iPos = pos[1] - '0';
+    int iPos = (int)pos[1];
     int countWhite;
     int countBlack;
     Piece* newPiece = nullptr;
