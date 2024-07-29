@@ -16,6 +16,8 @@ int main () {
         string playerOne, playerTwo;
         cin >> playerOne >> playerTwo;
         board_Display.setPlayers(playerOne, playerTwo);
+        // for testing purposes
+        board_Display.defaultBoard();
 
         string setup;
             cin >> setup;

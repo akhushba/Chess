@@ -141,7 +141,8 @@ void BoardDisplay::addPiece(char type, const std::string pos) {
     PlayerInfo* currentPlayer = (c == BLACK) ? blackPlayer : whitePlayer;
     setState(newPiece, cPos, iPos);
     currentPlayer->activePieces.push_back(newPiece);
-    currentPlayer->player->pieceSet->push_back(newPiece);
+    cout << "pushback new piece" << endl;
+    // currentPlayer->player->pieceSet->push_back(newPiece);
 }
 
 
