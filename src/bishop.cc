@@ -48,3 +48,21 @@ void Bishop::generateMoves() {
     }
 
 }
+
+vector <pair<char,int>> Bishop::generate(){
+    vector <pair<char,int>> possible;
+    int directions[4][2] = {{1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
+
+    for (auto& direction : directions) {
+        char col = cPos;
+        int row = iPos;
+
+        while (row >= 1 && row <= 8 && col >= 'a' && col < 'h') {
+            row += direction[0];
+            col += direction[1];
+            if(cPos + direction[0] < 'a' || cPos + direction[0] > 'h' || iPos + direction[1] < 1 || iPos + direction[1] > 8) continue;
+            possible.emplace_back(make_tuple(col, row));
+        }
+    }
+  return possible;
+}

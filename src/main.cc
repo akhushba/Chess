@@ -11,7 +11,8 @@ int main () {
 
     BoardDisplay board_Display;
     board_Display.defaultBoard();
-    Piece* p  = board_Display.getBoardInfo('b', 2);
+    board_Display.notifyObservers();
+    Piece* p  = board_Display.getBoardInfo('e', 1);
     cout << board_Display.checkValid(p, 'e', 2) << endl;
 
     //  cout << p->isValidMove('a', 3) << endl;

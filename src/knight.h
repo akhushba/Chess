@@ -10,6 +10,8 @@ class Knight : public Piece{
 
         bool isValidMove(char newC, int newI) override;
         void generateMoves() override;
+        vector <pair<char,int>> generate() override;
+
 };
 
 #endif

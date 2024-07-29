@@ -30,3 +30,14 @@ void King::generateMoves() {
             validPosVec.emplace_back(make_tuple(cPos + d[0], iPos + d[1]));
     }
 }
+
+vector <pair<char,int>> King::generate(){
+    vector <pair<char,int>> possible;
+    int directions[8][2] = {{1, 1}, {1, -1}, {-1, 1}, {-1, -1}, {0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+
+    for(auto& d : directions) {
+        if(cPos + d[0] < 'a' || cPos + d[0] > 'h' || iPos + d[1] < 1 || iPos + d[1] > 8) continue;
+            possible.emplace_back(make_tuple(cPos + d[0], iPos + d[1]));
+    }
+    return possible;
+}
