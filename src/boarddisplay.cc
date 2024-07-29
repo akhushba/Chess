@@ -69,6 +69,7 @@ void BoardDisplay::defaultBoard() {
 
     getWhitePlayer()->player->pieceSet = &(getWhitePlayer()->activePieces);
     getBlackPlayer()->player->pieceSet = &(getBlackPlayer()->activePieces);
+    customSetup = false;
 }
 
 Piece* BoardDisplay::getBoardInfo(char c, int i) {
@@ -290,6 +291,7 @@ void BoardDisplay::setUpGame() {
             getCurrentTurn = (colour == "WHITE") ? WHITE : BLACK;
         } else if (setupCommand == "done") {
             notifyObservers();
+            customSetup = true;
             break;
         }
         notifyObservers();
@@ -357,7 +359,7 @@ BoardDisplay::BoardDisplay() {
     blackPlayer = new PlayerInfo(Colour::BLACK, 'e', 8);
     getCurrentTurn = WHITE;
 
-    defaultBoard();
+    // defaultBoard();
     attach(new TextDisplay(this));
     notifyObservers();
 }
