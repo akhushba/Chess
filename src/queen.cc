@@ -1,6 +1,6 @@
 #include "queen.h"
 
-Queen::Queen(Colour colour, Chessboard *board, char cPos, int iPos): Piece(colour, 'q', board, cPos, iPos, 9) {
+Queen::Queen(Colour colour, BoardDisplay *board, char cPos, int iPos): Piece(colour, 'q', board, cPos, iPos, 9) {
     Piece::setPos(cPos, iPos);
 }
 
@@ -11,7 +11,7 @@ bool Queen::isValidMove(char newC, int newI) {
     // Check if not moving
     if (newC == cPos && newI == iPos) return false;
     // Final position must not have a piece of the same colour
-    if (board->occupied(newC, newI) == colour) return false;
+    if (boardInfo->occupied(newC, newI) == colour) return false;
 
     // Determine movement direction
     int colDiff = newC - cPos;
@@ -29,7 +29,7 @@ bool Queen::isValidMove(char newC, int newI) {
         currentCol += colStep;
         currentRow += rowStep;
         
-        if (board->occupied(currentCol, currentRow) == colour) return false;
+        if (boardInfo->occupied(currentCol, currentRow) == colour) return false;
     }
 
     // Ensure the move doesn't put the player's king in check

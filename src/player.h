@@ -3,10 +3,13 @@
 
 #include <iostream>
 #include <vector>
+
 #include "piece.h"
+#include "boarddisplay.h"
 
 using namespace std;
 
+class BoardDisplay;
 class Piece;
 
 class Player {

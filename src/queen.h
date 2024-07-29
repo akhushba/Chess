@@ -3,11 +3,14 @@
 
 #include "piece.h"
 
+class BoardDisplay;
+
 class Queen : public Piece {
-    public:
-        Queen(Colour colour, Chessboard *board, char cPos, int iPos);
-        bool isValidMove(char newC, int newI) override;
-        void generateMoves() override;
-        ~Queen() override = default;
+public:
+    Queen(Colour colour, BoardDisplay *board, char cPos, int iPos);
+    bool isValidMove(char newC, int newI) override;  
+    void generateMoves() override;
+    ~Queen() override = default;
 };
+
 #endif

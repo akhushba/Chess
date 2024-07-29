@@ -1,5 +1,3 @@
 #include "observer.h"
 
-void Observer::notify() {
-
-}
+void Observer::notify() {}

@@ -4,32 +4,22 @@
 
 using namespace std;
 
-Piece::Piece(Colour colour, char type, Chessboard *board, char cPos, int iPos, int pieceValue) 
-    : colour{colour}, board{board}, cPos{cPos}, iPos{iPos}, pieceValue{pieceValue}, 
+Piece::Piece(Colour colour, char type, BoardDisplay *board, char cPos, int iPos, int pieceValue) 
+    : colour{colour}, boardInfo{boardInfo}, cPos{cPos}, iPos{iPos}, pieceValue{pieceValue}, 
       type{colour == BLACK ? type : static_cast<char>(type - 32)} {
     active = true;
 }
 
 void Piece::setPos(char c, int i) {
-    if (capture(c, i) != nullptr) {
-        capture(c, i)->active = false;
-    }
-    cPos = c;
-    iPos = i;
-}
-
-void Piece::setActiveStatus(bool newStatus) {
-    active = newStatus;
+    boardInfo->setState(this, c, i);
 }
 
 Player* Piece::getOpponent() {
-    if (colour == WHITE) {
-        return board->getBlackPlayer();
-    } else if (colour == BLACK) {
-        return board->getWhitePlayer();
-    }
+    return (colour == WHITE) ? boardInfo->getBlackPlayer()->player.get() : boardInfo->getWhitePlayer()->player.get();
 }
 
 int Piece::getPieceValue() {
     return pieceValue;
 }
+
+bool Piece::isValidMove(char c, int i) {}

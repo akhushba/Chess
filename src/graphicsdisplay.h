@@ -1,13 +1,12 @@
 #ifndef GRAPHICS_DISPLAY_H
 #define GRAPHICS_DISPLAY_H
 
-#include "observer.h"
-#include "boarddisplay.h"
-#include "window.h"
 #include <iostream>
 #include <memory>
 
 class XWindow;
+class BoarddDisplay;
+class Observer;
 
 class GraphicsDisplay : public Observer {
     BoardDisplay* display;

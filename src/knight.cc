@@ -1,6 +1,6 @@
 #include "knight.h"
 
-Knight::Knight(Colour colour, Chessboard *board, char cPos, int iPos): Piece(colour, 'n', board, cPos, iPos, 3)  {
+Knight::Knight(Colour colour, BoardDisplay *board, char cPos, int iPos): Piece(colour, 'n', board, cPos, iPos, 3)  {
     setPos(cPos, iPos);
 }
 
@@ -16,7 +16,7 @@ bool Knight::isValidMove(char newC, int newI) {
     if (abs(newC - cPos) == 2 && abs(newI - iPos) != 1) return false;
     else if (abs(newI - iPos) == 2 && abs(newC - cPos) != 1) return false;
     // can't move to a square occupied by your own colour
-    else if (board->occupied(newC, newI) == colour) return false;
+    else if (boardInfo->occupied(newC, newI) == colour) return false;
 
     //avoid being in check logic, simulateInCheck returns true if King is in check
     if(boardInfo->simulateInCheck(this, newC, newI)) return false;

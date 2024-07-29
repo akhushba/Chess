@@ -1,6 +1,9 @@
 #include "graphicsdisplay.h"
 #include <memory>
 
+#include "observer.h"
+#include "boarddisplay.h"
+#include "window.h"
 
 GraphicsDisplay::GraphicsDisplay(BoardDisplay* display) 
     : display{display}, xw{std::make_unique<Xwindow>(1450, 850)} {
@@ -12,7 +15,7 @@ GraphicsDisplay::GraphicsDisplay(BoardDisplay* display)
       for (int col = 0; col < 8; ++col) {
           char c = display->getState(row, col);
           colour = c == '-' ? Xwindow::Cacao : Xwindow::Sand;
-          w->fillRectangle(col * cellSize, row * cellSize, cellSize, cellSize, colour);
+          xw->fillRectangle(col * cellSize, row * cellSize, cellSize, cellSize, colour);
       }
   }
 }
@@ -26,7 +29,7 @@ void GraphicsDisplay::notify() {
             // Loop through each pixel within the cell
             for (int y = 0; y < cellSize; ++y) {
                 for (int x = 0; x < cellSize; ++x) {
-                    char c = display->getPixelState(row, col, x, y); // Get the state of the pixel
+                    char c = display->getState(row * cellSize + y, col * cellSize + x); // Get the state of the pixel
 
                     int colour;
                     switch (c) {
@@ -53,10 +56,10 @@ void GraphicsDisplay::notify() {
             }
         }
     }
-    w->drawString(900, 100, "BOARD STATUS");
+    xw->drawString(900, 100, "BOARD STATUS");
     int textOffset = 25;
     for(auto s : display->messages) {
-        w->drawString(900, 100 + textOffset, s);
+        xw->drawString(900, 100 + textOffset, s);
         textOffset += 25;
     }
 }
