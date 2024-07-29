@@ -12,7 +12,7 @@ void BoardDisplay::init() {
 
     whitePlayer = std::make_unique<PlayerInfo>(Colour::WHITE, 'e', 1);
     blackPlayer = std::make_unique<PlayerInfo>(Colour::BLACK, 'e', 8);
-
+    getCurrentTurn = WHITE;
 }
 
 
@@ -239,6 +239,35 @@ bool BoardDisplay::inStalemate(Colour c) {
     return true;
 }
 
+void BoardDisplay::setUpGame(){
+        string setupCommand;
+        while(cin >> setupCommand) {
+            if(setupCommand == "+"){
+                char addnewPiece;
+                string addPos;
+                cin >> addnewPiece >> addPos;
+                addPiece(addnewPiece, addPos);
+            }
+            else if(setupCommand == "-"){
+                string removePos;
+                cin >> removePos;
+                removePiece(removePos);
+            }
+            else if(setupCommand == "="){
+                string colour;
+                cin >> colour;
+                if(colour == "WHITE"){
+                   getCurrentTurn = WHITE;
+                }
+                if(colour == "Black"){
+                    getCurrentTurn = BLACK;
+                }
+            }
+            else if(setupCommand == "done"){
+                break;
+            }
+        }
+}
 void BoardDisplay::resign(Colour c) {
     //if black resigns, then white gets +1 score and game ends vice versa if white resigns
     PlayerInfo* winningPlayer = (c == BLACK) ? whitePlayer.get() : blackPlayer.get();

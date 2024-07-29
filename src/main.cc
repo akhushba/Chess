@@ -57,27 +57,7 @@ int main () {
 
     }
     else if (command == "setup") {
-        string setupCommand;
-        while(cin >> setupCommand) {
-            if(setupCommand == "+"){
-                string addPos;
-                cin >> addPos;
-
-            }
-            else if(setupCommand == "-"){
-                string removePos;
-                cin >> removePos;
-
-            }
-            else if(setupCommand == "="){
-                string colour;
-                cin >> colour;
-
-            }
-            else if(setupCommand == "done"){
-                break;
-            }
-        }
+        board_Display.setUpGame();
     }
   }
 }

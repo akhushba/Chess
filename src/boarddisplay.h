@@ -124,7 +124,7 @@ public:
     void resign(Colour c);
     void endGame();
     void endSession();
-
+    void setUpGame();
     BoardDisplay();
     ~BoardDisplay() = default; 
 };
