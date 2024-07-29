@@ -1,5 +1,24 @@
 #include "boarddisplay.h"
-#include <memory>
+
+#include "subject.h"
+#include "colour.h"
+#include "piece.h"
+#include "player.h"
+
+#include "bishop.h"
+#include "king.h"
+#include "knight.h"
+#include "pawn.h"
+#include "queen.h"
+#include "rook.h"
+
+#include "human.h"
+#include "levelOne.h"
+#include "levelTwo.h"
+#include "levelThree.h"
+#include "levelFour.h"
+
+BoardDisplay::BoardSegment::BoardSegment(Colour c) : colour{c}, piece{nullptr} {}
 
 // Initialize the board with unique pointers to BoardSegment
 void BoardDisplay::init() {

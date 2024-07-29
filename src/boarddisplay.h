@@ -7,23 +7,23 @@
 #include <algorithm>
 #include <vector>
 
-#include "subject.h"
-#include "colour.h"
-#include "piece.h"
-#include "player.h"
+class Subject;
+enum Colour;
+class Piece;
+class Player;
 
-#include "bishop.h"
-#include "king.h"
-#include "knight.h"
-#include "pawn.h"
-#include "queen.h"
-#include "rook.h"
+class Bishop;
+class King;
+class Knight;
+class Pawn;
+class Queen;
+class Rook;
 
-#include "human.h"
-#include "levelOne.h"
-#include "levelTwo.h"
-#include "levelThree.h"
-#include "levelFour.h"
+class Human;
+class LevelOne;
+class LevelTwo;
+class LevelThree;
+class LevelFour;
 
 using namespace std;
 
@@ -38,7 +38,7 @@ class BoardDisplay final: public Subject {
         void setBegin(){
             piece = nullptr;
         }
-        BoardSegment(Colour c) : colour{c}, piece{nullptr} {}
+        BoardSegment(Colour c);
         ~BoardSegment() = default;
       
     };
