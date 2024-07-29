@@ -324,7 +324,6 @@ void BoardDisplay::endGame() {
     //need to reset the player info 
     for(int i = 0; i < 8; ++i) {
         for(int j = 0; j < 8; ++j) {
-            Colour segmentColor = ((i + j) % 2 == 0) ? WHITE : BLACK;
             board[i][j] -> setBegin();
         }
     }
