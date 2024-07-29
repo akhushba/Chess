@@ -53,8 +53,8 @@ void BoardDisplay::init() {
 }
 
 
-BoardDisplay::BoardSegment* BoardDisplay::getBoardInfo(char c, int i) {
-    return board[i - 1][c - 'a'].get();
+Piece* BoardDisplay::getBoardInfo(char c, int i) {
+    return board[i - 1][c - 'a'].get()->piece;
 }
 
 void BoardDisplay::attach(Observer* o) {
@@ -204,15 +204,15 @@ bool BoardDisplay::canCastle(Colour c) {
 
 
 Colour BoardDisplay::occupied(char c, int i) {
-    BoardSegment* seg = getBoardInfo(c, i);
-    if(seg->piece) return seg->piece->getColour();
+    Piece* p = getBoardInfo(c, i);
+    if(p) return p->getColour();
     else return NULL_C;
 }
 
 bool BoardDisplay::simulateAttack(Piece* p, char newC, int newI, Piece* checkAttack) {
     pair<char, int> currentPosition = p->getPosition();
 
-    Piece* tempCapture = getBoardInfo(newC, newI)->piece;
+    Piece* tempCapture = getBoardInfo(newC, newI);
     setState(p, newC, newI);
     setState(nullptr, currentPosition.first, currentPosition.second);
 

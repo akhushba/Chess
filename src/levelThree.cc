@@ -30,7 +30,7 @@ void LevelThree::move(Piece* p, char c, int i) {
     for (int i = 0; i < numPieces; i++) {
         // randomly shuffle the validPosVec vector
         shuffle(pieceSet[i]->validPosVec.begin(), pieceSet[i]->validPosVec.end(), g);
-
+        
         for (int j = 0; j < pieceSet[i]->validPosVec.size(); j++) {
 
             // possible valid position that a piece can move to
@@ -70,8 +70,8 @@ void LevelThree::move(Piece* p, char c, int i) {
     }
 
     // if there is no safe move, then just choose a random valid move
-    char newC = std::get<0>(pieceSet.at(0)->validPosVec.at(0));
-    int newI = std::get<1>(pieceSet.at(0)->validPosVec.at(0));
-    board->setState(pieceSet[0], newC, newI);
+    char potentialC = std::get<0>(pieceSet.at(0)->validPosVec.at(0));
+    int potentialI = std::get<1>(pieceSet.at(0)->validPosVec.at(0));
+    board->setState(pieceSet[0], potentialC, potentialI);
     // pieceSet[0]->setPos(newC, newI);
 }

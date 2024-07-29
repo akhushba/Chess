@@ -32,6 +32,7 @@ public:
     virtual bool isValidMove(char c, int i) = 0;
     virtual void generateMoves() = 0;
     void setPos(char c, int i);
+    void setActiveStatus(bool state);
     Player* getOpponent();
     int getPieceValue();
 

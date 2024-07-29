@@ -62,7 +62,7 @@ public:
     std::unique_ptr<PlayerInfo> blackPlayer; 
 
     void init();
-    BoardSegment* getBoardInfo(char c, int i);
+    Piece* getBoardInfo(char c, int i);
     Colour getCurrentTurn;
 
     // Observer pattern
