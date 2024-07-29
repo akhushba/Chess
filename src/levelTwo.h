@@ -5,7 +5,7 @@
 
 class LevelTwo : public Computer {
     public:
-        LevelTwo(string name, vector<Piece*> pieceSet);
+        LevelTwo(string name, vector<Piece*> *pieceSet, Colour c);
         void move(Piece* p = nullptr, char c = '\0', int i = -1) override;
         ~LevelTwo() override = default;
 };

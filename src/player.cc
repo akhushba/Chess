@@ -2,7 +2,13 @@
 
 using namespace std;
 
-Player::Player(string name, vector<Piece*> pieceSet) : name{name}, pieceSet{pieceSet} {}
+Player::Player(string name, vector<Piece*> *ps, Colour c) : name{name}, pieceSet{ps}, colour{c} {
+    if (c == WHITE) {
+        *pieceSet = board->whitePlayer->activePieces;
+    } else if (c == BLACK) {
+        *pieceSet = board->blackPlayer->activePieces;
+    }
+}
 
 bool Player::callSimulateAttack(Piece* p, char newC, int newI, Piece* reference) {
     if (reference) {

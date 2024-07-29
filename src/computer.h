@@ -6,7 +6,7 @@
 class Computer : public Player {
 
 public:
-    Computer(string name, vector<Piece*> pieceSet);
+    Computer(string name, vector<Piece*> *pieceSet, Colour c);
     virtual void move(Piece* p = nullptr, char c = '\0', int i = -1) override = 0;
     
     virtual ~Computer() override = 0;
