@@ -1,5 +1,4 @@
 #include "bishop.h"
-#include "piece.h"
 
 Bishop::Bishop(Colour colour, BoardDisplay *board, char cPos, int iPos): Piece(colour, 'b', board, cPos, iPos, 3)  {
 }

@@ -2,6 +2,7 @@
 #define _KING_H_
 
 #include "piece.h"
+class BoardDisplay;
 
 class King : public Piece {
     public:
