@@ -29,32 +29,32 @@ void LevelThree::move(Piece* p, char c, int i) {
 
     for (int i = 0; i < numPieces; i++) {
         // randomly shuffle the validPosVec vector
-        shuffle(pieceSet[i]->validPosVec.begin(), pieceSet[i]->validPosVec.end(), g);
+        shuffle(pieceSet.at(i)->validPosVec.begin(), pieceSet.at(i)->validPosVec.end(), g);
         
-        for (int j = 0; j < pieceSet[i]->validPosVec.size(); j++) {
+        for (int j = 0; j < pieceSet.at(i)->validPosVec.size(); j++) {
 
             // possible valid position that a piece can move to
-            newC = get<0>(pieceSet[i]->validPosVec[j]);
-            newI = get<1>(pieceSet[i]->validPosVec[j]);
+            newC = get<0>(pieceSet.at(i)->validPosVec.at(j));
+            newI = get<1>(pieceSet.at(i)->validPosVec.at(j));
             // reset bool each time
             goodMove = true;
 
             // iterate through the vector of the opponents pieces
-            for (int k = 0; k < pieceSet[i]->getOpponent()->pieceSet.size(); k++) {
+            for (int k = 0; k < pieceSet.at(i)->getOpponent()->pieceSet.size(); k++) {
                 // check first that the position in question is a valid capture move
-                if (pieceSet[i]->capture(newC, newI) != nullptr) {
+                if (pieceSet.at(i)->capture(newC, newI) != nullptr) {
                     // temporarily set this captured opponent piece to inactive
-                    pieceSet[i]->capture(newC, newI)->setActiveStatus(false);
+                    pieceSet.at(i)->capture(newC, newI)->setActiveStatus(false);
                     // we need to check that this position can not be moved to by any of the opponent's players
-                    if (pieceSet[i]->getOpponent()->pieceSet[k]->isValidMove(newC, newI) == true) {
+                    if (pieceSet.at(i)->getOpponent()->pieceSet.at(k)->isValidMove(newC, newI) == true) {
                         goodMove = false;
                         break;
                     }
                     // set captured opponent back to active
-                    pieceSet[i]->capture(newC, newI)->setActiveStatus(true);
+                    pieceSet.at(i)->capture(newC, newI)->setActiveStatus(true);
                 // if no pieces can be captured, just move somewhere where we are safe
                 } else {
-                    if (pieceSet[i]->getOpponent()->pieceSet[k]->isValidMove(newC, newI) == true) {
+                    if (pieceSet.at(i)->getOpponent()->pieceSet.at(k)->isValidMove(newC, newI) == true) {
                         goodMove = false;
                         break;
                     }
@@ -62,8 +62,8 @@ void LevelThree::move(Piece* p, char c, int i) {
             }
 
             if (goodMove) {
-                board->setState(pieceSet[i], newC, newI);
-                // pieceSet[i]->setPos(newC, newI);
+                board->setState(pieceSet.at(i), newC, newI);
+                // pieceSet.at(i)->setPos(newC, newI);
                 return;
             }
         }
@@ -72,6 +72,6 @@ void LevelThree::move(Piece* p, char c, int i) {
     // if there is no safe move, then just choose a random valid move
     char potentialC = std::get<0>(pieceSet.at(0)->validPosVec.at(0));
     int potentialI = std::get<1>(pieceSet.at(0)->validPosVec.at(0));
-    board->setState(pieceSet[0], potentialC, potentialI);
-    // pieceSet[0]->setPos(newC, newI);
+    board->setState(pieceSet.at(0), potentialC, potentialI);
+    // pieceSet.at(0)->setPos(newC, newI);
 }

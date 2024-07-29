@@ -26,8 +26,8 @@ void LevelTwo::move(Piece* p, char c, int i) {
         shuffle(pieceSet.at(i)->validPosVec.begin(), pieceSet.at(i)->validPosVec.end(), g);
 
         for (int j = 0; j < pieceSet.at(i)->validPosVec.size(); j++) {
-            newC = get<0>(pieceSet.at(i)->validPosVec[j]);
-            newI = get<1>(pieceSet.at(i)->validPosVec[j]);
+            newC = get<0>(pieceSet.at(i)->validPosVec.at(j));
+            newI = get<1>(pieceSet.at(i)->validPosVec.at(j));
             if (pieceSet.at(i)->capture(newC, newI) != nullptr) {
                 pieceSet.at(i)->capture(newC, newI)->setActiveStatus(false);
                 board->setState(pieceSet.at(i), newC, newI);

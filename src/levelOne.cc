@@ -22,10 +22,10 @@ void LevelOne::move(Piece* p, char c, int i) {
     // randomly shuffle the pieceSet vector
     shuffle(pieceSet.begin(), pieceSet.end(), g);
     // randomly shuffle the validPosVec vector
-    shuffle(pieceSet[0]->validPosVec.begin(), pieceSet[0]->validPosVec.end(), g);
+    shuffle(pieceSet.at(0)->validPosVec.begin(), pieceSet.at(0)->validPosVec.end(), g);
 
-    newC = get<0>(pieceSet[0]->validPosVec[0]);
-    newI = get<1>(pieceSet[0]->validPosVec[0]);
-    board->setState(pieceSet[0], newC, newI);
-    // pieceSet[0]->setPos(newC, newI);
+    newC = get<0>(pieceSet.at(0)->validPosVec.at(0));
+    newI = get<1>(pieceSet.at(0)->validPosVec.at(0));
+    board->setState(pieceSet.at(0), newC, newI);
+    // pieceSet.at(0)->setPos(newC, newI);
 }

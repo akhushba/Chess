@@ -15,12 +15,12 @@ int LevelFour::getMaxPieceValue(vector<pair<Piece*, tuple<char, int>>> optionsVe
     if (optionsVec.empty()) return -1;
 
     int maxIndex = 0;
-    int maxValue = optionsVec[0].first->getPieceValue();
-    char charPos = get<0>(optionsVec[0].second);
-    int intPos = get<1>(optionsVec[0].second);
+    int maxValue = optionsVec.at(0).first->getPieceValue();
+    char charPos = get<0>(optionsVec.at(0).second);
+    int intPos = get<1>(optionsVec.at(0).second);
 
     for (int i = 1; i < optionsVec.size(); ++i) {
-        int currentValue = optionsVec[i].first->capture(charPos, intPos)->getPieceValue();
+        int currentValue = optionsVec.at(i).first->capture(charPos, intPos)->getPieceValue();
         if (currentValue > maxValue) {
             maxValue = currentValue;
             maxIndex = i;
@@ -49,36 +49,36 @@ void LevelFour::move(Piece* p, char c, int i) {
     mt19937 g(rd());
 
     for (int i = 0; i < numPieces; i++) {
-        for (int j = 0; j < pieceSet[i]->validPosVec.size(); j++) {
-            newC = get<0>(pieceSet[i]->validPosVec[j]);
-            newI = get<1>(pieceSet[i]->validPosVec[j]);
+        for (int j = 0; j < pieceSet.at(i)->validPosVec.size(); j++) {
+            newC = get<0>(pieceSet.at(i)->validPosVec.at(j));
+            newI = get<1>(pieceSet.at(i)->validPosVec.at(j));
 
             if ((newC == 'e' || newC == 'd') && (newI == 4 || newI == 5)) {
-                centerOptions.push_back(make_pair(pieceSet[i], make_tuple(newC, newI)));
+                centerOptions.push_back(make_pair(pieceSet.at(i), make_tuple(newC, newI)));
             }
 
-            if (pieceSet[i]->capture(newC, newI) != nullptr) {
+            if (pieceSet.at(i)->capture(newC, newI) != nullptr) {
                 canAttack = false;
                 for (int k = 0; k < numPieces; k++) {
-                    if (pieceSet[k]->getPieceValue() > pieceSet[i]->getPieceValue()) {
-                        canAttack = callSimulateAttack(pieceSet[i], newC, newI, pieceSet[k]);
+                    if (pieceSet.at(k)->getPieceValue() > pieceSet.at(i)->getPieceValue()) {
+                        canAttack = callSimulateAttack(pieceSet.at(i), newC, newI, pieceSet.at(k));
                         if (canAttack) break;
                     }
                 }
                 if (!canAttack) {
-                    captureOptions.push_back(make_pair(pieceSet[i], make_tuple(newC, newI)));
+                    captureOptions.push_back(make_pair(pieceSet.at(i), make_tuple(newC, newI)));
                 }
             }
 
             goodMove = true;
-            for (int k = 0; k < pieceSet[i]->getOpponent()->pieceSet.size(); k++) {
-                if (pieceSet[i]->getOpponent()->pieceSet[k]->isValidMove(newC, newI)) {
+            for (int k = 0; k < pieceSet.at(i)->getOpponent()->pieceSet.size(); k++) {
+                if (pieceSet.at(i)->getOpponent()->pieceSet.at(k)->isValidMove(newC, newI)) {
                     goodMove = false;
                     break;
                 }
             }
             if (goodMove) {
-                safeOptions.push_back(make_pair(pieceSet[i], make_tuple(newC, newI)));
+                safeOptions.push_back(make_pair(pieceSet.at(i), make_tuple(newC, newI)));
             }
         }
     }
@@ -110,22 +110,22 @@ void LevelFour::move(Piece* p, char c, int i) {
     } else if (safeCaptureAndCenter.empty() && safeAndCapture.empty()) {
         // No overlap in any of the vectors
         shuffle(pieceSet.begin(), pieceSet.end(), g);
-        newC = get<0>(get<1>(safeOptions[0]));
-        newI = get<1>(get<1>(safeOptions[0]));
+        newC = get<0>(get<1>(safeOptions.at(0)));
+        newI = get<1>(get<1>(safeOptions.at(0)));
         board->setState(pieceSet.at(0), newC, newI);
     } else if (safeCaptureAndCenter.empty()) {
         // Something exists in 2 of the vectors
         index = getMaxPieceValue(safeAndCapture);
-        newC = get<0>(get<1>(safeAndCapture[index]));
-        newI = get<1>(get<1>(safeAndCapture[index]));
+        newC = get<0>(get<1>(safeAndCapture.at(index)));
+        newI = get<1>(get<1>(safeAndCapture.at(index)));
         board->setState(pieceSet.at(index), newC, newI);
-        pieceSet[index]->capture(newC, newI)->setActiveStatus(false);
+        pieceSet.at(index)->capture(newC, newI)->setActiveStatus(false);
     } else {
         // There is something that exists in all 3 vectors
         index = getMaxPieceValue(safeCaptureAndCenter);
-        newC = get<0>(get<1>(safeCaptureAndCenter[index]));
-        newI = get<1>(get<1>(safeCaptureAndCenter[index]));
+        newC = get<0>(get<1>(safeCaptureAndCenter.at(index)));
+        newI = get<1>(get<1>(safeCaptureAndCenter.at(index)));
         board->setState(pieceSet.at(index), newC, newI);
-        pieceSet[index]->capture(newC, newI)->setActiveStatus(false);
+        pieceSet.at(index)->capture(newC, newI)->setActiveStatus(false);
     }
 }
