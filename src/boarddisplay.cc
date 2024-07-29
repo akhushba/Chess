@@ -331,5 +331,26 @@ void BoardDisplay::endGame() {
 
 void BoardDisplay::endSession() {
     notifyObservers();
+}
 
+
+BoardDisplay::PlayerInfo* BoardDisplay::getWhitePlayer() {
+    return whitePlayer.get();
+}
+
+BoardDisplay::PlayerInfo* BoardDisplay::getBlackPlayer() {
+    return blackPlayer.get();
+}
+
+BoardDisplay::PlayerInfo* BoardDisplay::getCurrentPlayer() {
+    return getCurrentTurn == WHITE ? whitePlayer.get() : blackPlayer.get();
+}
+
+void BoardDisplay::addWhitePlayer(string playerType) {
+    whitePlayer = make_unique<PlayerInfo>(WHITE, 'e', 'f', playerType);
+}
+
+void BoardDisplay::addBlackPlayer(string playerType) {
+    blackPlayer = make_unique<PlayerInfo>(BLACK, 'e', 'f', playerType);
+        
 }

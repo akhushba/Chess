@@ -75,31 +75,16 @@ public:
     void removePiece(string pos);
 public:
     std::vector<std::string> messages;
-    PlayerInfo* getWhitePlayer() {
-        return whitePlayer.get();
-    }
 
-    PlayerInfo* getBlackPlayer() {
-        return blackPlayer.get();
-    }
-    PlayerInfo* getCurrentPlayer() {
-        if(getCurrentTurn== WHITE){
-            return whitePlayer.get();
-        }
-        if(getCurrentTurn== BLACK){
-            return blackPlayer.get();
-        }
-        return 0;
-    }
+    PlayerInfo* getWhitePlayer();
 
-    void addWhitePlayer(string playerType) {
-        whitePlayer = make_unique<PlayerInfo>(WHITE, 'e', 'f', playerType);
-    }
+    PlayerInfo* getBlackPlayer();
 
-    void addBlackPlayer(string playerType) {
-        blackPlayer = make_unique<PlayerInfo>(BLACK, 'e', 'f', playerType);
-        
-    }
+    PlayerInfo* getCurrentPlayer();
+
+    void addWhitePlayer(string playerType);
+
+    void addBlackPlayer(string playerType);
 
     //for the chessboard
     bool simulateAttack(Piece*, char newC, int newI, Piece* reference = nullptr);
