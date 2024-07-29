@@ -16,6 +16,9 @@
 #include "levelThree.h"
 #include "levelFour.h"
 
+#include "textdisplay.h"
+#include "graphicsdisplay.h"
+
 BoardDisplay::BoardSegment::BoardSegment(Colour c) : colour{c}, piece{nullptr} {}
 
 void BoardDisplay::BoardSegment::setBegin() {
@@ -41,7 +44,7 @@ BoardDisplay::PlayerInfo::PlayerInfo(Colour c, char kingC, int kingI, string pla
 void BoardDisplay::init() {
     for (int i = 0; i < 8; ++i) {
         for (int j = 0; j < 8; ++j) {
-            Colour segmentColor = ((i + j) % 2 == 0) ? WHITE : BLACK;
+            Colour segmentColor = ((i + j) % 2 == 0) ? BLACK : WHITE;
             board[i][j] = new BoardSegment(segmentColor);
         }
     }
@@ -305,4 +308,6 @@ void BoardDisplay::addBlackPlayer(string playerType) {
 
 BoardDisplay::BoardDisplay() {
     init();
+    attach(new TextDisplay(this));
+    notifyObservers();
 }
