@@ -15,6 +15,7 @@ class Piece;
 class Player {
 protected:
     string name;
+    Colour colour;
     BoardDisplay *board;
     class CustomException : public std::exception {
         private:
@@ -29,8 +30,8 @@ protected:
             }
     };
 public:
-    vector<Piece*> pieceSet; 
-    Player(string name, vector<Piece*> pieceSet);
+    vector<Piece*> *pieceSet; 
+    Player(string name, vector<Piece*> *ps, Colour c);
     
     virtual void move(Piece* p = nullptr, char c = '\0', int i = -1) = 0;
     virtual ~Player() = 0;

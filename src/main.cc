@@ -16,6 +16,15 @@ int main () {
         string playerOne, playerTwo;
         cin >> playerOne >> playerTwo;
         board_Display.setPlayers(playerOne, playerTwo);
+
+        string setup;
+            cin >> setup;
+            if (setup == "setup") {
+                board_Display.setUpGame();
+            } else {
+                
+                command = setup;
+            }
     }
     else if (command == "resign") {
         BoardDisplay::PlayerInfo* currentPlayer= board_Display.getCurrentPlayer();

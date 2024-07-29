@@ -363,15 +363,15 @@ void BoardDisplay::setPlayer(Colour c, string playerType) {
     Player* p = c == WHITE ? whitePlayer->player : blackPlayer->player;
     if(p) delete p;
     if (playerType == "human") {
-        p = new Human("human", {});
+        p = new Human("human", {}, c);
     } else if (playerType == "computer1") {
-        p = new LevelOne("level one", {});
+        p = new LevelOne("level one", {}, c);
     } else if (playerType == "computer2") {
-        p = new LevelTwo("level two", {});
+        p = new LevelTwo("level two", {}, c);
     } else if (playerType == "computer3") {
-        p = new LevelThree("level three", {});
+        p = new LevelThree("level three", {},c );
     } else if (playerType == "computer4") {
-        p = new LevelFour("level four", {});
+        p = new LevelFour("level four", {}, c);
     }
 }
 

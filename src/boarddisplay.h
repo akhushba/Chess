@@ -32,9 +32,9 @@ public:
         int score;
         const Colour colour;
         bool inCheck;
-        std::pair<char, int> kingPosition;
-        std::vector<Piece*> activePieces;
-        std::vector<Piece*> inactivePieces;
+        pair<char, int> kingPosition;
+        vector<Piece*> activePieces;
+        vector<Piece*> inactivePieces;
 
         void reset();
 
