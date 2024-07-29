@@ -355,7 +355,6 @@ BoardDisplay::BoardDisplay() {
     defaultBoard();
     attach(new TextDisplay(this));
     notifyObservers();
-
 }
 
 void BoardDisplay::setPlayer(Colour c, string playerType) {

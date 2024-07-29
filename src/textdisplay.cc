@@ -2,10 +2,10 @@
 
 #include "boarddisplay.h"
 
-TextDisplay::TextDisplay(BoardDisplay* display): display{display} {}
+TextDisplay::TextDisplay(BoardDisplay* display): display{display} {
+}
 
 TextDisplay::~TextDisplay() {
-    delete display;
 }
 
 void TextDisplay::notify() {
