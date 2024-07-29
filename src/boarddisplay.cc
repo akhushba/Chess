@@ -1,6 +1,5 @@
 #include "boarddisplay.h"
 
-#include "subject.h"
 #include "colour.h"
 #include "piece.h"
 #include "player.h"
@@ -19,6 +18,25 @@
 #include "levelFour.h"
 
 BoardDisplay::BoardSegment::BoardSegment(Colour c) : colour{c}, piece{nullptr} {}
+
+void BoardDisplay::BoardSegment::setBegin() {
+    piece = nullptr;
+}
+
+BoardDisplay::PlayerInfo::PlayerInfo(Colour c, char kingC, int kingI, std::string playerType)
+                : score{0}, colour{c}, inCheck{false} {
+    if(playerType == "human") {
+
+    } else if (playerType == "computer1") {
+
+    } else if (playerType == "computer2") {
+
+    } else if (playerType == "computer3") {
+
+    } else if (playerType == "computer4") {
+
+    } 
+}
 
 // Initialize the board with unique pointers to BoardSegment
 void BoardDisplay::init() {

@@ -7,6 +7,8 @@
 #include <algorithm>
 #include <vector>
 
+#include "subject.h"
+
 class Subject;
 enum Colour;
 class Piece;
@@ -35,9 +37,7 @@ class BoardDisplay final: public Subject {
         Colour colour;
         Piece* piece;
 
-        void setBegin(){
-            piece = nullptr;
-        }
+        void setBegin();
         BoardSegment(Colour c);
         ~BoardSegment() = default;
       
@@ -53,20 +53,7 @@ public:
             std::vector<std::unique_ptr<Piece>> activePieces;
             std::vector<std::unique_ptr<Piece>> inactivePieces;
 
-            PlayerInfo(Colour c, char kingC, int kingI, std::string playerType)
-                : score{0}, colour{c}, inCheck{false} {
-                    if(playerType == "human") {
-
-                    } else if (playerType == "computer1") {
-
-                    } else if (playerType == "computer2") {
-
-                    } else if (playerType == "computer3") {
-
-                    } else if (playerType == "computer4") {
-
-                    } 
-                }
+            PlayerInfo::PlayerInfo(Colour c, char kingC, int kingI, std::string playerType);
             ~PlayerInfo() = default;
     };
 
