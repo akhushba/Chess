@@ -25,19 +25,8 @@ void BoardDisplay::BoardSegment::setBegin() {
     piece = nullptr;
 }
 
-BoardDisplay::PlayerInfo::PlayerInfo(Colour c, char kingC, int kingI, string playerType)
+BoardDisplay::PlayerInfo::PlayerInfo(Colour c, char kingC, int kingI)
     : player(nullptr), score{0}, colour{c}, inCheck{false}, kingPosition{kingC, kingI} {
-    if (playerType == "human") {
-        player = new Human("human", {});
-    } else if (playerType == "computer1") {
-        player = new LevelOne("level one", {});
-    } else if (playerType == "computer2") {
-        player = new LevelTwo("level two", {});
-    } else if (playerType == "computer3") {
-        player = new LevelThree("level three", {});
-    } else if (playerType == "computer4") {
-        player = new LevelFour("level four", {});
-    }
 }
 
 // Initialize the board
@@ -49,9 +38,46 @@ void BoardDisplay::init() {
         }
     }
 
-    whitePlayer = new PlayerInfo(Colour::WHITE, 'e', 1, "human");
-    blackPlayer = new PlayerInfo(Colour::BLACK, 'e', 8, "human");
+    whitePlayer = new PlayerInfo(Colour::WHITE, 'e', 1);
+    blackPlayer = new PlayerInfo(Colour::BLACK, 'e', 8);
     getCurrentTurn = WHITE;
+
+    // White pieces
+    addPiece('R', "a1"); // Rook
+    addPiece('N', "b1"); // Knight
+    addPiece('B', "c1"); // Bishop
+    addPiece('Q', "d1"); // Queen
+    addPiece('K', "e1"); // King
+    addPiece('B', "f1"); // Bishop
+    addPiece('N', "g1"); // Knight
+    addPiece('R', "h1"); // Rook
+    addPiece('P', "a2"); // Pawns
+    addPiece('P', "b2");
+    addPiece('P', "c2");
+    addPiece('P', "d2");
+    addPiece('P', "e2");
+    addPiece('P', "f2");
+    addPiece('P', "g2");
+    addPiece('P', "h2");
+
+    // Black pieces
+    addPiece('r', "a8"); // Rook
+    addPiece('n', "b8"); // Knight
+    addPiece('b', "c8"); // Bishop
+    addPiece('q', "d8"); // Queen
+    addPiece('k', "e8"); // King
+    addPiece('b', "f8"); // Bishop
+    addPiece('n', "g8"); // Knight
+    addPiece('r', "h8"); // Rook
+    addPiece('p', "a7"); // Pawns
+    addPiece('p', "b7");
+    addPiece('p', "c7");
+    addPiece('p', "d7");
+    addPiece('p', "e7");
+    addPiece('p', "f7");
+    addPiece('p', "g7");
+    addPiece('p', "h7");
+
 }
 
 Piece* BoardDisplay::getBoardInfo(char c, int i) {
@@ -323,18 +349,30 @@ BoardDisplay::PlayerInfo* BoardDisplay::getCurrentPlayer() {
     return getCurrentTurn == WHITE ? whitePlayer : blackPlayer;
 }
 
-void BoardDisplay::addWhitePlayer(string playerType) {
-    whitePlayer = new PlayerInfo(WHITE, 'e', 'f', playerType);
-}
-
-void BoardDisplay::addBlackPlayer(string playerType) {
-    blackPlayer = new PlayerInfo(BLACK, 'e', 'f', playerType);
-        
-}
-
 BoardDisplay::BoardDisplay() {
     init();
     attach(new TextDisplay(this));
     notifyObservers();
 
+}
+
+void BoardDisplay::setPlayer(Colour c, string playerType) {
+    Player* p = c == WHITE ? whitePlayer->player : blackPlayer->player;
+    if(p) delete p;
+    if (playerType == "human") {
+        p = new Human("human", {});
+    } else if (playerType == "computer1") {
+        p = new LevelOne("level one", {});
+    } else if (playerType == "computer2") {
+        p = new LevelTwo("level two", {});
+    } else if (playerType == "computer3") {
+        p = new LevelThree("level three", {});
+    } else if (playerType == "computer4") {
+        p = new LevelFour("level four", {});
+    }
+}
+
+void BoardDisplay::setPlayers(string playerOne, string playerTwo) {
+    setPlayer(WHITE, playerOne);
+    setPlayer(BLACK, playerTwo);
 }
