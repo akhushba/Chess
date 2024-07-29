@@ -124,14 +124,14 @@ void BoardDisplay::addPiece(char type, const std::string pos) {
         case 'B': case 'b': newPiece = new Bishop(c, this, cPos, iPos); break;
         case 'N': case 'n': newPiece = new Knight(c, this, cPos, iPos); break;
         case 'K': case 'k': 
-            if ((c == BLACK && countBlack >= 1) || (c == WHITE && countWhite >= 1)) {
-                cout << "Invalid number of kings" << endl;
-                return;
-            }
-            if (inCheck(c)) {
-                cout << "Invalid, king is in check" << endl;
-                return;
-            }
+            // if ((c == BLACK && countBlack >= 1) || (c == WHITE && countWhite >= 1)) {
+            //     cout << "Invalid number of kings" << endl;
+            //     return;
+            // }
+            // if (inCheck(c)) {
+            //     cout << "Invalid, king is in check" << endl;
+            //     return;
+            // }
             newPiece = new King(c, this, cPos, iPos);
             // (c == WHITE ? countWhite : countBlack)++;
             break;
@@ -167,7 +167,7 @@ void BoardDisplay::removePiece(string pos) {
 }
 
 void BoardDisplay::setState(Piece* p, char cPos, int iPos, char pawnPromote) {
-    cout << "HERE " << endl;
+    // cout << "HERE " << endl;
     PlayerInfo* currentPlayer = (p->getColour() == BLACK) ? blackPlayer : whitePlayer;
 
     if (p->getType() == 'K' || p->getType() == 'k') {
@@ -179,7 +179,7 @@ void BoardDisplay::setState(Piece* p, char cPos, int iPos, char pawnPromote) {
     //     p->setPos(cPos, iPos);
     //     p->hasMoved = true;
     // }
-    cout << "END " << endl;
+    // cout << "END " << endl;
 }
 
 bool BoardDisplay::canCapture(Colour pieceColour, char cPos, int iPos) {

@@ -21,12 +21,13 @@ void TextDisplay::notify() {
         out << "\n";
     }
 
-    out << ' ';
+    out << "  ";
     for (char c = 'a'; c < 'a' + SIZE; ++c) {
         out << c;
     }
     out << "\n";
-
+    out << "\nBOARD STATUS\n";
+    out << "------------\n";
     for(auto s : display->messages) out << s << "\n";
 
 }
