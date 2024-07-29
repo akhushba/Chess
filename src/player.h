@@ -30,11 +30,12 @@ protected:
     };
 public:
     vector<Piece*> pieceSet; 
-    Player() {}
-    Player(string name, vector<Piece*> pieceSet) : name{name}, pieceSet{pieceSet} {}
+    Player(string name, vector<Piece*> pieceSet);
+    
     virtual void move(Piece* p = nullptr, char c = '\0', int i = -1) = 0;
+    virtual ~Player() = 0;
+
     bool callSimulateAttack(Piece*, char newC, int newI, Piece* reference = nullptr);
-    virtual ~Player() {}
 };
 
 #endif

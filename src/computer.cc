@@ -3,3 +3,5 @@
 using namespace std;
 
 Computer::Computer(string name, vector<Piece*> pieceSet) : Player(name, pieceSet) {}
+
+Computer::~Computer() {}
