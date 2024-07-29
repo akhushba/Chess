@@ -1,6 +1,6 @@
 #include "textdisplay.h"
 
-#include "boarddisplay.h"
+// #include "boarddisplay.h"
 
 TextDisplay::TextDisplay(BoardDisplay* display): display{display} {}
 
@@ -15,7 +15,7 @@ void TextDisplay::notify() {
         out << (i + 1) << ' ';
         
         for (int j = 0; j < SIZE; ++j) {
-            display->getState(i, j);
+            // display->getState(i, j);
         }
         out << "\n";
     }
@@ -26,6 +26,6 @@ void TextDisplay::notify() {
     }
     out << "\n";
 
-    for(auto s : display->messages) out << s << "\n";
+    // for(auto s : display->messages) out << s << "\n";
 
 }

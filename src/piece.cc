@@ -3,6 +3,7 @@
 #include <tuple>
 
 using namespace std;
+Piece::~Piece() {}
 
 Piece::Piece(Colour colour, char type, BoardDisplay *board, char cPos, int iPos, int pieceValue) 
     : colour{colour}, boardInfo{boardInfo}, cPos{cPos}, iPos{iPos}, pieceValue{pieceValue}, 
@@ -14,12 +15,16 @@ void Piece::setPos(char c, int i) {
     boardInfo->setState(this, c, i);
 }
 
+Piece* Piece::capture(char c, int i) {
+    return this;
+}
+
 void Piece::setActiveStatus(bool state) {
     active = state;
 }
 
 Player* Piece::getOpponent() {
-    return (colour == WHITE) ? boardInfo->getBlackPlayer()->player.get() : boardInfo->getWhitePlayer()->player.get();
+    return (colour == WHITE) ? boardInfo->getBlackPlayer()->player : boardInfo->getWhitePlayer()->player;
 }
 
 int Piece::getPieceValue() {
@@ -27,7 +32,3 @@ int Piece::getPieceValue() {
 }
 
 bool Piece::isValidMove(char c, int i) {}
-
-Piece* Piece::capture(char newC, int newI) {
-    // return boardInfo->getBoardInfo(newC, newI);
-}
