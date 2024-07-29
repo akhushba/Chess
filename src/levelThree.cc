@@ -1,9 +1,9 @@
-#include "computer.h"
-#include "levelThree.h"
 #include <iostream>
 #include <random>
 #include <algorithm>
 #include <numeric>
+
+#include "levelThree.h"
 
 using namespace std; 
 
