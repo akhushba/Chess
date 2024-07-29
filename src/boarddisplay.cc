@@ -137,8 +137,8 @@ void BoardDisplay::addPiece(char type, string pos) {
         //need to make sure neither kings are in check
         //exactly one black king and one white king
 
-    } else if (type == 'P' || type == 'p') {
-        if('a' <= cPos <= 'h' && 2 <= iPos <= 8){
+    }  else if (type == 'P' || type == 'p') {
+        if('a' <= cPos && cPos >= 'h' && 2 <= iPos && iPos >= 7){
         //ensure that no pawns are in the first or last row of board
         newPiece = new Pawn(c, nullptr, cPos, iPos);
         }
