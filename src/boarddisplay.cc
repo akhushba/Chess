@@ -243,8 +243,10 @@ void BoardDisplay::setUpGame() {
             cin >> colour;
             getCurrentTurn = (colour == "WHITE") ? WHITE : BLACK;
         } else if (setupCommand == "done") {
+            notifyObservers();
             break;
         }
+        notifyObservers();
     }
 }
 
@@ -310,4 +312,5 @@ BoardDisplay::BoardDisplay() {
     init();
     attach(new TextDisplay(this));
     notifyObservers();
+
 }
