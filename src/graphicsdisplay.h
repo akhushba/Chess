@@ -3,10 +3,10 @@
 
 #include <iostream>
 #include <memory>
+#include "observer.h"
 
-class XWindow;
-class BoarddDisplay;
-class Observer;
+class Xwindow;
+class BoardDisplay;
 
 class GraphicsDisplay : public Observer {
     BoardDisplay* display;

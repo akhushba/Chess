@@ -1,10 +1,9 @@
-#include "computer.h"
-#include "player.h"
-#include "levelOne.h"
 #include <iostream>
 #include <random>
 #include <algorithm>
 #include <numeric>
+
+#include "levelOne.h"
 
 using namespace std;
 

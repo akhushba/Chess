@@ -23,7 +23,7 @@ void BoardDisplay::BoardSegment::setBegin() {
     piece = nullptr;
 }
 
-BoardDisplay::PlayerInfo::PlayerInfo(Colour c, char kingC, int kingI, std::string playerType)
+BoardDisplay::PlayerInfo::PlayerInfo(Colour c, char kingC, int kingI, string playerType)
                 : score{0}, colour{c}, inCheck{false} {
     if(playerType == "human") {
 
@@ -47,14 +47,14 @@ void BoardDisplay::init() {
         }
     }
 
-    whitePlayer = std::make_unique<PlayerInfo>(Colour::WHITE, 'e', 1);
-    blackPlayer = std::make_unique<PlayerInfo>(Colour::BLACK, 'e', 8);
+    whitePlayer = std::make_unique<PlayerInfo>(Colour::WHITE, 'e', 1, "human");
+    blackPlayer = std::make_unique<PlayerInfo>(Colour::BLACK, 'e', 8, "human");
     getCurrentTurn = WHITE;
 }
 
 
-BoardDisplay::BoardSegment* BoardDisplay::getBoardInfo(char c, int i) {
-    return board[i - 1][c - 'a'].get();
+Piece* BoardDisplay::getBoardInfo(char c, int i) {
+    return board[i - 1][c - 'a'].get()->piece;
 }
 
 void BoardDisplay::attach(Observer* o) {
@@ -204,15 +204,15 @@ bool BoardDisplay::canCastle(Colour c) {
 
 
 Colour BoardDisplay::occupied(char c, int i) {
-    BoardSegment* seg = getBoardInfo(c, i);
-    if(seg->piece) return seg->piece->getColour();
+    Piece* p = getBoardInfo(c, i);
+    if(p) return p->getColour();
     else return NULL_C;
 }
 
 bool BoardDisplay::simulateAttack(Piece* p, char newC, int newI, Piece* checkAttack) {
     pair<char, int> currentPosition = p->getPosition();
 
-    Piece* tempCapture = getBoardInfo(newC, newI)->piece;
+    Piece* tempCapture = getBoardInfo(newC, newI);
     setState(p, newC, newI);
     setState(nullptr, currentPosition.first, currentPosition.second);
 
@@ -315,16 +315,21 @@ void BoardDisplay::resign(Colour c) {
 
 }
 
+void BoardDisplay::PlayerInfo::reset() {
+    inCheck = false;
+    kingPosition = (colour == WHITE) ? make_pair('e', 1) :  make_pair('e', 8);
+}
+
 void BoardDisplay::endGame() {
     //need to reset the player info 
     for(int i = 0; i < 8; ++i) {
         for(int j = 0; j < 8; ++j) {
-            Colour segmentColor = ((i + j) % 2 == 0) ? WHITE : BLACK;
             board[i][j] -> setBegin();
         }
     }
-    std::unique_ptr<PlayerInfo> resetPlayerWhite = std::make_unique<PlayerInfo>(Colour::WHITE, 'e', 1);
-    std::unique_ptr<PlayerInfo> resetPlayerBlack = std::make_unique<PlayerInfo>(Colour::BLACK, 'e', 8);
+
+    getWhitePlayer()->reset();
+    getBlackPlayer()->reset();
 
     notifyObservers();
 }

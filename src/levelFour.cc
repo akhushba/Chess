@@ -1,10 +1,9 @@
-#include "computer.h"
 #include "levelFour.h"
 
 #include <algorithm>
 #include <iostream>
 #include <tuple>
-#include <unordered_set>
+#include <vector>
 #include <random>
 
 using namespace std;
@@ -31,15 +30,11 @@ int LevelFour::getMaxPieceValue(vector<pair<Piece*, tuple<char, int>>> optionsVe
     return maxIndex;
 }
 
-void LevelFour::move(Piece* p = nullptr, char c = '\0', int i = -1) {
-    // maybe: check for popular pawn first move
-    // maybe: be ok w having pawn captured if capturing smth of higher value
-
+void LevelFour::move(Piece* p, char c, int i) {
     vector<pair<Piece*, tuple<char, int>>> safeOptions;
     vector<pair<Piece*, tuple<char, int>>> captureOptions;
     vector<pair<Piece*, tuple<char, int>>> centerOptions;
     
-    unordered_set<pair<Piece*, tuple<char, int>>> commonElements;
     vector<pair<Piece*, tuple<char, int>>> safeCaptureAndCenter;
     vector<pair<Piece*, tuple<char, int>>> safeAndCapture;
 
@@ -63,82 +58,74 @@ void LevelFour::move(Piece* p = nullptr, char c = '\0', int i = -1) {
             }
 
             if (pieceSet[i]->capture(newC, newI) != nullptr) {
-                // check if moving "my" piece puts any of my other pieces in danger (but only for those that are higher value)
-                for (int k = 0; i < numPieces; i++) {
+                canAttack = false;
+                for (int k = 0; k < numPieces; k++) {
                     if (pieceSet[k]->getPieceValue() > pieceSet[i]->getPieceValue()) {
                         canAttack = callSimulateAttack(pieceSet[i], newC, newI, pieceSet[k]);
-                        if (canAttack == true) break;
+                        if (canAttack) break;
                     }
                 }
-                if (canAttack == false) {
+                if (!canAttack) {
                     captureOptions.push_back(make_pair(pieceSet[i], make_tuple(newC, newI)));
                 }
             }
+
             goodMove = true;
             for (int k = 0; k < pieceSet[i]->getOpponent()->pieceSet.size(); k++) {
-                if (pieceSet[i]->getOpponent()->pieceSet[k]->isValidMove(newC, newI) == true) {
+                if (pieceSet[i]->getOpponent()->pieceSet[k]->isValidMove(newC, newI)) {
                     goodMove = false;
                     break;
                 }
             }
             if (goodMove) {
-                centerOptions.push_back(make_pair(pieceSet[i], make_tuple(newC, newI)));
+                safeOptions.push_back(make_pair(pieceSet[i], make_tuple(newC, newI)));
             }
         }
     }
-    // set common elems to vec1
-    for (const auto& elem : safeOptions) {
-        commonElements.insert(elem);
-    }
-    // find common elems in vec1 and vec2
-    safeCaptureAndCenter.clear();
-    for (const auto& elem : centerOptions) {
-        if (commonElements.find(elem) != commonElements.end()) {
-            safeCaptureAndCenter.push_back(elem);
-            safeAndCapture.push_back(elem);
-        }
-    }
-    // reset common elems to be the common elems between vec1 and vec2
-    commonElements.clear();
-    for (const auto& elem : safeCaptureAndCenter) {
-        commonElements.insert(elem);
-    }
-    // find common elems between all 3 vecs
-    safeCaptureAndCenter.clear();
-    for (const auto& elem : captureOptions) {
-        if (commonElements.find(elem) != commonElements.end()) {
-            safeCaptureAndCenter.push_back(elem);
+
+    // Find common elements in safeOptions and captureOptions
+    for (const auto& safeOption : safeOptions) {
+        for (const auto& captureOption : captureOptions) {
+            if (safeOption == captureOption) {
+                safeAndCapture.push_back(safeOption);
+            }
         }
     }
 
-    if (safeOptions.size() == 0) {
-        // no safe options then just do smth random
+    // Find common elements in safeAndCapture and centerOptions
+    for (const auto& safeCapture : safeAndCapture) {
+        for (const auto& centerOption : centerOptions) {
+            if (safeCapture == centerOption) {
+                safeCaptureAndCenter.push_back(safeCapture);
+            }
+        }
+    }
+
+    if (safeOptions.empty()) {
+        // No safe options, make a random move
         shuffle(pieceSet.begin(), pieceSet.end(), g);
         char newC = std::get<0>(pieceSet.at(0)->validPosVec.at(0));
         int newI = std::get<1>(pieceSet.at(0)->validPosVec.at(0));
         board->setState(pieceSet.at(0), newC, newI);
-    } else if (safeCaptureAndCenter.size() == 0 && safeAndCapture.size() == 0) {
-        // no overlap in any of the vectors
+    } else if (safeCaptureAndCenter.empty() && safeAndCapture.empty()) {
+        // No overlap in any of the vectors
         shuffle(pieceSet.begin(), pieceSet.end(), g);
         newC = get<0>(get<1>(safeOptions[0]));
         newI = get<1>(get<1>(safeOptions[0]));
         board->setState(pieceSet.at(0), newC, newI);
-        // pieceSet[0]->setPos(newC, newI);
-    } else if (safeCaptureAndCenter.size() == 0) {
-        // smth exists in 2 of the vectors
+    } else if (safeCaptureAndCenter.empty()) {
+        // Something exists in 2 of the vectors
         index = getMaxPieceValue(safeAndCapture);
         newC = get<0>(get<1>(safeAndCapture[index]));
         newI = get<1>(get<1>(safeAndCapture[index]));
         board->setState(pieceSet.at(index), newC, newI);
-        // pieceSet[index]->setPos(newC, newI);
         pieceSet[index]->capture(newC, newI)->setActiveStatus(false);
     } else {
-        // there is smth that exists in all 3 vectors
+        // There is something that exists in all 3 vectors
         index = getMaxPieceValue(safeCaptureAndCenter);
         newC = get<0>(get<1>(safeCaptureAndCenter[index]));
         newI = get<1>(get<1>(safeCaptureAndCenter[index]));
         board->setState(pieceSet.at(index), newC, newI);
-        // pieceSet[index]->setPos(newC, newI);
         pieceSet[index]->capture(newC, newI)->setActiveStatus(false);
     }
 }

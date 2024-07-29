@@ -1,7 +1,6 @@
 #include "graphicsdisplay.h"
 #include <memory>
 
-#include "observer.h"
 #include "boarddisplay.h"
 #include "window.h"
 

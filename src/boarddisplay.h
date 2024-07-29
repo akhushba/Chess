@@ -8,9 +8,8 @@
 #include <vector>
 
 #include "subject.h"
+#include "colour.h"
 
-class Subject;
-enum Colour;
 class Piece;
 class Player;
 
@@ -30,7 +29,6 @@ class LevelFour;
 using namespace std;
 
 class Piece;
-
 class BoardDisplay final: public Subject {
     bool customSetup;
     struct BoardSegment {
@@ -53,6 +51,8 @@ public:
             std::vector<std::unique_ptr<Piece>> activePieces;
             std::vector<std::unique_ptr<Piece>> inactivePieces;
 
+            void reset();
+
             PlayerInfo(Colour c, char kingC, int kingI, std::string playerType);
             ~PlayerInfo() = default;
     };
@@ -62,7 +62,7 @@ public:
     std::unique_ptr<PlayerInfo> blackPlayer; 
 
     void init();
-    BoardSegment* getBoardInfo(char c, int i);
+    Piece* getBoardInfo(char c, int i);
     Colour getCurrentTurn;
 
     // Observer pattern

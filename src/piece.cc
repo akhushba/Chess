@@ -14,6 +14,10 @@ void Piece::setPos(char c, int i) {
     boardInfo->setState(this, c, i);
 }
 
+void Piece::setActiveStatus(bool state) {
+    active = state;
+}
+
 Player* Piece::getOpponent() {
     return (colour == WHITE) ? boardInfo->getBlackPlayer()->player.get() : boardInfo->getWhitePlayer()->player.get();
 }
