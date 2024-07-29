@@ -15,6 +15,7 @@ class Player;
 using namespace std;
 
 class BoardDisplay final : public Subject {
+public:
     bool customSetup;
     struct BoardSegment {
         Colour colour;
@@ -25,7 +26,6 @@ class BoardDisplay final : public Subject {
         ~BoardSegment() = default;
     };
 
-public:
     class PlayerInfo {
     public:
         Player* player;
@@ -42,13 +42,13 @@ public:
         ~PlayerInfo() = default;
     };
 
-    BoardSegment board[8][8];
-    PlayerInfo* whitePlayer; 
-    PlayerInfo* blackPlayer; 
+    BoardSegment* board[8][8];
+    PlayerInfo* whitePlayer = nullptr; 
+    PlayerInfo* blackPlayer = nullptr; 
+    Colour getCurrentTurn= WHITE;
 
     void init();
     Piece* getBoardInfo(char c, int i);
-    Colour getCurrentTurn;
 
     // Observer pattern
     void attach(Observer* o) override;
@@ -59,7 +59,6 @@ public:
     void addPiece(char type, string pos);
     void removePiece(string pos);
 
-public:
     std::vector<std::string> messages;
 
     PlayerInfo* getWhitePlayer();

@@ -3,7 +3,7 @@
 #include <vector>
 #include <memory>
 
-class Observer;
+#include "observer.h"
 
 class Subject {
   std::vector<std::unique_ptr<Observer>> observers;

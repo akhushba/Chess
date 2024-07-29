@@ -42,7 +42,7 @@ void BoardDisplay::init() {
     for (int i = 0; i < 8; ++i) {
         for (int j = 0; j < 8; ++j) {
             Colour segmentColor = ((i + j) % 2 == 0) ? WHITE : BLACK;
-            board[i][j] = BoardSegment(segmentColor);
+            board[i][j] = new BoardSegment(segmentColor);
         }
     }
 
@@ -52,7 +52,7 @@ void BoardDisplay::init() {
 }
 
 Piece* BoardDisplay::getBoardInfo(char c, int i) {
-    return board[i - 1][c - 'a'].piece;
+    return board[i - 1][c - 'a']->piece;
 }
 
 void BoardDisplay::attach(Observer* o) {
@@ -68,10 +68,10 @@ void BoardDisplay::notifyObservers() {
 }
 
 char BoardDisplay::getState(int row, int col) const {
-    if (!board[row][col].piece) {
-        return board[row][col].colour == BLACK ? '_' : ' ';
+    if (!board[row][col]->piece) {
+        return board[row][col]->colour == BLACK ? '_' : ' ';
     }
-    return board[row][col].piece->getType();
+    return board[row][col]->piece->getType();
 }
 
 void BoardDisplay::addPiece(char type, string pos) {
@@ -100,7 +100,7 @@ void BoardDisplay::addPiece(char type, string pos) {
 }
 
 void BoardDisplay::removePiece(string pos) {
-    Piece* p = board[pos[1] - '0' - 1][pos[0] - 'a'].piece;
+    Piece* p = board[pos[1] - '0' - 1][pos[0] - 'a']->piece;
     if (p) {
         PlayerInfo* currentPlayer = (p->getColour() == BLACK) ? blackPlayer : whitePlayer;
         auto& activePieces = currentPlayer->activePieces;
@@ -119,7 +119,7 @@ void BoardDisplay::setState(Piece* p, char cPos, int iPos, char pawnPromote) {
         currentPlayer->kingPosition = {cPos, iPos};
     }
 
-    board[iPos - 1][cPos - 'a'].piece = p;
+    board[iPos - 1][cPos - 'a']->piece = p;
     if (p) {
         p->setPos(cPos, iPos);
         p->hasMoved = true;
@@ -262,7 +262,7 @@ void BoardDisplay::PlayerInfo::reset() {
 void BoardDisplay::endGame() {
     for (int i = 0; i < 8; ++i) {
         for (int j = 0; j < 8; ++j) {
-            board[i][j].setBegin();
+            board[i][j]->setBegin();
         }
     }
     whitePlayer->reset();
@@ -275,6 +275,12 @@ void BoardDisplay::endSession() {
     notifyObservers();
 }
 
+
+void BoardDisplay::makeMove(Colour c, string oldPos, string newPos){
+        PlayerInfo* currentPlayer = (c == BLACK) ? blackPlayer : whitePlayer;
+        Piece* p = getBoardInfo(oldPos[0], (int)oldPos[1]);
+        currentPlayer->player->move(p, newPos[0], (int)newPos[1]);
+}
 
 BoardDisplay::PlayerInfo* BoardDisplay::getWhitePlayer() {
     return whitePlayer;
@@ -295,4 +301,8 @@ void BoardDisplay::addWhitePlayer(string playerType) {
 void BoardDisplay::addBlackPlayer(string playerType) {
     blackPlayer = new PlayerInfo(BLACK, 'e', 'f', playerType);
         
+}
+
+BoardDisplay::BoardDisplay() {
+    init();
 }
