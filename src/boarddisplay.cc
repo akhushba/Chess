@@ -25,19 +25,8 @@ void BoardDisplay::BoardSegment::setBegin() {
     piece = nullptr;
 }
 
-BoardDisplay::PlayerInfo::PlayerInfo(Colour c, char kingC, int kingI, string playerType)
+BoardDisplay::PlayerInfo::PlayerInfo(Colour c, char kingC, int kingI)
     : player(nullptr), score{0}, colour{c}, inCheck{false}, kingPosition{kingC, kingI} {
-    if (playerType == "human") {
-        player = new Human("human", {});
-    } else if (playerType == "computer1") {
-        player = new LevelOne("level one", {});
-    } else if (playerType == "computer2") {
-        player = new LevelTwo("level two", {});
-    } else if (playerType == "computer3") {
-        player = new LevelThree("level three", {});
-    } else if (playerType == "computer4") {
-        player = new LevelFour("level four", {});
-    }
 }
 
 // Initialize the board
@@ -49,8 +38,8 @@ void BoardDisplay::init() {
         }
     }
 
-    whitePlayer = new PlayerInfo(Colour::WHITE, 'e', 1, "human");
-    blackPlayer = new PlayerInfo(Colour::BLACK, 'e', 8, "human");
+    whitePlayer = new PlayerInfo(Colour::WHITE, 'e', 1);
+    blackPlayer = new PlayerInfo(Colour::BLACK, 'e', 8);
     getCurrentTurn = WHITE;
 }
 
@@ -299,18 +288,30 @@ BoardDisplay::PlayerInfo* BoardDisplay::getCurrentPlayer() {
     return getCurrentTurn == WHITE ? whitePlayer : blackPlayer;
 }
 
-void BoardDisplay::addWhitePlayer(string playerType) {
-    whitePlayer = new PlayerInfo(WHITE, 'e', 'f', playerType);
-}
-
-void BoardDisplay::addBlackPlayer(string playerType) {
-    blackPlayer = new PlayerInfo(BLACK, 'e', 'f', playerType);
-        
-}
-
 BoardDisplay::BoardDisplay() {
     init();
     attach(new TextDisplay(this));
     notifyObservers();
 
+}
+
+void BoardDisplay::setPlayer(Colour c, string playerType) {
+    Player* p = c == WHITE ? whitePlayer->player : blackPlayer->player;
+    if(p) delete p;
+    if (playerType == "human") {
+        p = new Human("human", {});
+    } else if (playerType == "computer1") {
+        p = new LevelOne("level one", {});
+    } else if (playerType == "computer2") {
+        p = new LevelTwo("level two", {});
+    } else if (playerType == "computer3") {
+        p = new LevelThree("level three", {});
+    } else if (playerType == "computer4") {
+        p = new LevelFour("level four", {});
+    }
+}
+
+void BoardDisplay::setPlayers(string playerOne, string playerTwo) {
+    setPlayer(WHITE, playerOne);
+    setPlayer(BLACK, playerTwo);
 }

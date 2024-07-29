@@ -38,7 +38,7 @@ public:
 
         void reset();
 
-        PlayerInfo(Colour c, char kingC, int kingI, std::string playerType);
+        PlayerInfo(Colour c, char kingC, int kingI);
         ~PlayerInfo() = default;
     };
 
@@ -67,10 +67,6 @@ public:
 
     PlayerInfo* getCurrentPlayer();
 
-    void addWhitePlayer(string playerType);
-
-    void addBlackPlayer(string playerType);
-
     // for the chessboard
     bool simulateAttack(Piece*, char newC, int newI, Piece* reference = nullptr);
     void setState(Piece* p, char cPos, int iPos, char pawnPromote = '\0');
@@ -79,6 +75,8 @@ public:
     Colour occupied(char c, int i);
     bool simulateInCheck(Piece* p, char newC, int newI);
     bool canCastle(Colour c);
+    void setPlayers(string playerOne, string playerTwo);
+    void setPlayer(Colour c, string playerType);
 
     bool inCheck(Colour c);
     bool inCheckmate(Colour c);
