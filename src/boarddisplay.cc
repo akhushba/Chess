@@ -106,10 +106,12 @@ char BoardDisplay::getState(int row, int col) const {
 void BoardDisplay::addPiece(char type, string pos) {
     Colour c = std::islower(type) ? BLACK : WHITE;
     char cPos = pos[0];
-    int iPos = (int)pos[1];
+    int iPos = pos[1] - '0';
     int countWhite;
     int countBlack;
     Piece* newPiece = nullptr;
+    if(cPos < 'a' || cPos > 'h' || iPos < 1 || iPos > 8) 
+        return;
     if (type == 'Q' || type == 'q') {
         newPiece = new Queen(c, nullptr, cPos, iPos);
     } else if (type == 'R' || type == 'r') {
@@ -138,6 +140,7 @@ void BoardDisplay::addPiece(char type, string pos) {
         //exactly one black king and one white king
 
     }  else if (type == 'P' || type == 'p') {
+        cout << "AHHAFHAHSD \t" << cPos << iPos << endl;
         if('a' <= cPos && cPos >= 'h' && 2 <= iPos && iPos >= 7){
         //ensure that no pawns are in the first or last row of board
         newPiece = new Pawn(c, nullptr, cPos, iPos);
