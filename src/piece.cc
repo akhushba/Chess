@@ -31,4 +31,8 @@ int Piece::getPieceValue() {
     return pieceValue;
 }
 
+vector<pair<char,int>> Piece::generate(){
+    return {};
+}
+
 bool Piece::isValidMove(char c, int i) {}

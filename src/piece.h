@@ -40,7 +40,7 @@ public:
     std::pair<char, int> getPosition() const { return {cPos, iPos}; }
     Colour getColour() const { return colour; }
     char getType() const { return type; }
-
+    virtual vector <pair<char,int>> generate();
     virtual ~Piece() = 0;
 };
 

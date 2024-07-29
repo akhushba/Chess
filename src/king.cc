@@ -1,6 +1,6 @@
 #include "king.h"
 
-King::King(Colour colour, BoardDisplay*board, char cPos, int iPos) : Piece(colour, 'k', board, iPos, cPos, 10) {
+King::King(Colour colour, BoardDisplay*board, char cPos, int iPos) : Piece(colour, 'k', board, cPos, iPos, 10) {
 }
 
 bool King::isValidMove(char newC, int newI) {

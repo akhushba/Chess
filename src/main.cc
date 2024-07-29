@@ -5,71 +5,16 @@
 
 #include "boarddisplay.h"
 using namespace std;
+#include "piece.h"
 
 int main () {
 
     BoardDisplay board_Display;
+    board_Display.defaultBoard();
+    Piece* p  = board_Display.getBoardInfo('a', 2);
+    cout << board_Display.checkValid(p, 'a', 3) << endl;
 
-    string command;
-    while (cin >> command) {
-    if (command == "game" ) {
-        string playerOne, playerTwo;
-        cin >> playerOne >> playerTwo;
-        board_Display.setPlayers(playerOne, playerTwo);
-        // for testing purposes
-        board_Display.defaultBoard();
-
-        string setup;
-            cin >> setup;
-            if (setup == "setup") {
-                board_Display.setUpGame();
-            } else {
-                board_Display.defaultBoard();
-                command = setup;
-            }
-    }
-    
-    if (command == "resign") {
-        BoardDisplay::PlayerInfo* currentPlayer= board_Display.getCurrentPlayer();
-        board_Display.resign(currentPlayer->colour);
-    }
-    else if (command == "move") {
-        string oldPos, newPos;
-        cin >> oldPos >> newPos;
-        BoardDisplay::PlayerInfo* currentPlayer= board_Display.getCurrentPlayer();
-        board_Display.makeMove(currentPlayer-> colour, oldPos, newPos);
-        if(currentPlayer-> colour == WHITE ){
-            board_Display.inCheck(board_Display.getBlackPlayer()->colour);
-        }
-        if(currentPlayer-> colour == BLACK ){
-            board_Display.inCheck(board_Display.getWhitePlayer()->colour);
-        }
-        if(board_Display.inStalemate(Colour:: WHITE) || board_Display.inStalemate(Colour:: BLACK)){
-            //update score
-            //endgame
-            board_Display.getWhitePlayer()->score += 0.5;
-            board_Display.getBlackPlayer()->score += 0.5;
-            board_Display.endGame();
-            board_Display.notifyObservers();
-        }
-        if(board_Display.inCheckmate(Colour:: WHITE)){
-            board_Display.getBlackPlayer()->score++;
-            board_Display.endGame();
-            board_Display.notifyObservers();
-        }
-        if(board_Display.inCheckmate(Colour:: BLACK)){
-            board_Display.getWhitePlayer()->score++;
-            board_Display.endGame();
-            board_Display.notifyObservers();
-        }
-
-        //ignore if no pawn promotion is happening
-        char pawnProm;
-        cin >> pawnProm;
-
-    }
-    else if (command == "setup") {
-        board_Display.setUpGame();
-    }
-  }
+    //  cout << p->isValidMove('a', 3) << endl;
+    // cout << p->getType() << p->getPosition().first << p->getPosition().second << endl;
 }
+

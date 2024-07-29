@@ -67,14 +67,14 @@ void BoardDisplay::defaultBoard() {
     addPiece('p', "g7");
     addPiece('p', "h7");
 
-    getWhitePlayer()->player->pieceSet = &(getWhitePlayer()->activePieces);
-    getBlackPlayer()->player->pieceSet = &(getBlackPlayer()->activePieces);
-    customSetup = false;
+    // getWhitePlayer()->player->pieceSet = &(getWhitePlayer()->activePieces);
+    // getBlackPlayer()->player->pieceSet = &(getBlackPlayer()->activePieces);
+    // customSetup = false;
 }
 
 Piece* BoardDisplay::getBoardInfo(char c, int i) {
     return board[i - 1][c - 'a']->piece;
-}
+    }
 
 void BoardDisplay::attach(Observer* o) {
     Subject::attach(o);
@@ -142,7 +142,7 @@ void BoardDisplay::addPiece(char type, const std::string pos) {
     PlayerInfo* currentPlayer = (c == BLACK) ? blackPlayer : whitePlayer;
     setState(newPiece, cPos, iPos);
     currentPlayer->activePieces.push_back(newPiece);
-    cout << "pushback new piece" << endl;
+    // cout << "pushback new piece" << endl;
     // currentPlayer->player->pieceSet->push_back(newPiece);
 }
 
@@ -203,7 +203,8 @@ bool BoardDisplay::canCastle(Colour c) {
 
 Colour BoardDisplay::occupied(char c, int i) {
     Piece* p = getBoardInfo(c, i);
-    if (p) return p->getColour();
+    cout<<"hello"<<endl;
+    if ( p== nullptr) return p->getColour();
     return NULL_C;
 }
 
@@ -383,4 +384,85 @@ void BoardDisplay::setPlayer(Colour c, string playerType) {
 void BoardDisplay::setPlayers(string playerOne, string playerTwo) {
     setPlayer(WHITE, playerOne);
     setPlayer(BLACK, playerTwo);
+}
+
+bool BoardDisplay::checkValid(Piece* p, char cPos, int iPos){
+    vector<pair<char,int>> possible = p->generate();
+
+    // //find pair <cpos,iPos>
+    // auto foundPair = findPair(possible, cPos, iPos);
+    // if (foundPair.first == 'i') {
+    //     return false;
+    // }
+    // if(p->getType() == 'N') {
+    //     //only check end
+    //     if(occupied(cPos, iPos) == p->getColour()) return false;
+    // } else {
+    //     char currC = p->getPosition().first;
+    //     int currI = p->getPosition().second;
+    //     // check all square in between
+    //     // Determine movement direction
+    // int colDiff = cPos - currC;
+    // int rowDiff = iPos - currI;
+    // int colStep = (colDiff == 0) ? 0 : (colDiff > 0) ? 1 : -1;
+    // int rowStep = (rowDiff == 0) ? 0 : (rowDiff > 0) ? 1 : -1;
+
+    // // Check if move is along a valid path for a Queen
+    // if ((colDiff != 0 && rowDiff != 0 && abs(colDiff) != abs(rowDiff)) || (colDiff == 0 && rowDiff == 0)) return false;
+
+    // //make sure all squares inbetween are unoccupied
+    // char currentCol = currC;
+    // int currentRow = currI;
+    // while (currentCol != cPos && currentRow != iPos) {
+    //     currentCol += colStep;
+    //     currentRow += rowStep;
+        
+    //     if (occupied(currentCol, currentRow) == p->getColour()) return false;
+    // }
+
+    // }
+    // simulateAttack2(p, cPos, iPos);
+    // run in check simulation
+    return true;
+}
+
+bool BoardDisplay::simulateAttack2(Piece* p, char newC, int newI, Piece* checkAttack) {
+    pair<char, int> currentPosition = p->getPosition();
+
+    Piece* tempCapture = getBoardInfo(newC, newI);
+    setState(p, newC, newI);
+    setState(nullptr, currentPosition.first, currentPosition.second);
+
+    PlayerInfo* currentPlayer = (p->getColour() == BLACK) ? blackPlayer : whitePlayer;
+    PlayerInfo* oppositePlayer = (p->getColour() == BLACK) ? whitePlayer : blackPlayer;
+
+    bool canBeAttacked = false;
+    bool originalCheckState = currentPlayer->inCheck;
+    currentPlayer->inCheck = false;
+
+    for(const auto& piece : oppositePlayer->activePieces) {
+        if (checkAttack) {
+            canBeAttacked = checkValid(piece, checkAttack->getPosition().first, checkAttack->getPosition().second);
+        } else {
+            canBeAttacked = checkValid(piece, currentPlayer->kingPosition.first, currentPlayer->kingPosition.second);
+        }
+        if(canBeAttacked) break;
+    }
+
+    currentPlayer->inCheck = originalCheckState;
+    
+    setState(tempCapture, newC, newI);
+    setState(p, currentPosition.first, currentPosition.second);
+
+    return canBeAttacked;
+}
+
+std::pair<char, int> BoardDisplay::findPair(const std::vector<std::pair<char, int>>& vec, char cPos, int iPos) {
+    for (const auto& pair : vec) {
+        if (pair.first == cPos && pair.second == iPos) {
+            cout << pair.first << pair.second << endl;
+            return pair;
+        }
+    }
+    return {'i', 0};
 }

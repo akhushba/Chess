@@ -1,4 +1,5 @@
 #include "pawn.h"
+#include <utility>
 
 Pawn::Pawn(Colour colour, BoardDisplay *board, char cPos, int iPos): Piece(colour, 'p', board, cPos, iPos, 1)  {
 }
@@ -40,4 +41,18 @@ void Pawn::generateMoves() {
         if(isValidMove(cPos + d[0], iPos + d[1])) 
             validPosVec.emplace_back(make_tuple(cPos + d[0], iPos + d[1]));
     }
+}
+
+vector <pair<char,int>> Pawn::generate(){
+    vector <pair<char,int>> possible;
+
+    // int boardPosition = (colour == Colour::WHITE) ? 1 : -1;
+    // if (!hasMoved) {
+    //     possible.emplace_back(make_pair(cPos, iPos + 2 * boardPosition));
+    // }
+
+    // int directions[4][2] = {{0, boardPosition}, {1, boardPosition}, {-1, boardPosition}};
+    // for(auto& d : directions) {
+    //     possible.emplace_back(make_pair(cPos + d[0], iPos + d[1]));
+    // }
 }

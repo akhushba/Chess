@@ -8,7 +8,7 @@
 
 #include "subject.h"
 #include "colour.h"
-
+#include <optional>
 class Piece;
 class Player;
 
@@ -69,11 +69,11 @@ public:
 
     // for the chessboard
     bool simulateAttack(Piece*, char newC, int newI, Piece* reference = nullptr);
+    bool simulateAttack2(Piece*, char newC, int newI, Piece* reference = nullptr);
     void setState(Piece* p, char cPos, int iPos, char pawnPromote = '\0');
     void makeMove(Colour currentColour, string oldpos, string newpos);
     bool canCapture(Colour pieceColour, char cPos, int iPos);
     Colour occupied(char c, int i);
-    bool simulateInCheck(Piece* p, char newC, int newI);
     bool canCastle(Colour c);
     void setPlayers(string playerOne, string playerTwo);
     void setPlayer(Colour c, string playerType);
@@ -85,8 +85,10 @@ public:
     void endGame();
     void endSession();
     void setUpGame();
+    bool checkValid(Piece *p, char cPos, int iPos);
     BoardDisplay();
     ~BoardDisplay() = default;
-};
+std::pair<char, int> findPair(const std::vector<std::pair<char, int>>& vec, char cPos, int iPos);
 
+};
 #endif
