@@ -47,7 +47,7 @@ public:
     PlayerInfo* blackPlayer = nullptr; 
     Colour getCurrentTurn= WHITE;
 
-    void init();
+    void defaultBoard();
     Piece* getBoardInfo(char c, int i);
 
     // Observer pattern

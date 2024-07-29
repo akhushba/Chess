@@ -29,19 +29,8 @@ BoardDisplay::PlayerInfo::PlayerInfo(Colour c, char kingC, int kingI)
     : player(nullptr), score{0}, colour{c}, inCheck{false}, kingPosition{kingC, kingI} {
 }
 
-// Initialize the board
-void BoardDisplay::init() {
-    for (int i = 0; i < 8; ++i) {
-        for (int j = 0; j < 8; ++j) {
-            Colour segmentColor = ((i + j) % 2 == 0) ? BLACK : WHITE;
-            board[i][j] = new BoardSegment(segmentColor);
-        }
-    }
-
-    whitePlayer = new PlayerInfo(Colour::WHITE, 'e', 1);
-    blackPlayer = new PlayerInfo(Colour::BLACK, 'e', 8);
-    getCurrentTurn = WHITE;
-
+// defaultBoardialize the board
+void BoardDisplay::defaultBoard() {
     // White pieces
     addPiece('R', "a1"); // Rook
     addPiece('B', "c1"); // Bishop
@@ -77,7 +66,6 @@ void BoardDisplay::init() {
     addPiece('p', "f7");
     addPiece('p', "g7");
     addPiece('p', "h7");
-
 }
 
 Piece* BoardDisplay::getBoardInfo(char c, int i) {
@@ -353,7 +341,18 @@ BoardDisplay::PlayerInfo* BoardDisplay::getCurrentPlayer() {
 }
 
 BoardDisplay::BoardDisplay() {
-    init();
+    for (int i = 0; i < 8; ++i) {
+        for (int j = 0; j < 8; ++j) {
+            Colour segmentColor = ((i + j) % 2 == 0) ? BLACK : WHITE;
+            board[i][j] = new BoardSegment(segmentColor);
+        }
+    }
+
+    whitePlayer = new PlayerInfo(Colour::WHITE, 'e', 1);
+    blackPlayer = new PlayerInfo(Colour::BLACK, 'e', 8);
+    getCurrentTurn = WHITE;
+
+    defaultBoard();
     attach(new TextDisplay(this));
     notifyObservers();
 
