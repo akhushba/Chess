@@ -329,16 +329,20 @@ void BoardDisplay::endSession() {
     notifyObservers();
 }
 
-
 void BoardDisplay::makeMove(Colour c, string oldPos, string newPos){
 
-    cout << "++++++++++1" << endl;
+    // cout << "++++++++++1" << endl;
     PlayerInfo* currentPlayer = (c == BLACK) ? blackPlayer : whitePlayer;
     Piece* p = getBoardInfo(oldPos[0], oldPos[1]-'0');
-    cout << "++++++++++3" << endl;
-    currentPlayer->player->move(p, newPos[0], (int)newPos[1]);
+    if(checkValid(p, newPos[0], newPos[1]-'0')) {
+        setState(p,newPos[0], newPos[1]-'0');
+        setState(nullptr,oldPos[0], oldPos[1]-'0');
+    }
+    else
+    // currentPlayer->player->move(p, newPos[0], (int)newPos[1]);
     cout << "++++++++++4" << endl;
-
+    //ADD PAWN PROMOTION
+    notifyObservers();
 }
 
 BoardDisplay::PlayerInfo* BoardDisplay::getWhitePlayer() {
@@ -392,6 +396,7 @@ void BoardDisplay::setPlayers(string playerOne, string playerTwo) {
 }
 
 bool BoardDisplay::checkValid(Piece* p, char cPos, int iPos){
+    if(!p) return false;
     vector<pair<char,int>> possible = p->generate();
 
     //find pair <cpos,iPos>
@@ -419,7 +424,7 @@ bool BoardDisplay::checkValid(Piece* p, char cPos, int iPos){
         while (currentCol != cPos || currentRow != iPos) {
             currentCol += colStep;
             currentRow += rowStep;
-            cout << currentCol << currentRow << "\t" << occupied(currentCol, currentRow) << endl;
+            // cout << currentCol << currentRow << "\t" << occupied(currentCol, currentRow) << endl;
             if (occupied(currentCol, currentRow) == p->getColour()) return false;
             if ((p->getType() == 'P' || p->getType() == 'p') && colDiff != 0 && occupied(currentCol, currentRow) == NULL_C) return false;
 
