@@ -69,6 +69,9 @@ void BoardDisplay::defaultBoard() {
 
     // getWhitePlayer()->player->pieceSet = &(getWhitePlayer()->activePieces);
     // getBlackPlayer()->player->pieceSet = &(getBlackPlayer()->activePieces);
+    attach(new TextDisplay(this));
+    notifyObservers();
+
     customSetup = false;
 }
 
@@ -151,25 +154,31 @@ void BoardDisplay::addPiece(char type, const std::string pos) {
 
 void BoardDisplay::removePiece(string pos) {
     Piece* p = board[pos[1] - '0' - 1][pos[0] - 'a']->piece;
+    cout << pos[1] - '0' - 1 << ", " << pos[0] - 'a' << endl;
     if (p) {
         PlayerInfo* currentPlayer = (p->getColour() == BLACK) ? blackPlayer : whitePlayer;
+        cout << "----------" << currentPlayer->activePieces.size() << endl;
         auto& activePieces = currentPlayer->activePieces;
         auto it = std::find(activePieces.begin(), activePieces.end(), p);
         if (it != activePieces.end()) {
             currentPlayer->inactivePieces.push_back(*it);
             activePieces.erase(it);
         }
+        // setState(nullptr, pos[0], pos[1]-'0');
+        // cout << "----------" << currentPlayer->activePieces.size() << endl;
     }
 }
 
 void BoardDisplay::setState(Piece* p, char cPos, int iPos, char pawnPromote) {
     // cout << "HERE " << endl;
-    PlayerInfo* currentPlayer = (p->getColour() == BLACK) ? blackPlayer : whitePlayer;
+    if (p) {
+        PlayerInfo* currentPlayer = (p->getColour() == BLACK) ? blackPlayer : whitePlayer;
+        if (p->getType() == 'K' || p->getType() == 'k') {
+            currentPlayer->kingPosition = {cPos, iPos};
 
-    if (p->getType() == 'K' || p->getType() == 'k') {
-        currentPlayer->kingPosition = {cPos, iPos};
-
+        }
     }
+
     board[iPos - 1][cPos - 'a']->piece = p;
     // if (p != nullptr) {
     //     p->setPos(cPos, iPos);
@@ -245,9 +254,10 @@ bool BoardDisplay::inCheck(Colour c) {
     PlayerInfo* currentPlayer = (c == BLACK) ? blackPlayer : whitePlayer;
     PlayerInfo* oppositePlayer = (c == BLACK) ? whitePlayer : blackPlayer;
 
-    cout << "inCheck?" << endl;
     for (auto& p : oppositePlayer->activePieces) {
-        if (p->isValidMove(currentPlayer->kingPosition.first, currentPlayer->kingPosition.second)) return true;
+        if (p->isValidMove(currentPlayer->kingPosition.first, currentPlayer->kingPosition.second)) 
+        return true;
+
     }
     return false;
 }
@@ -335,7 +345,6 @@ void BoardDisplay::endSession() {
 void BoardDisplay::makeMove(Colour c, string oldPos, string newPos){
     cout << "++++++++++1" << endl;
     PlayerInfo* currentPlayer = (c == BLACK) ? blackPlayer : whitePlayer;
-    cout << "oldPos: " << oldPos[1] << endl;
     Piece* p = getBoardInfo(oldPos[0], oldPos[1]-'0');
     cout << "++++++++++3" << endl;
     currentPlayer->player->move(p, newPos[0], (int)newPos[1]);
