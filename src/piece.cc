@@ -12,7 +12,8 @@ Piece::Piece(Colour colour, char type, BoardDisplay *board, char cPos, int iPos,
 }
 
 void Piece::setPos(char c, int i) {
-    boardInfo->setState(this, c, i);
+    cPos = c;
+    iPos = i;
 }
 
 Piece* Piece::capture(char c, int i) {
@@ -35,4 +36,6 @@ vector<pair<char,int>> Piece::generate(){
     return {};
 }
 
-bool Piece::isValidMove(char c, int i) {}
+bool Piece::isValidMove(char c, int i) {
+    return false;
+}

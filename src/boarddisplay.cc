@@ -68,6 +68,7 @@ void BoardDisplay::defaultBoard() {
     addPiece('p', "h7");
 
     customSetup = false;
+    notifyObservers();
 }
 
 Piece* BoardDisplay::getBoardInfo(char c, int i) {
@@ -171,6 +172,7 @@ void BoardDisplay::setState(Piece* p, char cPos, int iPos, char pawnPromote) {
             currentPlayer->kingPosition = {cPos, iPos};
 
         }
+        p->setPos(cPos, iPos);
     }
      board[iPos - 1][cPos - 'a']->piece = p;
 }
