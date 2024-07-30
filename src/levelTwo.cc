@@ -9,8 +9,7 @@ using namespace std;
 
 LevelTwo::LevelTwo(string name, vector<Piece*> pieceSet, Colour c) : Computer(name, pieceSet, c) {}
 
-pair<Piece*, pair<char, int>> LevelTwo::move(vector<pair<Piece*, vector<pair<char, int>>>> pieceAndMoves, vector<pair<Piece*, vector<pair<char, int>>>> pieceAndCaptureMoves) {
-    // if(p != nullptr && c != '\0' && i != -1) throw CustomException("An error occured while trying call move function on computer instead of human");
+pair<Piece*, pair<char, int>> LevelTwo::move(vector<pair<Piece*, vector<pair<char, int>>>> pieceAndMoves, vector<pair<Piece*, vector<pair<char, int>>>> pieceAndCaptureMoves, vector<pair<Piece*, vector<pair<char, int>>>> opponentPieceAndMoves) {
     int numPieces = pieceAndMoves.size();
     char newC;
     int newI;
@@ -22,12 +21,12 @@ pair<Piece*, pair<char, int>> LevelTwo::move(vector<pair<Piece*, vector<pair<cha
     shuffle(pieceAndMoves.begin(), pieceAndMoves.end(), g);
     shuffle(pieceAndCaptureMoves.begin(), pieceAndCaptureMoves.end(), g);
 
-    for (auto& [piece1, moves1] : pieceAndMoves) {
-        shuffle(moves1.begin(), moves1.end(), g);
-        for (auto& [piece2, moves2] : pieceAndCaptureMoves) {
+    for (auto& [piece1, moveSet1] : pieceAndMoves) {
+        shuffle(moveSet1.begin(), moveSet1.end(), g);
+        for (auto& [piece2, moveSet2] : pieceAndCaptureMoves) {
             if (piece1 == piece2) {
-                for (const auto& move1 : moves1) {
-                    for (const auto& move2 : moves2) {
+                for (const auto& move1 : moveSet1) {
+                    for (const auto& move2 : moveSet2) {
                         if (move1 == move2) {
                             return make_pair(piece1, move1);
                         }

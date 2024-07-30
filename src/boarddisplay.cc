@@ -155,7 +155,6 @@ void BoardDisplay::removePiece(char cPos, int iPos) {
     // cout << "removing from " << cPos << iPos << endl;
     if (p) {
         PlayerInfo* currentPlayer = (p->getColour() == BLACK) ? blackPlayer : whitePlayer;
-        // cout << "----------" << currentPlayer->activePieces.size() << endl;
         auto& activePieces = currentPlayer->activePieces;
         auto it = std::find(activePieces.begin(), activePieces.end(), p);
         if (it != activePieces.end()) {
@@ -422,11 +421,16 @@ vector<pair<char, int>> BoardDisplay::getValidMoves(Piece* p) {
 }
 
 
-void BoardDisplay::makeMove(Colour c){
+void BoardDisplay::makeMove(Colour c) {
 
     PlayerInfo* currentPlayer = (c == BLACK) ? blackPlayer : whitePlayer;
+    PlayerInfo* otherPlayer = (c == BLACK) ? whitePlayer : blackPlayer;
     vector<pair<Piece*, vector<pair<char, int>>>> pieceAndMoves;
+    vector<pair<Piece*, vector<pair<char, int>>>> pieceAndCaptureMoves;
+    vector<pair<Piece*, vector<pair<char, int>>>> opponentPieceAndMoves;
     vector<pair<char, int>> moves;
+    vector<pair<char, int>> captureMoves;
+    vector<pair<char, int>> opponentMoves;
     pair<Piece*, pair<char, int>> pieceMovePair;
     cout << "HERERE W " << endl;
     if (currentPlayer->player->getName() == "human") {
@@ -447,23 +451,29 @@ void BoardDisplay::makeMove(Colour c){
         for (auto& active : currentPlayer->activePieces) {
                 // cout << "VALID MOVES FOR: " << active->getType() << " " << active->getPosition().first << active->getPosition().second << endl;
             vector<pair<char, int>> gotMoves = getValidMoves(active);
-            for (auto& pair : gotMoves) {
-                // cout << pair.first << pair.second << endl;
-            }
+            // for (auto& pair : gotMoves) {
+            //     cout << pair.first << pair.second << endl;
+            // }
             count++;
-            if (gotMoves.size() != 0) {
-                pieceAndMoves.emplace_back(make_pair(active, gotMoves));
-            }
+            if (gotMoves.size() != 0) pieceAndMoves.emplace_back(make_pair(active, gotMoves));
+            if (captureMoves.size() != 0) pieceAndCaptureMoves.emplace_back(make_pair(active, captureMoves));
+            moves.clear(); 
         }
-        for(auto& pm : pieceAndMoves) {
-            cout << "FOR: \t"<< pm.first->getType() << " " << pm.first->getPosition().first << pm.first->getPosition().second << endl << "\thas:" << endl;
-            for(auto& pmp : pm.second){
-                cout << "\t\t" << pmp.first << pmp.second << endl;
+        for (auto& active : otherPlayer->activePieces) {
+            for (auto& pair : active->generate()) {
+                // cout << get<0>(pair) << ", " << get<1>(pair) << endl;
+                if (checkValid(active, get<0>(pair), get<1>(pair))) {
+                    opponentMoves.emplace_back(make_pair(get<0>(pair), get<1>(pair)));
+                }
             }
+            if (opponentMoves.size() != 0) opponentPieceAndMoves.emplace_back(make_pair(active, moves));
+            opponentMoves.clear(); 
         }
-        // cout << "------" << endl;
-        pieceMovePair = currentPlayer->player->move(pieceAndMoves, {});
-        // cout << "+++++++++++++++" << endl;
+        cout << "------" << endl;
+
+        pieceMovePair = currentPlayer->player->move(pieceAndMoves, pieceAndCaptureMoves, opponentPieceAndMoves);
+
+        cout << "+++++++++++++++" << endl;
         Piece* movePiece = get<0>(pieceMovePair);
         char oldC = movePiece->getPosition().first;
         int oldI = movePiece->getPosition().second;

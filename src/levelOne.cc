@@ -9,7 +9,7 @@ using namespace std;
 
 LevelOne::LevelOne(string name, vector<Piece*> pieceSet, Colour c) : Computer(name, pieceSet, c) {}
 
-pair<Piece*, pair<char, int>> LevelOne::move(vector<pair<Piece*, vector<pair<char, int>>>> pieceAndMoves, vector<pair<Piece*, vector<pair<char, int>>>> pieceAndCaptureMoves) {
+pair<Piece*, pair<char, int>> LevelOne::move(vector<pair<Piece*, vector<pair<char, int>>>> pieceAndMoves, vector<pair<Piece*, vector<pair<char, int>>>> pieceAndCaptureMoves, vector<pair<Piece*, vector<pair<char, int>>>> opponentPieceAndMoves) {
     // if(p != nullptr && c != '\0' && i != -1) throw CustomException("An error occured while trying call move function on computer instead of human");
 
     char newC;
