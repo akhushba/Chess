@@ -22,10 +22,11 @@ pair<Piece*, pair<char, int>> LevelOne::move(vector<pair<Piece*, vector<pair<cha
     shuffle(pieceAndMoves.begin(), pieceAndMoves.end(), g);
     // randomly shuffle the validPosVec vector
     shuffle(get<1>(pieceAndMoves[0]).begin(), get<1>(pieceAndMoves[0]).end(), g);
-
+    
     newC = get<0>(get<1>(pieceAndMoves[0])[0]);
     newI = get<1>(get<1>(pieceAndMoves[0])[0]);
 
+    cout << "moving " << get<0>(pieceAndMoves[0])->getType()  << " " << get<0>(pieceAndMoves[0])->getPosition().first << get<0>(pieceAndMoves[0])->getPosition().second << " " << newC << newI << endl;
     return make_pair(get<0>(pieceAndMoves[0]), make_pair(newC, newI));
 
     // board->setState(get<0>(pieceAndMoves[0]), newC, newI);

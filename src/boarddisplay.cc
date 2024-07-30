@@ -140,7 +140,10 @@ void BoardDisplay::addPiece(char type, const std::string pos) {
     }
 
     PlayerInfo* currentPlayer = (c == BLACK) ? blackPlayer : whitePlayer;
-    setState(newPiece, cPos, iPos);
+    // if(canCapture(WHITE, cPos, iPos) || canCapture(WHITE, cPos, iPos)) removePiece(cPos, iPos);
+    if(!getBoardInfo(cPos, iPos))
+    board[iPos - 1][cPos - 'a']->piece = newPiece;
+    else throw runtime_error ("piece already exists here, may not add");
     currentPlayer->activePieces.push_back(newPiece);
     // currentPlayer->player->pieceSet.push_back(newPiece);
 
@@ -196,19 +199,21 @@ void BoardDisplay::setState(Piece* p, char cPos, int iPos) {
                 } else throw runtime_error("expected pawn promotion");
             }
         }
+        if(canCapture(col, p->getPosition().first, p->getPosition().second)) {
+            cout << "CAPTURONG AH " << endl;
+            removePiece(cPos, iPos);
+        }
         p->setPos(cPos, iPos);
-    }
-
-    Piece* k = getBoardInfo(cPos, iPos);
-    if(k && k!= p) {
-        removePiece(cPos, iPos);
+        p->hasMoved = true;
     }
     board[iPos - 1][cPos - 'a']->piece = p;
 }
 
 bool BoardDisplay::canCapture(Colour pieceColour, char cPos, int iPos) {
     Piece* piece = getBoardInfo(cPos, iPos);
-    return piece && piece->getColour() != pieceColour;
+    if(!piece) return false;
+    else if(piece && piece->getColour() == pieceColour)  return false;
+    return true;
 }
 
 bool BoardDisplay::canCastle(Colour c) {
@@ -440,14 +445,20 @@ void BoardDisplay::makeMove(Colour c){
         // }
         int count = 0;
         for (auto& active : currentPlayer->activePieces) {
-                cout << "VALID MOVES FOR: " << active->getType() << " " << active->getPosition().first << active->getPosition().second << endl;
+                // cout << "VALID MOVES FOR: " << active->getType() << " " << active->getPosition().first << active->getPosition().second << endl;
             vector<pair<char, int>> gotMoves = getValidMoves(active);
             for (auto& pair : gotMoves) {
-                cout << pair.first << pair.second << endl;
+                // cout << pair.first << pair.second << endl;
             }
             count++;
             if (gotMoves.size() != 0) {
                 pieceAndMoves.emplace_back(make_pair(active, gotMoves));
+            }
+        }
+        for(auto& pm : pieceAndMoves) {
+            cout << "FOR: \t"<< pm.first->getType() << " " << pm.first->getPosition().first << pm.first->getPosition().second << endl << "\thas:" << endl;
+            for(auto& pmp : pm.second){
+                cout << "\t\t" << pmp.first << pmp.second << endl;
             }
         }
         // cout << "------" << endl;

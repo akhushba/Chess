@@ -57,7 +57,7 @@ vector <pair<char,int>> Bishop::generate(){
         char col = cPos;
         int row = iPos;
 
-        while (row >= 1 && row <= 8 && col >= 'a' && col < 'h') {
+        while (row >= 1 && row <= 8 && col >= 'a' && col <= 'h') {
             row += direction[0];
             col += direction[1];
             if(col < 'a' || col > 'h' || row < 1 || row > 8) continue;
