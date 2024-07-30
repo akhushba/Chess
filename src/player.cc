@@ -17,4 +17,8 @@ bool Player::callSimulateAttack(Piece* p, char newC, int newI, Piece* reference)
     return board->simulateAttack(p, newC, newI);
 }
 
+string Player::getName() {
+    return name;
+}
+
 Player::~Player() {}

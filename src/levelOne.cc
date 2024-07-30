@@ -9,10 +9,9 @@ using namespace std;
 
 LevelOne::LevelOne(string name, vector<Piece*> pieceSet, Colour c) : Computer(name, pieceSet, c) {}
 
-void LevelOne::move(Piece* p, char c, int i) {
-    if(p != nullptr && c != '\0' && i != -1) throw CustomException("An error occured while trying call move function on computer instead of human");
+pair<Piece*, pair<char, int>> LevelOne::move(vector<pair<Piece*, vector<pair<char, int>>>> pieceAndMoves) {
+    // if(p != nullptr && c != '\0' && i != -1) throw CustomException("An error occured while trying call move function on computer instead of human");
 
-    int numPieces = pieceSet.size();
     char newC;
     int newI;
 
@@ -20,12 +19,15 @@ void LevelOne::move(Piece* p, char c, int i) {
     mt19937 g(rd());
 
     // randomly shuffle the pieceSet vector
-    shuffle(pieceSet.begin(), pieceSet.end(), g);
+    shuffle(pieceAndMoves.begin(), pieceAndMoves.end(), g);
     // randomly shuffle the validPosVec vector
-    shuffle(pieceSet.at(0)->validPosVec.begin(), pieceSet.at(0)->validPosVec.end(), g);
+    shuffle(get<1>(pieceAndMoves[0]).begin(), get<1>(pieceAndMoves[0]).end(), g);
 
-    newC = get<0>(pieceSet.at(0)->validPosVec.at(0));
-    newI = get<1>(pieceSet.at(0)->validPosVec.at(0));
-    board->setState(pieceSet.at(0), newC, newI);
+    newC = get<0>(get<1>(pieceAndMoves[0])[0]);
+    newI = get<1>(get<1>(pieceAndMoves[0])[0]);
+    return make_pair(get<0>(pieceAndMoves[0]), make_pair(newC, newI));
+
+    // board->setState(get<0>(pieceAndMoves[0]), newC, newI);
+
     // pieceSet.at(0)->setPos(newC, newI);
 }

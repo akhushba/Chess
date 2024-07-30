@@ -4,7 +4,7 @@
 class Human : public Player {
     public:
         Human(string name, vector<Piece*> pieceSet, Colour c);
-        void move(Piece*p, char c, int i) override;
+        pair<Piece*, pair<char, int>> move(vector<pair<Piece*, vector<pair<char, int>>>>) override;
         ~Human() override = default;
 };
 

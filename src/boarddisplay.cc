@@ -337,17 +337,52 @@ void BoardDisplay::endSession() {
 }
 
 
-void BoardDisplay::makeMove(Colour c, string oldPos, string newPos){
+void BoardDisplay::makeMove(Colour c){
 
-    // cout << "++++++++++1" << endl;
     PlayerInfo* currentPlayer = (c == BLACK) ? blackPlayer : whitePlayer;
-    Piece* p = getBoardInfo(oldPos[0], oldPos[1]-'0');
-    if(checkValid(p, newPos[0], newPos[1]-'0')) {
-        
-        setState(p,newPos[0], newPos[1]-'0');
-        setState(nullptr,oldPos[0], oldPos[1]-'0');
+    vector<pair<Piece*, vector<pair<char, int>>>> pieceAndMoves;
+    vector<pair<char, int>> moves;
+    pair<Piece*, pair<char, int>> pieceMovePair;
+
+    if (currentPlayer->player->getName() == "human") {
+        string oldPos, newPos;
+        cin >> oldPos >> newPos;
+        Piece* p = getBoardInfo(oldPos[0], oldPos[1]-'0');
+
+        if(checkValid(p, newPos[0], newPos[1]-'0')) {
+            setState(p,newPos[0], newPos[1]-'0');
+            setState(nullptr,oldPos[0], oldPos[1]-'0');
+        }
+    } else {
+        cout << "before nested for" << endl;
+        for (auto& active : currentPlayer->activePieces) {
+            cout << "---------" << active->generate().size() << endl;
+            for (auto& pair : active->generate()) {
+                cout << get<0>(pair) << ", " << get<1>(pair) << endl;
+                if (checkValid(active, get<0>(pair), get<1>(pair))) {
+                    moves.emplace_back(make_pair(get<0>(pair), get<1>(pair)));
+                }
+            }
+            cout << "end of nested for" << endl;
+            pieceAndMoves.emplace_back(make_pair(active, moves));
+            cout << "successfully added to vec" << endl;
+            moves.clear(); 
+        }
+        cout << "------" << endl;
+        pieceMovePair = currentPlayer->player->move(pieceAndMoves);
+        Piece* movePiece = get<0>(pieceMovePair);
+        char moveC = get<0>(get<1>(pieceMovePair));
+        int moveI = get<1>(get<1>(pieceMovePair));
+        setState(movePiece, moveC, moveI);
+        // do this later
+        // setState(nullptr,oldPos[0], oldPos[1]-'0');
     }
-    else
+
+    // if(checkValid(p, newPos[0], newPos[1]-'0')) {
+    //     setState(p,newPos[0], newPos[1]-'0');
+    //     setState(nullptr,oldPos[0], oldPos[1]-'0');
+    // }
+    // else
     // currentPlayer->player->move(p, newPos[0], (int)newPos[1]);
     cout << "++++++++++4" << endl;
     //ADD PAWN PROMOTION

@@ -5,7 +5,7 @@
 class LevelThree : public Computer {
     public:
         LevelThree(string name, vector<Piece*> pieceSet, Colour c);
-        void move(Piece* p = nullptr, char c = '\0', int i = -1) override;
+        pair<Piece*, pair<char, int>> move(vector<pair<Piece*, vector<pair<char, int>>>>) override;
         ~LevelThree() override = default;
 };
 

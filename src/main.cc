@@ -41,13 +41,10 @@ int main () {
     }
     else if (command == "move") {
         cout << "move cmd start" << endl;
-        string oldPos, newPos;
-        cin >> oldPos >> newPos;
         BoardDisplay::PlayerInfo* currentPlayer= board_Display.getCurrentPlayer();
-        if (currentPlayer->colour == WHITE) { cout << "white" << endl; }
-        if (currentPlayer->colour == BLACK) { cout << "black" << endl; }
-        board_Display.makeMove(currentPlayer->colour, oldPos, newPos);
-        board_Display.getCurrentTurn = currentPlayer->colour == WHITE ? BLACK : WHITE;
+        // if (currentPlayer->colour == WHITE) { cout << "white" << endl; }
+        // if (currentPlayer->colour == BLACK) { cout << "black" << endl; }
+        board_Display.makeMove(currentPlayer->colour);
         // cout << "------1" << endl;
         // if(currentPlayer-> colour == WHITE) {
         //     board_Display.inCheck(board_Display.getBlackPlayer()->colour);

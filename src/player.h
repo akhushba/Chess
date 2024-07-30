@@ -32,8 +32,10 @@ protected:
 public:
     vector<Piece*> pieceSet; 
     Player(string name, vector<Piece*> ps, Colour c);
+    string getName();
     
-    virtual void move(Piece* p = nullptr, char c = '\0', int i = -1) = 0;
+    // virtual void move(Piece* p = nullptr, char c = '\0', int i = -1) = 0;
+    virtual pair<Piece*, pair<char, int>> move(vector<pair<Piece*, vector<pair<char, int>>>>) = 0;
     virtual ~Player() = 0;
 
     bool callSimulateAttack(Piece*, char newC, int newI, Piece* reference = nullptr);
