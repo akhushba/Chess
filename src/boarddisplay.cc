@@ -21,9 +21,7 @@
 
 BoardDisplay::BoardSegment::BoardSegment(Colour c) : colour{c}, piece{nullptr} {}
 
-BoardDisplay::~BoardDisplay() {
-
-}
+BoardDisplay::~BoardDisplay() = default;
 
 void BoardDisplay::BoardSegment::setBegin() {
     piece = nullptr;
@@ -480,8 +478,14 @@ BoardDisplay::BoardDisplay() {
 
     getCurrentTurn = WHITE;
 
-    attach(new TextDisplay(this));
-    // attach(new GraphicsDisplay(this));
+    char response;
+    cout << "Would you like to have a textual display? (Y\\N)" << endl;
+    cin >> response;
+    if(response == 'Y') attach(new TextDisplay(this));
+    cout << "Would you like to have a graphical display? (Y\\N)" << endl;
+    cin >> response;
+    if(response == 'Y') attach(new GraphicsDisplay(this));
+
     notifyObservers();
 }
 
