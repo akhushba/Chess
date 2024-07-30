@@ -406,12 +406,13 @@ void BoardDisplay::setPlayers(string playerOne, string playerTwo) {
 bool BoardDisplay::checkValid(Piece* p, char cPos, int iPos){
     if(!p) return false;
     vector<pair<char,int>> possible = p->generate();
-
     //find pair <cpos,iPos>
     auto foundPair = findPair(possible, cPos, iPos);
     if (foundPair.first == 'i') {
+        cout << "invalid move" << endl;
         return false;
     }
+    cout << foundPair.first << foundPair.second << endl;
     if(p->getType() == 'N' || p->getType() == 'n') {
         //only check end
         if(occupied(cPos, iPos) == p->getColour()) return false;

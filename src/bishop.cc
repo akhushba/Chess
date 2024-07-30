@@ -60,7 +60,7 @@ vector <pair<char,int>> Bishop::generate(){
         while (row >= 1 && row <= 8 && col >= 'a' && col < 'h') {
             row += direction[0];
             col += direction[1];
-            if(cPos + direction[0] < 'a' || cPos + direction[0] > 'h' || iPos + direction[1] < 1 || iPos + direction[1] > 8) continue;
+            if(col < 'a' || col > 'h' || row < 1 || row > 8) continue;
             possible.emplace_back(make_pair(col, row));
         }
     }
