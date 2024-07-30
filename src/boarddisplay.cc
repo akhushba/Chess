@@ -195,6 +195,7 @@ bool BoardDisplay::canCastle(Colour c) {
         if (!king || king->getType() != 'K' || king->hasMoved) return false;
         if (!rook || rook->getType() != 'R' || rook->hasMoved) return false;
         if (getBoardInfo('f', 1) || getBoardInfo('g', 1)) return false;
+        
     } else {
         Piece* king = getBoardInfo('e', 8);
         Piece* rook = getBoardInfo('h', 8);
@@ -440,8 +441,22 @@ bool BoardDisplay::checkValid(Piece* p, char cPos, int iPos){
         }
 
     }
-    simulateAttack2(p, cPos, iPos);
+    if(simulateAttack2(p, cPos, iPos)) return false;
     // run in check simulation
+    if(p->getType() == 'K' || p->getType() == 'k') {
+        if (canCastle(p->getColour())) {
+            if (p->getColour() == WHITE && cPos == 'g' && iPos == 1) { 
+                setState(getBoardInfo('h', 1), 'f', 1);
+                setState(nullptr, 'h', 1);
+                return true;
+            } else if (p->getColour() == BLACK && cPos == 'g' && iPos == 8)  {
+                setState(getBoardInfo('h', 8), 'f', 8);
+                setState(nullptr, 'h', 8);
+                return true;
+            }
+            else return false;
+        }
+    }
     return true;
 }
 

@@ -39,5 +39,8 @@ vector <pair<char,int>> King::generate(){
         if(cPos + d[0] < 'a' || cPos + d[0] > 'h' || iPos + d[1] < 1 || iPos + d[1] > 8) continue;
             possible.emplace_back(make_pair(cPos + d[0], iPos + d[1]));
     }
+
+    int casteIPos = colour == Colour::WHITE ? 1 : 8;
+    possible.emplace_back(make_pair('g', casteIPos));
     return possible;
 }
