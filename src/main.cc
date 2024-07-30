@@ -10,10 +10,10 @@ using namespace std;
 int main () {
 
     BoardDisplay board_Display;
-    board_Display.defaultBoard();
-    board_Display.notifyObservers();
-    Piece* p  = board_Display.getBoardInfo('a', 2);
-    cout << board_Display.checkValid(p, 'a', 3) << endl;
+    // board_Display.defaultBoard();
+    // board_Display.notifyObservers();
+    // Piece* p  = board_Display.getBoardInfo('a', 2);
+    // cout << board_Display.checkValid(p, 'a', 3) << endl;
 
 
     string command;
@@ -23,8 +23,6 @@ int main () {
         string playerOne, playerTwo;
         cin >> playerOne >> playerTwo;
         board_Display.setPlayers(playerOne, playerTwo);
-        // for testing purposes
-        // board_Display.defaultBoard();
 
         string setup;
         cin >> setup;

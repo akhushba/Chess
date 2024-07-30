@@ -387,9 +387,8 @@ Player* BoardDisplay::setPlayer(Colour c, string playerType) {
 }
 
 void BoardDisplay::setPlayers(string playerOne, string playerTwo) {
-
-    setPlayer(WHITE, playerOne);
-    setPlayer(BLACK, playerTwo);
+    whitePlayer->player = setPlayer(WHITE, playerOne);
+    blackPlayer->player = setPlayer(BLACK, playerTwo);
 }
 
 bool BoardDisplay::checkValid(Piece* p, char cPos, int iPos){
