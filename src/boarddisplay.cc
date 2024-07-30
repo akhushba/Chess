@@ -40,14 +40,14 @@ void BoardDisplay::defaultBoard() {
     addPiece('R', "h1"); // Rook
     addPiece('N', "b1"); // Knight
     addPiece('N', "g1"); // Knight
-    // addPiece('P', "b2");
-    // addPiece('P', "a2"); // Pawns
-    // addPiece('P', "c2");
-    // addPiece('P', "d2");
-    // addPiece('P', "e2");
-    // addPiece('P', "f2");
-    // addPiece('P', "g2");
-    // addPiece('P', "h2");
+    addPiece('P', "b2");
+    addPiece('P', "a2"); // Pawns
+    addPiece('P', "c2");
+    addPiece('P', "d2");
+    addPiece('P', "e2");
+    addPiece('P', "f2");
+    addPiece('P', "g2");
+    addPiece('P', "h2");
 
     // Black pieces
     addPiece('r', "a8"); // Rook
@@ -424,12 +424,16 @@ vector<pair<char, int>> BoardDisplay::getValidMoves(Piece* p) {
 
 
 void BoardDisplay::makeMove(Colour c){
-
     PlayerInfo* currentPlayer = (c == BLACK) ? blackPlayer : whitePlayer;
+    PlayerInfo* otherPlayer = (c == BLACK) ? whitePlayer : blackPlayer;
     vector<pair<Piece*, vector<pair<char, int>>>> pieceAndMoves;
+    vector<pair<Piece*, vector<pair<char, int>>>> pieceAndCaptureMoves;
+    vector<pair<Piece*, vector<pair<char, int>>>> opponentPieceAndMoves;
     vector<pair<char, int>> moves;
+    vector<pair<char, int>> captureMoves;
+    vector<pair<char, int>> opponentMoves;
     pair<Piece*, pair<char, int>> pieceMovePair;
-      char prevType;
+    char prevType;
     pair<char, int> prevPosition;
 
     cout << "HERERE W " << endl;
@@ -447,54 +451,47 @@ void BoardDisplay::makeMove(Colour c){
         //     for (auto& pair : active->generate()) {
         //     }
         // }
-        for (auto active : currentPlayer->activePieces) {
+        for (auto& active : currentPlayer->activePieces) {
                 // cout << "VALID MOVES FOR: " << active->getType() << " " << active->getPosition().first << active->getPosition().second << endl;
             vector<pair<char, int>> gotMoves = getValidMoves(active);
-            for (auto& pair : gotMoves) {
-                // cout << pair.first << pair.second << endl;
-            }
+            // for (auto& pair : gotMoves) {
+            //     cout << pair.first << pair.second << endl;
+            // }
+            if (gotMoves.size() != 0) {
+                char currentType = active->getType();
+                pair<char, int> currentPosition = active->getPosition();
 
-        if (gotMoves.size() != 0) {
-            char currentType = active->getType();
-            pair<char, int> currentPosition = active->getPosition();
-
-            if (currentType != prevType || currentPosition != prevPosition) {
-                pieceAndMoves.emplace_back(make_pair(active, gotMoves));
-                prevType = currentType;
-                prevPosition = currentPosition;
+                if (currentType != prevType || currentPosition != prevPosition) {
+                    pieceAndMoves.emplace_back(make_pair(active, gotMoves));
+                    prevType = currentType;
+                    prevPosition = currentPosition;
+                }
             }
+            if (captureMoves.size() != 0) pieceAndCaptureMoves.emplace_back(make_pair(active, captureMoves));
+            moves.clear(); 
         }
-            gotMoves.clear();
-        }
-        for(auto& pm : pieceAndMoves) {
-            cout << "FOR: \t"<< pm.first->getType() << " " << pm.first->getPosition().first << pm.first->getPosition().second << endl << "\thas:" << endl;
-            for(auto& pmp : pm.second){
-                cout << "\t\t" << pmp.first << pmp.second << endl;
+        for (auto& active : otherPlayer->activePieces) {
+            for (auto& pair : active->generate()) {
+                // cout << get<0>(pair) << ", " << get<1>(pair) << endl;
+                if (checkValid(active, get<0>(pair), get<1>(pair))) {
+                    opponentMoves.emplace_back(make_pair(get<0>(pair), get<1>(pair)));
+                }
             }
+            if (opponentMoves.size() != 0) opponentPieceAndMoves.emplace_back(make_pair(active, moves));
+            opponentMoves.clear(); 
         }
-        // cout << "------" << endl;
-        pieceMovePair = currentPlayer->player->move(pieceAndMoves, {});
-        // cout << "+++++++++++++++" << endl;
+       
+        pieceMovePair = currentPlayer->player->move(pieceAndMoves, pieceAndCaptureMoves, opponentPieceAndMoves);
+      
         Piece* movePiece = get<0>(pieceMovePair);
         char oldC = movePiece->getPosition().first;
         int oldI = movePiece->getPosition().second;
         char moveC = get<0>(get<1>(pieceMovePair));
         int moveI = get<1>(get<1>(pieceMovePair));
         setState(movePiece, moveC, moveI);
-
         setState(nullptr, oldC, oldI);
-        // do this later
-        // setState(nullptr,oldPos[0], oldPos[1]-'0');
     }
-
-    // if(checkValid(p, newPos[0], newPos[1]-'0')) {
-    //     setState(p,newPos[0], newPos[1]-'0');
-    //     setState(nullptr,oldPos[0], oldPos[1]-'0');
-    // }
-    // else
-    // currentPlayer->player->move(p, newPos[0], (int)newPos[1]);
     cout << "++++++++++4" << endl;
-    //ADD PAWN PROMOTION
     notifyObservers();
 }
 
@@ -573,6 +570,16 @@ BoardDisplay::BoardDisplay() {
     blackPlayer = new PlayerInfo(Colour::BLACK, 'e', 8);
     getCurrentTurn = WHITE;
 
+    for (int i = 0; i < 8; ++i) {
+        for (int j = 0; j < 8; ++j) {
+            Colour segmentColor = ((i + j) % 2 == 0) ? BLACK : WHITE;
+            board[i][j] = new BoardSegment(segmentColor);
+        }
+    }
+
+    whitePlayer = new PlayerInfo(Colour::WHITE, 'e', 1);
+    blackPlayer = new PlayerInfo(Colour::BLACK, 'e', 8);
+    getCurrentTurn = WHITE;
     attach(new TextDisplay(this));
     // attach(new GraphicsDisplay(this));
     notifyObservers();
@@ -583,15 +590,21 @@ Player* BoardDisplay::setPlayer(Colour c, string playerType) {
     if(p) delete p;
     if (playerType == "human") {
         p = new Human("human", {}, c);
+        p = new Human("human", {}, c);
     } else if (playerType == "computer1") {
+        p = new LevelOne("level one", {}, c);
         p = new LevelOne("level one", {}, c);
     } else if (playerType == "computer2") {
         p = new LevelTwo("level two", {}, c);
+        p = new LevelTwo("level two", {}, c);
     } else if (playerType == "computer3") {
+        p = new LevelThree("level three", {},c );
         p = new LevelThree("level three", {},c );
     } else if (playerType == "computer4") {
         p = new LevelFour("level four", {}, c);
+        p = new LevelFour("level four", {}, c);
     }
+    return p;
     return p;
 }
 

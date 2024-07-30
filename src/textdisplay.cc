@@ -1,5 +1,4 @@
 #include "textdisplay.h"
-
 #include "boarddisplay.h"
 
 TextDisplay::TextDisplay(BoardDisplay* display): display{display} {

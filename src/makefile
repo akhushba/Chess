@@ -6,7 +6,7 @@ OBJECTS=${CCFILES:.cc=.o}
 DEPENDS=${CCFILES:.cc=.d}
 
 ${EXEC}: ${OBJECTS}
-	${CXX} ${OBJECTS} -lX11 -o ${EXEC}
+	${CXX} ${OBJECTS} -o ${EXEC}
 
 -include ${DEPENDS}
 

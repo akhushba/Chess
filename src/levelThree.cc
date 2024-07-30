@@ -9,8 +9,62 @@ using namespace std;
 
 LevelThree::LevelThree(string name, vector<Piece*> pieceSet, Colour c) : Computer(name, pieceSet, c) {}
 
-pair<Piece*, pair<char, int>> LevelThree::move(vector<pair<Piece*, vector<pair<char, int>>>> pieceAndMoves, vector<pair<Piece*, vector<pair<char, int>>>> pieceAndCaptureMoves) {
-    // if(p != nullptr && c != '\0' && i != -1) throw CustomException("An error occured while trying call move function on computer instead of human");
+pair<Piece*, pair<char, int>> LevelThree::move(vector<pair<Piece*, vector<pair<char, int>>>> pieceAndMoves, vector<pair<Piece*, vector<pair<char, int>>>> pieceAndCaptureMoves, vector<pair<Piece*, vector<pair<char, int>>>> opponentPieceAndMoves) {
+    char newC;
+    int newI;
+    bool safeMove = true;
+
+    random_device rd;
+    mt19937 g(rd());
+
+    // randomly shuffle the pieceSet vector
+    shuffle(pieceAndMoves.begin(), pieceAndMoves.end(), g);
+    shuffle(pieceAndCaptureMoves.begin(), pieceAndCaptureMoves.end(), g);
+
+    // if capture and avoid capture
+    for (auto& [piece1, moveSet1] : pieceAndMoves) {
+        shuffle(moveSet1.begin(), moveSet1.end(), g);
+        for (auto& [piece2, moveSet2] : pieceAndCaptureMoves) {
+            if (piece1 == piece2) {
+                for (const auto& move1 : moveSet1) {
+                    for (const auto& move2 : moveSet2) {
+                        if (move1 == move2) {
+                            for (const auto& [opponentPiece, opponentMoves] : opponentPieceAndMoves) {
+                                for (const auto& opponentMove : opponentMoves) {
+                                    if (opponentMove == move1) {
+                                        safeMove = false;
+                                    }
+                                }
+                            }
+                            if (safeMove) {return make_pair(piece1, move1);}
+                        }
+                    }
+                }
+
+            }
+        }
+    }
+
+    for (const auto& [piece, moves] : pieceAndMoves) {
+        for (const auto& move : moves) {
+            bool moveExistsInOpponent = false;
+
+            for (const auto& [opponentPiece, opponentMoves] : opponentPieceAndMoves) {
+                if (find(opponentMoves.begin(), opponentMoves.end(), move) != opponentMoves.end()) {
+                    moveExistsInOpponent = true;
+                    break;
+                }
+            }
+            if (!moveExistsInOpponent) return make_pair(piece, move);
+        }
+    }
+
+    // if we have reached this point, there are no moves that can capture another piece
+    // so we can just use index 0 to choose a random move since the vectors are already shuffled/randomized
+    newC = get<0>(get<1>(pieceAndMoves[0])[0]);
+    newI = get<1>(get<1>(pieceAndMoves[0])[0]);
+    return make_pair(get<0>(pieceAndMoves[0]), make_pair(newC, newI));
+
     // // choose random piece and valid position
     // // iterate through the list of the opponents pieces
     // // call isValidMove on each opponent piece given randomly chosen position

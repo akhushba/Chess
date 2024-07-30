@@ -9,7 +9,7 @@ using namespace std;
 Human::Human(string name, vector<Piece*> pieceSet, Colour c) : Player(name, pieceSet, c) {};
 
 // this is will a single element vector for (Human)
-pair<Piece*, pair<char, int>> Human::move(vector<pair<Piece*, vector<pair<char, int>>>> pieceAndMoves, vector<pair<Piece*, vector<pair<char, int>>>> pieceAndCaptureMoves) {
+pair<Piece*, pair<char, int>> Human::move(vector<pair<Piece*, vector<pair<char, int>>>> pieceAndMoves, vector<pair<Piece*, vector<pair<char, int>>>> pieceAndCaptureMoves, vector<pair<Piece*, vector<pair<char, int>>>> opponentPieceAndMoves) {
     
 
     // cout << "hi" << endl;
