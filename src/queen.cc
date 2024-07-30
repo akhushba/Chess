@@ -67,7 +67,7 @@ vector <pair<char,int>>Queen::generate(){
             row += direction[0];
             col += direction[1];
             if(cPos + direction[0] < 'a' || cPos + direction[0] > 'h' || iPos + direction[1] < 1 || iPos + direction[1] > 8) continue;
-            possible.emplace_back(make_tuple(col, row));
+            possible.emplace_back(make_pair(col, row));
         }
     }
     return possible;

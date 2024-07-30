@@ -37,7 +37,7 @@ vector <pair<char,int>> King::generate(){
 
     for(auto& d : directions) {
         if(cPos + d[0] < 'a' || cPos + d[0] > 'h' || iPos + d[1] < 1 || iPos + d[1] > 8) continue;
-            possible.emplace_back(make_tuple(cPos + d[0], iPos + d[1]));
+            possible.emplace_back(make_pair(cPos + d[0], iPos + d[1]));
     }
     return possible;
 }
