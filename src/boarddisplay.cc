@@ -149,7 +149,7 @@ void BoardDisplay::addPiece(char type, const std::string pos) {
 
 void BoardDisplay::removePiece(char cPos, int iPos) {
     Piece* p = board[iPos - 1][cPos - 'a']->piece;
-    cout << "removing from " << cPos << iPos << endl;
+    // cout << "removing from " << cPos << iPos << endl;
     if (p) {
         PlayerInfo* currentPlayer = (p->getColour() == BLACK) ? blackPlayer : whitePlayer;
         cout << "----------" << currentPlayer->activePieces.size() << endl;
@@ -364,16 +364,23 @@ void BoardDisplay::makeMove(Colour c){
                 }
             }
             cout << "end of nested for" << endl;
-            pieceAndMoves.emplace_back(make_pair(active, moves));
+            if (moves.size() != 0) {
+                pieceAndMoves.emplace_back(make_pair(active, moves));
+            }
             cout << "successfully added to vec" << endl;
             moves.clear(); 
         }
         cout << "------" << endl;
         pieceMovePair = currentPlayer->player->move(pieceAndMoves);
+        cout << "+++++++++++++++" << endl;
         Piece* movePiece = get<0>(pieceMovePair);
+        char oldC = movePiece->getPosition().first;
+        int oldI = movePiece->getPosition().second;
         char moveC = get<0>(get<1>(pieceMovePair));
         int moveI = get<1>(get<1>(pieceMovePair));
         setState(movePiece, moveC, moveI);
+
+        setState(nullptr, oldC, oldI);
         // do this later
         // setState(nullptr,oldPos[0], oldPos[1]-'0');
     }
@@ -414,7 +421,7 @@ BoardDisplay::BoardDisplay() {
     getCurrentTurn = WHITE;
 
     attach(new TextDisplay(this));
-    attach(new GraphicsDisplay(this));
+    // attach(new GraphicsDisplay(this));
     notifyObservers();
 }
 
@@ -446,7 +453,7 @@ bool BoardDisplay::checkValid(Piece* p, char cPos, int iPos){
     //find pair <cpos,iPos>
     auto foundPair = findPair(possible, cPos, iPos);
     if (foundPair.first == 'i') {
-        cout << "invalid move" << endl;
+        // cout << "invalid move" << endl;
         return false;
     }
     cout << foundPair.first << foundPair.second << endl;
