@@ -21,3 +21,4 @@ class GraphicsDisplay : public Observer {
 };
 
 #endif
+

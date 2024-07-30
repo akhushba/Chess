@@ -13,3 +13,4 @@ vector <pair<char,int>> Knight::generate() {
     }
     return possible;
 }
+

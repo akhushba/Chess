@@ -42,3 +42,4 @@ pair<Piece*, pair<char, int>> LevelTwo::move(vector<pair<Piece*, vector<pair<cha
     newI = get<1>(get<1>(pieceAndMoves[0])[0]);
     return make_pair(get<0>(pieceAndMoves[0]), make_pair(newC, newI));
 }
+

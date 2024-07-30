@@ -46,7 +46,6 @@ int main () {
                 // if (currentPlayer->colour == WHITE) { cout << "white" << endl; }
                 // if (currentPlayer->colour == BLACK) { cout << "black" << endl; }
                 board_Display.makeMove(currentPlayer->colour);
-                board_Display.getCurrentTurn = (board_Display.getCurrentTurn == BLACK) ? WHITE : BLACK;
                 // cout << "------1" << endl;
                 // if(currentPlayer-> colour == WHITE) {
                 //     board_Display.inCheck(board_Display.getBlackPlayer()->colour);
@@ -82,11 +81,12 @@ int main () {
                 board_Display.setUpGame();
             }
         } catch (runtime_error& e) {
-            board_Display.messages.clear();
-            board_Display.messages.push_back(e.what());
+            board_Display.message = e.what();
             board_Display.notifyObservers();
-            board_Display.messages.clear();
+            board_Display.message = "";
         }
     }
+    board_Display.endSession();
 }
+
 

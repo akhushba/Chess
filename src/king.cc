@@ -16,3 +16,4 @@ vector <pair<char,int>> King::generate(){
     possible.emplace_back(make_pair('g', casteIPos));
     return possible;
 }
+

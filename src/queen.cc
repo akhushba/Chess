@@ -23,3 +23,4 @@ vector <pair<char,int>>Queen::generate(){
     return possible;
 
 }
+

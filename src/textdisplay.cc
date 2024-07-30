@@ -27,6 +27,6 @@ void TextDisplay::notify() {
     out << "\n";
     out << "\nBOARD STATUS\n";
     out << "------------\n";
-    for(auto s : display->messages) out << s << "\n";
+    out << display->message << "\n";
 
 }
