@@ -6,7 +6,7 @@
 class LevelTwo : public Computer {
     public:
         LevelTwo(string name, vector<Piece*> pieceSet, Colour c);
-        pair<Piece*, pair<char, int>> move(vector<pair<Piece*, vector<pair<char, int>>>>) override;
+        pair<Piece*, pair<char, int>> move(vector<pair<Piece*, vector<pair<char, int>>>> pieceAndMoves, vector<pair<Piece*, vector<pair<char, int>>>> pieceAndCaptureMoves) override;
         ~LevelTwo() override = default;
 };
 

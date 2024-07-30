@@ -9,7 +9,7 @@ using namespace std;
 
 LevelThree::LevelThree(string name, vector<Piece*> pieceSet, Colour c) : Computer(name, pieceSet, c) {}
 
-pair<Piece*, pair<char, int>> LevelThree::move(vector<pair<Piece*, vector<pair<char, int>>>>) {
+pair<Piece*, pair<char, int>> LevelThree::move(vector<pair<Piece*, vector<pair<char, int>>>> pieceAndMoves, vector<pair<Piece*, vector<pair<char, int>>>> pieceAndCaptureMoves) {
     // if(p != nullptr && c != '\0' && i != -1) throw CustomException("An error occured while trying call move function on computer instead of human");
     // // choose random piece and valid position
     // // iterate through the list of the opponents pieces

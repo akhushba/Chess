@@ -30,7 +30,7 @@ int LevelFour::getMaxPieceValue(vector<pair<Piece*, tuple<char, int>>> optionsVe
     return maxIndex;
 }
 
-pair<Piece*, pair<char, int>> LevelFour::move(vector<pair<Piece*, vector<pair<char, int>>>>) {
+pair<Piece*, pair<char, int>> LevelFour::move(vector<pair<Piece*, vector<pair<char, int>>>> pieceAndMoves, vector<pair<Piece*, vector<pair<char, int>>>> pieceAndCaptureMoves) {
     // vector<pair<Piece*, tuple<char, int>>> safeOptions;
     // vector<pair<Piece*, tuple<char, int>>> captureOptions;
     // vector<pair<Piece*, tuple<char, int>>> centerOptions;

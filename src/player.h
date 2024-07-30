@@ -35,9 +35,10 @@ public:
     string getName();
     
     // virtual void move(Piece* p = nullptr, char c = '\0', int i = -1) = 0;
-    virtual pair<Piece*, pair<char, int>> move(vector<pair<Piece*, vector<pair<char, int>>>>) = 0;
+    virtual pair<Piece*, pair<char, int>> move(vector<pair<Piece*, vector<pair<char, int>>>> pieceAndMoves, vector<pair<Piece*, vector<pair<char, int>>>> pieceAndCaptureMoves) = 0;
     virtual ~Player() = 0;
 
+    // bool canCapture(Colour pieceColour, char cPos, int iPos);
     bool callSimulateAttack(Piece*, char newC, int newI, Piece* reference = nullptr);
 };
 

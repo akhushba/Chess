@@ -21,4 +21,10 @@ string Player::getName() {
     return name;
 }
 
+// bool Player::canCapture(Colour pieceColour, char c, int i) {
+//     cout << c << " and " << i << endl;
+//     Piece* piece = board->getBoardInfo(c, i);
+//     return piece && piece->getColour() != pieceColour;
+// }
+
 Player::~Player() {}
