@@ -66,8 +66,6 @@ void BoardDisplay::defaultBoard() {
     addPiece('p', "f7");
     addPiece('p', "g7");
     addPiece('p', "h7");
-    attach(new TextDisplay(this));
-    notifyObservers();
 
     customSetup = false;
 }
@@ -143,7 +141,7 @@ void BoardDisplay::addPiece(char type, const std::string pos) {
     PlayerInfo* currentPlayer = (c == BLACK) ? blackPlayer : whitePlayer;
     setState(newPiece, cPos, iPos);
     currentPlayer->activePieces.push_back(newPiece);
-    currentPlayer->player->pieceSet.push_back(newPiece);
+    // currentPlayer->player->pieceSet.push_back(newPiece);
 
 }
 
@@ -367,7 +365,6 @@ BoardDisplay::BoardDisplay() {
     blackPlayer = new PlayerInfo(Colour::BLACK, 'e', 8);
     getCurrentTurn = WHITE;
 
-    // defaultBoard();
     attach(new TextDisplay(this));
     notifyObservers();
 }

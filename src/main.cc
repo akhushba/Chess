@@ -12,7 +12,10 @@ int main () {
     BoardDisplay board_Display;
     board_Display.defaultBoard();
     board_Display.notifyObservers();
-  
+    Piece* p  = board_Display.getBoardInfo('a', 2);
+    cout << board_Display.checkValid(p, 'a', 3) << endl;
+
+
     string command;
     while (cin >> command) {
     if (command == "game" ) {
