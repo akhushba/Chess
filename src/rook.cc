@@ -57,7 +57,7 @@ vector <pair<char,int>> Rook::generate(){
         char col = cPos;
         int row = iPos;
 
-        while (row >= 1 && row <= 8 && col >= 'a' && col < 'h') {
+        while (row >= 1 && row <= 8 && col >= 'a' && col <= 'h') {
             row += d[0];
             col += d[1];
             if(col < 'a' || col > 'h' || row < 1 || row > 8) continue;
