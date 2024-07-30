@@ -72,7 +72,7 @@ void BoardDisplay::defaultBoard() {
 }
 
 Piece* BoardDisplay::getBoardInfo(char c, int i) {
-    cout << i-1 << ", " << c-'a' << endl;
+    // cout << i-1 << ", " << c-'a' << endl;
     return board[i - 1][c - 'a']->piece;
 }
 
@@ -152,7 +152,7 @@ void BoardDisplay::removePiece(char cPos, int iPos) {
     // cout << "removing from " << cPos << iPos << endl;
     if (p) {
         PlayerInfo* currentPlayer = (p->getColour() == BLACK) ? blackPlayer : whitePlayer;
-        cout << "----------" << currentPlayer->activePieces.size() << endl;
+        // cout << "----------" << currentPlayer->activePieces.size() << endl;
         auto& activePieces = currentPlayer->activePieces;
         auto it = std::find(activePieces.begin(), activePieces.end(), p);
         if (it != activePieces.end()) {
@@ -425,20 +425,17 @@ void BoardDisplay::makeMove(Colour c){
                 pieceAndMoves.emplace_back(make_pair(active, gotMoves));
             }
         }
-        for(auto& pair : pieceAndMoves) {
-            
-        }
         // cout << "------" << endl;
-        // pieceMovePair = currentPlayer->player->move(pieceAndMoves);
+        pieceMovePair = currentPlayer->player->move(pieceAndMoves, {});
         // cout << "+++++++++++++++" << endl;
-        // Piece* movePiece = get<0>(pieceMovePair);
-        // char oldC = movePiece->getPosition().first;
-        // int oldI = movePiece->getPosition().second;
-        // char moveC = get<0>(get<1>(pieceMovePair));
-        // int moveI = get<1>(get<1>(pieceMovePair));
-        // setState(movePiece, moveC, moveI);
+        Piece* movePiece = get<0>(pieceMovePair);
+        char oldC = movePiece->getPosition().first;
+        int oldI = movePiece->getPosition().second;
+        char moveC = get<0>(get<1>(pieceMovePair));
+        int moveI = get<1>(get<1>(pieceMovePair));
+        setState(movePiece, moveC, moveI);
 
-        // setState(nullptr, oldC, oldI);
+        setState(nullptr, oldC, oldI);
         // do this later
         // setState(nullptr,oldPos[0], oldPos[1]-'0');
     }
