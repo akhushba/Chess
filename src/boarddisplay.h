@@ -57,7 +57,7 @@ public:
     char getState(int row, int col) const;
 
     void addPiece(char type, string pos);
-    void removePiece(string pos);
+    void removePiece(char cPos, int iPos);
 
     std::vector<std::string> messages;
 

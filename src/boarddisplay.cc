@@ -72,7 +72,7 @@ void BoardDisplay::defaultBoard() {
 }
 
 Piece* BoardDisplay::getBoardInfo(char c, int i) {
-    cout << i-1 << ", " << c-'a' << endl;
+    // cout << i-1 << ", " << c-'a' << endl;
     return board[i - 1][c - 'a']->piece;
     }
 
@@ -147,9 +147,9 @@ void BoardDisplay::addPiece(char type, const std::string pos) {
 }
 
 
-void BoardDisplay::removePiece(string pos) {
-    Piece* p = board[pos[1] - '0' - 1][pos[0] - 'a']->piece;
-    cout << pos[1] - '0' - 1 << ", " << pos[0] - 'a' << endl;
+void BoardDisplay::removePiece(char cPos, int iPos) {
+    Piece* p = board[iPos - 1][cPos - 'a']->piece;
+    cout << "removing from " << cPos << iPos << endl;
     if (p) {
         PlayerInfo* currentPlayer = (p->getColour() == BLACK) ? blackPlayer : whitePlayer;
         cout << "----------" << currentPlayer->activePieces.size() << endl;
@@ -174,7 +174,11 @@ void BoardDisplay::setState(Piece* p, char cPos, int iPos, char pawnPromote) {
         }
         p->setPos(cPos, iPos);
     }
-     board[iPos - 1][cPos - 'a']->piece = p;
+    Piece* k = getBoardInfo(cPos, iPos);
+    if(k && k!= p) {
+        removePiece(cPos, iPos);
+    }
+    board[iPos - 1][cPos - 'a']->piece = p;
 }
 
 bool BoardDisplay::canCapture(Colour pieceColour, char cPos, int iPos) {
@@ -287,7 +291,7 @@ void BoardDisplay::setUpGame() {
         } else if (setupCommand == "-") {
             string removePos;
             cin >> removePos;
-            removePiece(removePos);
+            removePiece(removePos[0],removePos[1]-'0');
         } else if (setupCommand == "=") {
             string colour;
             cin >> colour;
@@ -331,12 +335,14 @@ void BoardDisplay::endSession() {
     notifyObservers();
 }
 
+
 void BoardDisplay::makeMove(Colour c, string oldPos, string newPos){
 
     // cout << "++++++++++1" << endl;
     PlayerInfo* currentPlayer = (c == BLACK) ? blackPlayer : whitePlayer;
     Piece* p = getBoardInfo(oldPos[0], oldPos[1]-'0');
     if(checkValid(p, newPos[0], newPos[1]-'0')) {
+        
         setState(p,newPos[0], newPos[1]-'0');
         setState(nullptr,oldPos[0], oldPos[1]-'0');
     }
