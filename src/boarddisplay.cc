@@ -164,16 +164,41 @@ void BoardDisplay::removePiece(char cPos, int iPos) {
     }
 }
 
-void BoardDisplay::setState(Piece* p, char cPos, int iPos, char pawnPromote) {
+void BoardDisplay::setState(Piece* p, char cPos, int iPos) {
 
     if (p) {
-        PlayerInfo* currentPlayer = (p->getColour() == BLACK) ? blackPlayer : whitePlayer;
+        Colour col = p->getColour();
+        PlayerInfo* currentPlayer = (col == BLACK) ? blackPlayer : whitePlayer;
         if (p->getType() == 'K' || p->getType() == 'k') {
             currentPlayer->kingPosition = {cPos, iPos};
-
+            if(canCastle(col) && abs(cPos - p->getPosition().first) == 2) {
+                if(col == WHITE) {
+                    setState(getBoardInfo('h', 1), 'f', 1);
+                    setState(nullptr, 'h', 1);
+                }
+                else {
+                    setState(getBoardInfo('h', 8), 'f', 8);
+                    setState(nullptr, 'h', 8);
+                }
+            }
+        } else if ((p->getType() == 'P' || p->getType() == 'p')) {
+            if((col == BLACK && iPos == 1) || (col == WHITE && iPos == 8)){
+                char c;
+                if(cin >> c) {
+                    delete p;
+                    switch(c) {
+                        case 'Q': case 'q': p = new Queen(col, this, cPos, iPos); break;
+                        case 'R': case 'r': p = new Rook(col, this, cPos, iPos); break;
+                        case 'B': case 'b': p = new Bishop(col, this, cPos, iPos); break;
+                        case 'N': case 'n': p = new Knight(col, this, cPos, iPos); break;
+                        default: throw runtime_error("wrong pawn promotion type");
+                    }
+                } else throw runtime_error("expected pawn promotion");
+            }
         }
         p->setPos(cPos, iPos);
     }
+
     Piece* k = getBoardInfo(cPos, iPos);
     if(k && k!= p) {
         removePiece(cPos, iPos);
@@ -595,12 +620,8 @@ bool BoardDisplay::checkValid(Piece* p, char cPos, int iPos){
     if(p->getType() == 'K' || p->getType() == 'k') {
         if (canCastle(p->getColour())) {
             if (p->getColour() == WHITE && cPos == 'g' && iPos == 1) { 
-                setState(getBoardInfo('h', 1), 'f', 1);
-                setState(nullptr, 'h', 1);
                 return true;
             } else if (p->getColour() == BLACK && cPos == 'g' && iPos == 8)  {
-                setState(getBoardInfo('h', 8), 'f', 8);
-                setState(nullptr, 'h', 8);
                 return true;
             }
             else return false;
