@@ -243,7 +243,7 @@ bool BoardDisplay::inCheck(Colour c) {
     PlayerInfo* oppositePlayer = (c == BLACK) ? whitePlayer : blackPlayer;
 
     for (auto& p : oppositePlayer->activePieces) {
-        if (p->isValidMove(currentPlayer->kingPosition.first, currentPlayer->kingPosition.second)) 
+        if (checkValid(p, currentPlayer->kingPosition.first, currentPlayer->kingPosition.second)) 
         return true;
 
     }
