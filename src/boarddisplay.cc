@@ -325,6 +325,7 @@ void BoardDisplay::endSession() {
 
 
 void BoardDisplay::makeMove(Colour c, string oldPos, string newPos){
+        
         PlayerInfo* currentPlayer = (c == BLACK) ? blackPlayer : whitePlayer;
         Piece* p = getBoardInfo(oldPos[0], (int)oldPos[1]);
         currentPlayer->player->move(p, newPos[0], (int)newPos[1]);
