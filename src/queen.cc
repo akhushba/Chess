@@ -54,3 +54,22 @@ void Queen::generateMoves() {
         }
     }
 }
+
+vector <pair<char,int>>Queen::generate(){
+    vector <pair<char,int>> possible;
+    int directions[8][2] = {{1, 1}, {1, -1}, {-1, 1}, {-1, -1}, {0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+
+    for (auto& direction : directions) {
+        char col = cPos;
+        int row = iPos;
+
+        while (row >= 1 && row <= 8 && col >= 'a' && col < 'h') {
+            row += direction[0];
+            col += direction[1];
+            if(cPos + direction[0] < 'a' || cPos + direction[0] > 'h' || iPos + direction[1] < 1 || iPos + direction[1] > 8) continue;
+            possible.emplace_back(make_tuple(col, row));
+        }
+    }
+    return possible;
+
+}

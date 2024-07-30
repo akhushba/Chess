@@ -5,11 +5,14 @@
 
 #include "boarddisplay.h"
 using namespace std;
+#include "piece.h"
 
 int main () {
 
     BoardDisplay board_Display;
-
+    board_Display.defaultBoard();
+    board_Display.notifyObservers();
+  
     string command;
     while (cin >> command) {
     if (command == "game" ) {
@@ -83,3 +86,4 @@ int main () {
     }
   }
 }
+

@@ -1,6 +1,9 @@
 #ifndef ROOK_H
 #define ROOK_H
 
+#include <utility>
+#include<iostream>
+
 #include "piece.h"
 
 class Rook : public Piece{
@@ -10,6 +13,7 @@ class Rook : public Piece{
 
         bool isValidMove(char newC, int newI) override;
         void generateMoves() override;
+        vector<pair<char,int>> generate() override;
 };
 
 #endif

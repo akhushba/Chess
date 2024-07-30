@@ -10,5 +10,7 @@ class King : public Piece {
         bool isValidMove(char newC, int newI) override;
         void generateMoves() override;
         ~King() override = default;
+        vector <pair<char,int>> generate() override;
+
 };
 #endif

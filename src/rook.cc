@@ -48,3 +48,22 @@ void Rook::generateMoves() {
         }
     }
 }
+
+vector <pair<char,int>> Rook::generate(){
+    vector <pair<char,int>> possible;
+    int directions[4][2] = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+
+    for (auto& d : directions) {
+        char col = cPos;
+        int row = iPos;
+
+        while (row >= 1 && row <= 8 && col >= 'a' && col < 'h') {
+            row += d[0];
+            col += d[1];
+            if(cPos + d[0] < 'a' || cPos + d[0] > 'h' || iPos + d[1] < 1 || iPos + d[1] > 8) continue;
+            // cout << col << row << endl;
+            possible.emplace_back(make_pair(col, row));
+        }
+    }
+    return possible;
+}
