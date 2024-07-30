@@ -86,6 +86,7 @@ public:
     void endSession();
     void setUpGame();
     bool checkValid(Piece *p, char cPos, int iPos);
+    vector<pair<char, int>> getValidMoves(Piece* p);
     BoardDisplay();
     ~BoardDisplay() = default;
 std::pair<char, int> findPair(const std::vector<std::pair<char, int>>& vec, char cPos, int iPos);

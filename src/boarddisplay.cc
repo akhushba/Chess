@@ -336,16 +336,69 @@ void BoardDisplay::endSession() {
     notifyObservers();
 }
 
+vector<pair<char, int>> BoardDisplay::getValidMoves(Piece* p) {
+    vector<pair<char, int>> validMoves = {};
+    vector<pair<char, int>> moves = p->generate();
+    for(auto& m : moves) {
+        // cout << "ingetvalidmoves: " << p->getType() << " " << p->getPosition().first << p->getPosition().second << "\t" << m.first << m.second << endl;
+        if(p->getType() == 'N' || p->getType() == 'n') {
+            if(occupied(m.first, m.second) == p->getColour()) continue;
+        } else {
+            char currC = p->getPosition().first;
+            int currI = p->getPosition().second;
+            // check all square in between
+            // Determine movement direction
+            int colDiff = m.first - currC;
+            int rowDiff = m.second - currI;
+            int colStep = (colDiff == 0) ? 0 : (colDiff > 0) ? 1 : -1;
+            int rowStep = (rowDiff == 0) ? 0 : (rowDiff > 0) ? 1 : -1;
+
+            //make sure all squares inbetween are unoccupied
+            char currentCol = currC;  // Start with the next position
+            int currentRow = currI ;
+
+            while (currentCol != m.first || currentRow != m.second) {
+                currentCol += colStep;
+                currentRow += rowStep;
+                // cout << currentCol << currentRow << "\t" << occupied(currentCol, currentRow) << endl;
+                if (occupied(currentCol, currentRow) == p->getColour()) goto checkMore;
+                if ((p->getType() == 'P' || p->getType() == 'p') && colDiff != 0 && occupied(currentCol, currentRow) == NULL_C) goto checkMore;
+            }
+
+        }
+        
+        if(simulateAttack2(p, m.first, m.second)) continue;
+        // run in check simulation
+        if(p->getType() == 'K' || p->getType() == 'k') {
+            if (canCastle(p->getColour())) {
+                if (p->getColour() == WHITE && m.first == 'g' && m.second == 1) { 
+                    validMoves.emplace_back(m);
+                    // cout << "placing1: " << p->getType() << " " << p->getPosition().first << p->getPosition().second << "\t" << m.first << m.second << endl;
+                    continue;
+                } else if (p->getColour() == BLACK && m.first == 'g' && m.second == 8)  {
+                    validMoves.emplace_back(m);
+                    // cout << "placing2: " << p->getType() << " " << p->getPosition().first << p->getPosition().second << "\t" << m.first << m.second << endl;
+                    continue;
+                }
+                else continue;
+            }
+        }
+
+        validMoves.emplace_back(m);
+        // cout << "placing3: " << p->getType() << " " << p->getPosition().first << p->getPosition().second << "\t" << m.first << m.second << endl;
+        checkMore: continue;
+    }
+    return validMoves;
+}
+
 
 void BoardDisplay::makeMove(Colour c){
 
     PlayerInfo* currentPlayer = (c == BLACK) ? blackPlayer : whitePlayer;
     vector<pair<Piece*, vector<pair<char, int>>>> pieceAndMoves;
-    vector<pair<Piece*, vector<pair<char, int>>>> pieceAndCaptureMoves;
     vector<pair<char, int>> moves;
-    vector<pair<char, int>> captureMoves;
     pair<Piece*, pair<char, int>> pieceMovePair;
-
+    cout << "HERERE W " << endl;
     if (currentPlayer->player->getName() == "human") {
         string oldPos, newPos;
         cin >> oldPos >> newPos;
@@ -356,37 +409,101 @@ void BoardDisplay::makeMove(Colour c){
             setState(nullptr,oldPos[0], oldPos[1]-'0');
         }
     } else {
+        // for(auto& active : currentPlayer->activePieces) {
+        //     for (auto& pair : active->generate()) {
+        //     }
+        // }
+        int count = 0;
         for (auto& active : currentPlayer->activePieces) {
-            for (auto& pair : active->generate()) {
-                cout << get<0>(pair) << ", " << get<1>(pair) << endl;
-                if (checkValid(active, get<0>(pair), get<1>(pair))) {
-                    moves.emplace_back(make_pair(get<0>(pair), get<1>(pair)));
-                }
-                if (canCapture(c, get<0>(pair), get<1>(pair))) {
-                    captureMoves.emplace_back(make_pair(get<0>(pair), get<1>(pair)));
-                }
+                cout << "VALID MOVES FOR: " << active->getType() << " " << active->getPosition().first << active->getPosition().second << endl;
+            vector<pair<char, int>> gotMoves = getValidMoves(active);
+            for (auto& pair : gotMoves) {
+                cout << pair.first << pair.second << endl;
             }
-            if (moves.size() != 0) pieceAndMoves.emplace_back(make_pair(active, moves));
-            if (captureMoves.size() != 0) pieceAndCaptureMoves.emplace_back(make_pair(active, captureMoves));
-            moves.clear(); 
+            count++;
+            if (gotMoves.size() != 0) {
+                pieceAndMoves.emplace_back(make_pair(active, gotMoves));
+            }
         }
-        cout << "------" << endl;
+        for(auto& pair : pieceAndMoves) {
+            
+        }
+        // cout << "------" << endl;
+        // pieceMovePair = currentPlayer->player->move(pieceAndMoves);
+        // cout << "+++++++++++++++" << endl;
+        // Piece* movePiece = get<0>(pieceMovePair);
+        // char oldC = movePiece->getPosition().first;
+        // int oldI = movePiece->getPosition().second;
+        // char moveC = get<0>(get<1>(pieceMovePair));
+        // int moveI = get<1>(get<1>(pieceMovePair));
+        // setState(movePiece, moveC, moveI);
 
-        pieceMovePair = currentPlayer->player->move(pieceAndMoves, pieceAndCaptureMoves);
-
-        cout << "+++++++++++++++" << endl;
-        Piece* movePiece = get<0>(pieceMovePair);
-        char oldC = movePiece->getPosition().first;
-        int oldI = movePiece->getPosition().second;
-        char moveC = get<0>(get<1>(pieceMovePair));
-        int moveI = get<1>(get<1>(pieceMovePair));
-        setState(movePiece, moveC, moveI);
-        setState(nullptr, oldC, oldI);
+        // setState(nullptr, oldC, oldI);
+        // do this later
+        // setState(nullptr,oldPos[0], oldPos[1]-'0');
     }
+
+    // if(checkValid(p, newPos[0], newPos[1]-'0')) {
+    //     setState(p,newPos[0], newPos[1]-'0');
+    //     setState(nullptr,oldPos[0], oldPos[1]-'0');
+    // }
+    // else
+    // currentPlayer->player->move(p, newPos[0], (int)newPos[1]);
     cout << "++++++++++4" << endl;
     //ADD PAWN PROMOTION
     notifyObservers();
 }
+
+// void BoardDisplay::makeMove(Colour c){
+
+//     PlayerInfo* currentPlayer = (c == BLACK) ? blackPlayer : whitePlayer;
+//     vector<pair<Piece*, vector<pair<char, int>>>> pieceAndMoves;
+//     vector<pair<Piece*, vector<pair<char, int>>>> pieceAndCaptureMoves;
+//     vector<pair<char, int>> moves;
+//     vector<pair<char, int>> captureMoves;
+//     pair<Piece*, pair<char, int>> pieceMovePair;
+
+//     if (currentPlayer->player->getName() == "human") {
+//         string oldPos, newPos;
+//         cin >> oldPos >> newPos;
+//         Piece* p = getBoardInfo(oldPos[0], oldPos[1]-'0');
+
+//         if(checkValid(p, newPos[0], newPos[1]-'0')) {
+//             setState(p,newPos[0], newPos[1]-'0');
+//             setState(nullptr,oldPos[0], oldPos[1]-'0');
+//         }
+//     } else {
+//         for (auto& active : currentPlayer->activePieces) {
+//             for (auto& pair : active->generate()) {
+//                 cout << get<0>(pair) << ", " << get<1>(pair) << endl;
+//                 if (checkValid(active, get<0>(pair), get<1>(pair))) {
+//                     moves.emplace_back(make_pair(get<0>(pair), get<1>(pair)));
+//                 }
+//                 if (canCapture(c, get<0>(pair), get<1>(pair))) {
+//                     captureMoves.emplace_back(make_pair(get<0>(pair), get<1>(pair)));
+//                 }
+//             }
+//             if (moves.size() != 0) pieceAndMoves.emplace_back(make_pair(active, moves));
+//             if (captureMoves.size() != 0) pieceAndCaptureMoves.emplace_back(make_pair(active, captureMoves));
+//             moves.clear(); 
+//         }
+//         cout << "------" << endl;
+
+//         pieceMovePair = currentPlayer->player->move(pieceAndMoves, pieceAndCaptureMoves);
+
+//         cout << "+++++++++++++++" << endl;
+//         Piece* movePiece = get<0>(pieceMovePair);
+//         char oldC = movePiece->getPosition().first;
+//         int oldI = movePiece->getPosition().second;
+//         char moveC = get<0>(get<1>(pieceMovePair));
+//         int moveI = get<1>(get<1>(pieceMovePair));
+//         setState(movePiece, moveC, moveI);
+//         setState(nullptr, oldC, oldI);
+//     }
+//     cout << "++++++++++4" << endl;
+//     //ADD PAWN PROMOTION
+//     notifyObservers();
+// }
 
 BoardDisplay::PlayerInfo* BoardDisplay::getWhitePlayer() {
     return whitePlayer;
