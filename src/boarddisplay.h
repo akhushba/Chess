@@ -32,6 +32,7 @@ public:
         int score;
         const Colour colour;
         bool inCheck;
+        bool hasKing = false;
         pair<char, int> kingPosition;
         vector<Piece*> activePieces;
         vector<Piece*> inactivePieces;
@@ -52,7 +53,6 @@ public:
 
     // Observer pattern
     void attach(Observer* o) override;
-    void detach(Observer* o) override;
     void notifyObservers() override;
     char getState(int row, int col) const;
 
@@ -67,10 +67,8 @@ public:
 
     PlayerInfo* getCurrentPlayer();
 
-    // for the chessboard
     bool simulateAttack(Piece*, char newC, int newI, Piece* reference = nullptr);
-    bool simulateAttack2(Piece*, char newC, int newI, Piece* reference = nullptr);
-    void setState(Piece* p, char cPos, int iPos);
+    void setState(Piece* p, char cPos, int iPos, bool tempState = false);
     void makeMove(Colour currentColour);
     bool canCapture(Colour pieceColour, char cPos, int iPos);
     Colour occupied(char c, int i);
