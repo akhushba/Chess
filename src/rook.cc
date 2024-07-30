@@ -60,7 +60,7 @@ vector <pair<char,int>> Rook::generate(){
         while (row >= 1 && row <= 8 && col >= 'a' && col <= 'h') {
             row += d[0];
             col += d[1];
-            if(col < 'a' || col > 'h' || row < 1 || row > 8) continue;
+            if(col < 'a' || col > 'h' || row < 1 || row > 8) break;
             // cout << col << row << endl;
             possible.emplace_back(make_pair(col, row));
         }

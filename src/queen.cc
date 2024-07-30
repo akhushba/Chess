@@ -67,7 +67,7 @@ vector <pair<char,int>>Queen::generate(){
         while (row >= 1 && row <= 8 && col >= 'a' && col < 'h') {
             row += direction[0];
             col += direction[1];
-            if(col < 'a' || col > 'h' || row < 1 || row > 8) continue;
+            if(col < 'a' || col > 'h' || row < 1 || row > 8) break;
             possible.emplace_back(make_pair(col, row));
             // std::cout << "possible moves \t" << col << row << std::endl;
         }

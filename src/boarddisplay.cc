@@ -40,14 +40,14 @@ void BoardDisplay::defaultBoard() {
     addPiece('R', "h1"); // Rook
     addPiece('N', "b1"); // Knight
     addPiece('N', "g1"); // Knight
-    addPiece('P', "b2");
-    addPiece('P', "a2"); // Pawns
-    addPiece('P', "c2");
-    addPiece('P', "d2");
-    addPiece('P', "e2");
-    addPiece('P', "f2");
-    addPiece('P', "g2");
-    addPiece('P', "h2");
+    // addPiece('P', "b2");
+    // addPiece('P', "a2"); // Pawns
+    // addPiece('P', "c2");
+    // addPiece('P', "d2");
+    // addPiece('P', "e2");
+    // addPiece('P', "f2");
+    // addPiece('P', "g2");
+    // addPiece('P', "h2");
 
     // Black pieces
     addPiece('r', "a8"); // Rook
@@ -58,14 +58,14 @@ void BoardDisplay::defaultBoard() {
     addPiece('b', "f8"); // Bishop
     addPiece('n', "g8"); // Knight
     addPiece('r', "h8"); // Rook
-    addPiece('p', "a7"); // Pawns
-    addPiece('p', "b7");
-    addPiece('p', "c7");
-    addPiece('p', "d7");
-    addPiece('p', "e7");
-    addPiece('p', "f7");
-    addPiece('p', "g7");
-    addPiece('p', "h7");
+    // addPiece('p', "a7"); // Pawns
+    // addPiece('p', "b7");
+    // addPiece('p', "c7");
+    // addPiece('p', "d7");
+    // addPiece('p', "e7");
+    // addPiece('p', "f7");
+    // addPiece('p', "g7");
+    // addPiece('p', "h7");
 
     customSetup = false;
     notifyObservers();
@@ -258,7 +258,7 @@ bool BoardDisplay::simulateAttack(Piece* p, char newC, int newI, Piece* checkAtt
     bool originalCheckState = currentPlayer->inCheck;
     currentPlayer->inCheck = false;
 
-    for(const auto& piece : oppositePlayer->activePieces) {
+    for(const auto piece : oppositePlayer->activePieces) {
         if (checkAttack) {
             canBeAttacked = piece->isValidMove(checkAttack->getPosition().first, checkAttack->getPosition().second);
         } else {
@@ -276,37 +276,37 @@ bool BoardDisplay::simulateAttack(Piece* p, char newC, int newI, Piece* checkAtt
 }
 
 bool BoardDisplay::inCheck(Colour c) {
-    PlayerInfo* currentPlayer = (c == BLACK) ? blackPlayer : whitePlayer;
-    PlayerInfo* oppositePlayer = (c == BLACK) ? whitePlayer : blackPlayer;
+    // PlayerInfo* currentPlayer = (c == BLACK) ? blackPlayer : whitePlayer;
+    // PlayerInfo* oppositePlayer = (c == BLACK) ? whitePlayer : blackPlayer;
 
-    for (auto& p : oppositePlayer->activePieces) {
-        if (checkValid(p, currentPlayer->kingPosition.first, currentPlayer->kingPosition.second)) 
-        return true;
+    // for (auto& p : oppositePlayer->activePieces) {
+    //     if (checkValid(p, currentPlayer->kingPosition.first, currentPlayer->kingPosition.second)) 
+    //     return true;
 
-    }
+    // }
     return false;
 }
 
 
 bool BoardDisplay::inCheckmate(Colour c) {
-    PlayerInfo* currentPlayer = (c == BLACK) ? blackPlayer : whitePlayer;
-    for (auto& p : currentPlayer->activePieces) {
-        p->generateMoves();
-        if (!p->validPosVec.empty()) return false;
-    }
-    return true;
+    // PlayerInfo* currentPlayer = (c == BLACK) ? blackPlayer : whitePlayer;
+    // for (auto& p : currentPlayer->activePieces) {
+    //     p->generateMoves();
+    //     if (!p->validPosVec.empty()) return false;
+    // }
+     return false;
 }
 
     // king is not in check since that would get triggered in checkmate
     // no piece can be moved without putting the king in check 
     // need to check to see if all no valid pos moves exist
 bool BoardDisplay::inStalemate(Colour c) {
-    if (inCheck(c)) return false;
+    // if (inCheck(c)) return false;
 
-    PlayerInfo* currentPlayer = (c == BLACK) ? blackPlayer : whitePlayer;
-    for (auto& p : currentPlayer->activePieces) {
-        if (!p->validPosVec.empty()) return false;
-    }
+    // PlayerInfo* currentPlayer = (c == BLACK) ? blackPlayer : whitePlayer;
+    // for (auto& p : currentPlayer->activePieces) {
+    //     if (!p->validPosVec.empty()) return false;
+    // }
     return true;
 }
 
@@ -367,9 +367,10 @@ void BoardDisplay::endSession() {
 }
 
 vector<pair<char, int>> BoardDisplay::getValidMoves(Piece* p) {
+    if(!p) return {};
     vector<pair<char, int>> validMoves = {};
     vector<pair<char, int>> moves = p->generate();
-    for(auto& m : moves) {
+    for(auto m : moves) {
         // cout << "ingetvalidmoves: " << p->getType() << " " << p->getPosition().first << p->getPosition().second << "\t" << m.first << m.second << endl;
         if(p->getType() == 'N' || p->getType() == 'n') {
             if(occupied(m.first, m.second) == p->getColour()) continue;
@@ -428,6 +429,9 @@ void BoardDisplay::makeMove(Colour c){
     vector<pair<Piece*, vector<pair<char, int>>>> pieceAndMoves;
     vector<pair<char, int>> moves;
     pair<Piece*, pair<char, int>> pieceMovePair;
+      char prevType;
+    pair<char, int> prevPosition;
+
     cout << "HERERE W " << endl;
     if (currentPlayer->player->getName() == "human") {
         string oldPos, newPos;
@@ -443,17 +447,24 @@ void BoardDisplay::makeMove(Colour c){
         //     for (auto& pair : active->generate()) {
         //     }
         // }
-        int count = 0;
-        for (auto& active : currentPlayer->activePieces) {
+        for (auto active : currentPlayer->activePieces) {
                 // cout << "VALID MOVES FOR: " << active->getType() << " " << active->getPosition().first << active->getPosition().second << endl;
             vector<pair<char, int>> gotMoves = getValidMoves(active);
             for (auto& pair : gotMoves) {
                 // cout << pair.first << pair.second << endl;
             }
-            count++;
-            if (gotMoves.size() != 0) {
+
+        if (gotMoves.size() != 0) {
+            char currentType = active->getType();
+            pair<char, int> currentPosition = active->getPosition();
+
+            if (currentType != prevType || currentPosition != prevPosition) {
                 pieceAndMoves.emplace_back(make_pair(active, gotMoves));
+                prevType = currentType;
+                prevPosition = currentPosition;
             }
+        }
+            gotMoves.clear();
         }
         for(auto& pm : pieceAndMoves) {
             cout << "FOR: \t"<< pm.first->getType() << " " << pm.first->getPosition().first << pm.first->getPosition().second << endl << "\thas:" << endl;
@@ -655,7 +666,7 @@ bool BoardDisplay::simulateAttack2(Piece* p, char newC, int newI, Piece* checkAt
     bool originalCheckState = currentPlayer->inCheck;
     currentPlayer->inCheck = false;
 
-    for(const auto& piece : oppositePlayer->activePieces) {
+    for(const auto piece : oppositePlayer->activePieces) {
         if (checkAttack) {
             canBeAttacked = checkValid(piece, checkAttack->getPosition().first, checkAttack->getPosition().second);
         } else {
