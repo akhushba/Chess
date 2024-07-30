@@ -10,7 +10,6 @@ using namespace std;
 LevelThree::LevelThree(string name, vector<Piece*> pieceSet, Colour c) : Computer(name, pieceSet, c) {}
 
 pair<Piece*, pair<char, int>> LevelThree::move(vector<pair<Piece*, vector<pair<char, int>>>> pieceAndMoves, vector<pair<Piece*, vector<pair<char, int>>>> pieceAndCaptureMoves, vector<pair<Piece*, vector<pair<char, int>>>> opponentPieceAndMoves) {
-    int numPieces = pieceAndMoves.size();
     char newC;
     int newI;
     bool safeMove = true;
@@ -56,9 +55,7 @@ pair<Piece*, pair<char, int>> LevelThree::move(vector<pair<Piece*, vector<pair<c
                     break;
                 }
             }
-            if (!moveExistsInOpponent) {
-                return make_pair(piece, move);
-            }
+            if (!moveExistsInOpponent) return make_pair(piece, move);
         }
     }
 

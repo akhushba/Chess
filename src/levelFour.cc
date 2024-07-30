@@ -11,7 +11,7 @@ using namespace std;
 LevelFour::LevelFour(string name, vector<Piece*> pieceSet, Colour c) : Computer(name, pieceSet, c) {}
 
 // returns which move option captures the most valuable piece
-int LevelFour::getMaxPieceValue(vector<pair<Piece*, tuple<char, int>>> optionsVec) {
+int LevelFour::getMaxPieceValue(vector<pair<Piece*, pair<char, int>>> optionsVec) {
     if (optionsVec.empty()) return -1;
 
     int maxIndex = 0;
@@ -31,6 +31,104 @@ int LevelFour::getMaxPieceValue(vector<pair<Piece*, tuple<char, int>>> optionsVe
 }
 
 pair<Piece*, pair<char, int>> LevelFour::move(vector<pair<Piece*, vector<pair<char, int>>>> pieceAndMoves, vector<pair<Piece*, vector<pair<char, int>>>> pieceAndCaptureMoves, vector<pair<Piece*, vector<pair<char, int>>>> opponentPieceAndMoves) {
+    
+    // find all moves in pieceAndMoves overlapping w pieceAndCaptureMoves not in opponentPieceAndMoves
+    // find all moves in pieceAndMoves not in opponentPieceAndMoves
+    // choose random move
+
+    char newC;
+    int newI;
+    bool safeMove = true;
+    int index;
+
+    vector<pair<Piece*, pair<char, int>>> safeCaptureCenterOptions;
+    vector<pair<Piece*, pair<char, int>>> safeCaptureOptions;
+    vector<pair<Piece*, tuple<char, int>>> safeOptions;
+
+    random_device rd;
+    mt19937 g(rd());
+
+    shuffle(pieceAndMoves.begin(), pieceAndMoves.end(), g);
+    shuffle(pieceAndCaptureMoves.begin(), pieceAndCaptureMoves.end(), g);
+
+    // if capture and avoid capture
+    for (auto& [piece1, moveSet1] : pieceAndMoves) {
+        shuffle(moveSet1.begin(), moveSet1.end(), g);
+        for (auto& [piece2, moveSet2] : pieceAndCaptureMoves) {
+            if (piece1 == piece2) {
+                for (const auto& move1 : moveSet1) {
+                    for (const auto& move2 : moveSet2) {
+                        if (move1 == move2) {
+                            for (const auto& [opponentPiece, opponentMoves] : opponentPieceAndMoves) {
+                                for (const auto& opponentMove : opponentMoves) {
+                                    if (opponentMove == move1) {
+                                        safeMove = false;
+                                    }
+                                }
+                            }
+                            // if occupies one of the center 4 squares
+                            if ((move1.first == 'd' || move1.first == 'e') && (move1.second == '4' || move1.second == '5')) {
+                                if (safeMove) {safeCaptureCenterOptions.emplace_back(make_pair(piece1, move1));}
+                            } else {
+                                if (safeMove) {safeCaptureOptions.emplace_back(make_pair(piece1, move1));}
+                            }
+                            
+                        }
+                    }
+                }
+
+            }
+        }
+    }
+
+    // if just avoid capture
+    for (const auto& [piece, moves] : pieceAndMoves) {
+        for (const auto& move : moves) {
+            bool moveExistsInOpponent = false;
+            for (const auto& [opponentPiece, opponentMoves] : opponentPieceAndMoves) {
+                if (find(opponentMoves.begin(), opponentMoves.end(), move) != opponentMoves.end()) {
+                    moveExistsInOpponent = true;
+                    break;
+                }
+            }
+            if (!moveExistsInOpponent) safeOptions.emplace_back(make_pair(piece, move));
+        }
+    }
+
+    // if we have reached this point, there are no moves that can capture another piece
+    // so we can just use index 0 to choose a random move since the vectors are already shuffled/randomized
+    newC = get<0>(get<1>(pieceAndMoves[0])[0]);
+    newI = get<1>(get<1>(pieceAndMoves[0])[0]);
+    return make_pair(get<0>(pieceAndMoves[0]), make_pair(newC, newI));
+
+    if (safeOptions.empty()) {
+        // No safe options, make a random move
+        shuffle(pieceAndMoves.begin(), pieceAndMoves.end(), g);
+        newC = (pieceAndMoves[0].second)[0].first;
+        newI = (pieceAndMoves[0].second)[0].second;
+        return make_pair(get<0>(pieceAndMoves[0]), make_pair(newC, newI));
+    } else if (safeCaptureCenterOptions.empty() && safeCaptureCenterOptions.empty()) {
+        // No overlap in any of the vectors
+        shuffle(pieceAndMoves.begin(), pieceAndMoves.end(), g);
+        newC = get<0>(get<1>(safeOptions[0]));
+        newI = get<1>(get<1>(safeOptions[0]));
+        return make_pair(get<0>(safeOptions[0]), make_pair(newC, newI));
+    } else if (safeCaptureCenterOptions.empty()) {
+        // Something exists in 2 of the vectors
+        index = getMaxPieceValue(safeCaptureOptions);
+        newC = get<0>(get<1>(safeCaptureOptions.at(index)));
+        newI = get<1>(get<1>(safeCaptureOptions.at(index)));
+        return make_pair(get<0>(safeCaptureOptions[index]), make_pair(newC, newI));
+    } else {
+        // There is something that exists in all 3 vectors
+        index = getMaxPieceValue(safeCaptureCenterOptions);
+        newC = get<0>(get<1>(safeCaptureCenterOptions[index]));
+        newI = get<1>(get<1>(safeCaptureCenterOptions[index]));
+        return make_pair(get<0>(safeCaptureCenterOptions[index]), make_pair(newC, newI));
+    }
+
+
+
     // vector<pair<Piece*, tuple<char, int>>> safeOptions;
     // vector<pair<Piece*, tuple<char, int>>> captureOptions;
     // vector<pair<Piece*, tuple<char, int>>> centerOptions;
