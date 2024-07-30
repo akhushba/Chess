@@ -1,14 +1,14 @@
 #ifndef _BOARD_DISPLAY_H_
 #define _BOARD_DISPLAY_H_
 
+#include <memory>
 #include <utility>
 #include <string>
 #include <algorithm>
 #include <vector>
-
 #include "subject.h"
 #include "colour.h"
-#include <optional>
+
 class Piece;
 class Player;
 
@@ -17,9 +17,10 @@ using namespace std;
 class BoardDisplay final : public Subject {
 public:
     bool customSetup;
+
     struct BoardSegment {
         Colour colour;
-        Piece* piece;
+        std::unique_ptr<Piece> piece;
 
         void setBegin();
         BoardSegment(Colour c);
@@ -28,14 +29,13 @@ public:
 
     class PlayerInfo {
     public:
-        Player* player;
+        std::unique_ptr<Player> player;
         int score;
         const Colour colour;
         bool inCheck;
         bool hasKing = false;
         pair<char, int> kingPosition;
-        vector<Piece*> activePieces;
-        vector<Piece*> inactivePieces;
+        vector<Piece *> activePieces;
 
         void reset();
 
@@ -43,9 +43,9 @@ public:
         ~PlayerInfo() = default;
     };
 
-    BoardSegment* board[8][8];
-    PlayerInfo* whitePlayer = nullptr; 
-    PlayerInfo* blackPlayer = nullptr; 
+    std::unique_ptr<BoardSegment> board[8][8];
+    std::unique_ptr<PlayerInfo> whitePlayer; 
+    std::unique_ptr<PlayerInfo> blackPlayer; 
     Colour getCurrentTurn = WHITE;
 
     void defaultBoard();
@@ -62,9 +62,7 @@ public:
     std::vector<std::string> messages;
 
     PlayerInfo* getWhitePlayer();
-
     PlayerInfo* getBlackPlayer();
-
     PlayerInfo* getCurrentPlayer();
 
     bool simulateAttack(Piece*, char newC, int newI, Piece* reference = nullptr);
@@ -86,8 +84,9 @@ public:
     bool checkValid(Piece *p, char cPos, int iPos);
     vector<pair<char, int>> getValidMoves(Piece* p);
     BoardDisplay();
-    ~BoardDisplay() = default;
-std::pair<char, int> findPair(const std::vector<std::pair<char, int>>& vec, char cPos, int iPos);
+    ~BoardDisplay();
 
+    std::pair<char, int> findPair(const std::vector<std::pair<char, int>>& vec, char cPos, int iPos);
 };
+
 #endif
