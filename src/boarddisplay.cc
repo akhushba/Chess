@@ -379,6 +379,7 @@ BoardDisplay::BoardDisplay() {
     getCurrentTurn = WHITE;
 
     attach(new TextDisplay(this));
+    attach(new GraphicsDisplay(this));
     notifyObservers();
 }
 
