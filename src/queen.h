@@ -7,9 +7,7 @@ class BoardDisplay;
 
 class Queen : public Piece {
 public:
-    Queen(Colour colour, BoardDisplay *board, char cPos, int iPos);
-    bool isValidMove(char newC, int newI) override;  
-    void generateMoves() override;
+    Queen(Colour colour, char cPos, int iPos);
     ~Queen() override = default;
     vector <pair<char,int>> generate() override;
 

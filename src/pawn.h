@@ -6,11 +6,9 @@
 class Pawn : public Piece {
 
     public: 
-        Pawn(Colour colour, BoardDisplay *board, char cPos, int iPos);
+        Pawn(Colour colour, char cPos, int iPos);
         ~Pawn() override = default;
 
-        bool isValidMove(char newC, int newI) override;
-        void generateMoves() override;
         vector <pair<char,int>> generate() override;
 
 };

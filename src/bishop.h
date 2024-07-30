@@ -7,9 +7,7 @@ class BoardDisplay;
 
 class Bishop : public Piece {
     public:
-        Bishop(Colour colour, BoardDisplay *board, char cPos, int iPos);
-        bool isValidMove(char newC, int newI) override;
-        void generateMoves() override;
+        Bishop(Colour colour, char cPos, int iPos);
         ~Bishop() override = default;
         vector <pair<char,int>> generate() override;
 };

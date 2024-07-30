@@ -20,7 +20,7 @@ int main () {
     while (cin >> command) {
         try {
             if (command == "game" ) {
-            cout << "game cmd start" << endl;
+            // cout << "game cmd start" << endl;
             string playerOne, playerTwo;
             cin >> playerOne >> playerTwo;
             board_Display.setPlayers(playerOne, playerTwo);
@@ -33,7 +33,7 @@ int main () {
                     board_Display.defaultBoard();
                     command = setup;
                 }
-                cout << "game cmd end" << endl;
+                // cout << "game cmd end" << endl;
             }
             
             if (command == "resign") {
@@ -41,7 +41,7 @@ int main () {
                 board_Display.resign(currentPlayer->colour);
             }
             else if (command == "move") {
-                cout << "move cmd start" << endl;
+                // cout << "move cmd start" << endl;
                 BoardDisplay::PlayerInfo* currentPlayer= board_Display.getCurrentPlayer();
                 // if (currentPlayer->colour == WHITE) { cout << "white" << endl; }
                 // if (currentPlayer->colour == BLACK) { cout << "black" << endl; }
@@ -77,7 +77,7 @@ int main () {
                 //     board_Display.notifyObservers();
                 // }
 
-                cout << "move cmd end" << endl;
+                // cout << "move cmd end" << endl;
             } else if (command == "setup") {
                 board_Display.setUpGame();
             }
@@ -85,6 +85,7 @@ int main () {
             board_Display.messages.clear();
             board_Display.messages.push_back(e.what());
             board_Display.notifyObservers();
+            board_Display.messages.clear();
         }
     }
 }

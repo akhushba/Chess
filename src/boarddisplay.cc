@@ -72,7 +72,7 @@ void BoardDisplay::defaultBoard() {
 }
 
 Piece* BoardDisplay::getBoardInfo(char c, int i) {
-    // cout << i-1 << ", " << c-'a' << endl;
+
     return board[i - 1][c - 'a']->piece;
 }
 
@@ -97,26 +97,23 @@ void BoardDisplay::addPiece(char type, const std::string pos) {
     int iPos = pos[1] - '0'; // Convert char to int
 
     // Check for valid positions
-    if (iPos < 1 || iPos > 8 || cPos < 'a' || cPos > 'h') {
-        cout << "Invalid position: " << pos << endl;
-        return;
-    }
+    if (iPos < 1 || iPos > 8 || cPos < 'a' || cPos > 'h') throw runtime_error("Out of boudnds position given");
 
 
     PlayerInfo* curr = (c == BLACK) ? blackPlayer : whitePlayer;
     Piece* newPiece;
     switch (type) {
-        case 'Q': case 'q': newPiece = new Queen(c, this, cPos, iPos); break;
-        case 'R': case 'r': newPiece = new Rook(c, this, cPos, iPos); break;
-        case 'B': case 'b': newPiece = new Bishop(c, this, cPos, iPos); break;
-        case 'N': case 'n': newPiece = new Knight(c, this, cPos, iPos); break;
+        case 'Q': case 'q': newPiece = new Queen(c, cPos, iPos); break;
+        case 'R': case 'r': newPiece = new Rook(c, cPos, iPos); break;
+        case 'B': case 'b': newPiece = new Bishop(c, cPos, iPos); break;
+        case 'N': case 'n': newPiece = new Knight(c, cPos, iPos); break;
         case 'K': case 'k': 
             if(curr->hasKing) throw runtime_error("Trying to insert multiple kings is not allowed");
-            newPiece = new King(c, this, cPos, iPos);
+            newPiece = new King(c, cPos, iPos);
             break;
         case 'P': case 'p':
             if (iPos == 1 || iPos == 8) throw runtime_error("Invalid pawn placement");
-            newPiece = new Pawn(c, this, cPos, iPos);
+            newPiece = new Pawn(c, cPos, iPos);
             break;
         default: throw runtime_error("Piece type not recognized");
     }
@@ -131,10 +128,10 @@ void BoardDisplay::addPiece(char type, const std::string pos) {
 
 void BoardDisplay::removePiece(char cPos, int iPos) {
     Piece* p = board[iPos - 1][cPos - 'a']->piece;
-    // cout << "removing from " << cPos << iPos << endl;
+
     if (p) {
         PlayerInfo* currentPlayer = (p->getColour() == BLACK) ? blackPlayer : whitePlayer;
-        // cout << "----------" << currentPlayer->activePieces.size() << endl;
+
         auto& activePieces = currentPlayer->activePieces;
         auto it = std::find(activePieces.begin(), activePieces.end(), p);
         if (it != activePieces.end()) {
@@ -167,17 +164,16 @@ void BoardDisplay::setState(Piece* p, char cPos, int iPos, bool tempState) {
                 if(cin >> c) {
                     delete p;
                     switch(c) {
-                        case 'Q': case 'q': p = new Queen(col, this, cPos, iPos); break;
-                        case 'R': case 'r': p = new Rook(col, this, cPos, iPos); break;
-                        case 'B': case 'b': p = new Bishop(col, this, cPos, iPos); break;
-                        case 'N': case 'n': p = new Knight(col, this, cPos, iPos); break;
+                        case 'Q': case 'q': p = new Queen(col, cPos, iPos); break;
+                        case 'R': case 'r': p = new Rook(col, cPos, iPos); break;
+                        case 'B': case 'b': p = new Bishop(col, cPos, iPos); break;
+                        case 'N': case 'n': p = new Knight(col, cPos, iPos); break;
                         default: throw runtime_error("wrong pawn promotion type");
                     }
                 } else throw runtime_error("expected pawn promotion");
             }
         }
-        if(canCapture(col, p->getPosition().first, p->getPosition().second)) {
-            cout << "CAPTURONG AH " << endl;
+        if(canCapture(col, p->getPosition().first, p->getPosition().second) && !tempState) {
             removePiece(cPos, iPos);
         }
         p->setPos(cPos, iPos);
@@ -316,7 +312,6 @@ vector<pair<char, int>> BoardDisplay::getValidMoves(Piece* p) {
     if(!p) return {};
     vector<pair<char, int>> validMoves = {};
     vector<pair<char, int>> moves = p->generate();
-    cout << p->getType() << "\t" << p->getPosition().first << p->getPosition().second << endl; 
     for(auto m : moves) {
 
         if(p->getType() == 'N' || p->getType() == 'n') {
@@ -358,7 +353,6 @@ vector<pair<char, int>> BoardDisplay::getValidMoves(Piece* p) {
                 else continue;
             }
         }
-        cout << m.first << m.second << endl;
         validMoves.emplace_back(m);
         checkMore: continue;
     }
@@ -377,7 +371,7 @@ void BoardDisplay::makeMove(Colour c){
         if(checkValid(p, newPos[0], newPos[1]-'0')) {
             setState(p,newPos[0], newPos[1]-'0');
             setState(nullptr,oldPos[0], oldPos[1]-'0');
-        }
+        } else throw runtime_error("Invalid move made");
 
     } else {
 
@@ -586,7 +580,7 @@ bool BoardDisplay::simulateAttack(Piece* p, char newC, int newI, Piece* checkAtt
 
 std::pair<char, int> BoardDisplay::findPair(const std::vector<std::pair<char, int>>& vec, char cPos, int iPos) {
     for (const auto& pair : vec) {
-        // cout << pair.first << pair.second << endl;
+
         if (pair.first == cPos && pair.second == iPos) {
             return pair;
         }

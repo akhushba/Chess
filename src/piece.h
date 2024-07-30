@@ -12,10 +12,7 @@ class Player;
 
 class Piece {
 protected:
-    std::tuple<char, int> getCoordinate(char c, int i);
 
-    bool active;
-    BoardDisplay *boardInfo;
     const Colour colour;
     const char type;
 
@@ -25,16 +22,11 @@ protected:
 
 public:
     bool hasMoved = false;
-    std::vector<std::tuple<char, int>> validPosVec;
 
-    Piece(Colour colour, char type, BoardDisplay *board, char cPos, int iPos, int pieceValue);
+    Piece(Colour colour, char type, char cPos, int iPos, int pieceValue);
 
-    virtual bool isValidMove(char c, int i) = 0;
-    virtual void generateMoves() = 0;
     void setPos(char c, int i);
-    void setActiveStatus(bool state);
     Piece* capture(char c, int i);
-    Player* getOpponent();
     int getPieceValue();
 
     std::pair<char, int> getPosition() const { return {cPos, iPos}; }
