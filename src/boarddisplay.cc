@@ -21,6 +21,10 @@
 
 BoardDisplay::BoardSegment::BoardSegment(Colour c) : colour{c}, piece{nullptr} {}
 
+BoardDisplay::~BoardDisplay() {
+
+}
+
 void BoardDisplay::BoardSegment::setBegin() {
     piece = nullptr;
 }
@@ -28,13 +32,6 @@ void BoardDisplay::BoardSegment::setBegin() {
 BoardDisplay::PlayerInfo::PlayerInfo(Colour c, char kingC, int kingI)
     : player(nullptr), score{0}, colour{c}, inCheck{false}, kingPosition{kingC, kingI} {
 }
-
-void BoardDisplay::PlayerInfo::reset() {
-    inCheck = false;
-    kingPosition = (colour == WHITE) ? std::make_pair('e', 1) : std::make_pair('e', 8);
-}
-
-BoardDisplay::~BoardDisplay() {}
 
 void BoardDisplay::defaultBoard() {
     // White pieces
@@ -46,8 +43,8 @@ void BoardDisplay::defaultBoard() {
     addPiece('R', "h1");
     addPiece('N', "b1");
     addPiece('N', "g1");
-    addPiece('P', "a2");
     addPiece('P', "b2");
+    addPiece('P', "a2");
     addPiece('P', "c2");
     addPiece('P', "d2");
     addPiece('P', "e2");
@@ -78,7 +75,7 @@ void BoardDisplay::defaultBoard() {
 }
 
 Piece* BoardDisplay::getBoardInfo(char c, int i) {
-    return board[i - 1][c - 'a']->piece.get();
+    return board[i - 1][c - 'a']->piece;
 }
 
 void BoardDisplay::attach(Observer* o) {
@@ -87,6 +84,7 @@ void BoardDisplay::attach(Observer* o) {
 
 void BoardDisplay::notifyObservers() {
     Subject::notifyObservers();
+    message = "";
 }
 
 char BoardDisplay::getState(int row, int col) const {
@@ -101,32 +99,39 @@ void BoardDisplay::addPiece(char type, const std::string pos) {
     char cPos = pos[0];
     int iPos = pos[1] - '0';
 
-    if (iPos < 1 || iPos > 8 || cPos < 'a' || cPos > 'h') throw std::runtime_error("Out of bounds position given");
+    // Check for valid board position
+    if (iPos < 1 || iPos > 8 || cPos < 'a' || cPos > 'h') 
+        throw std::runtime_error("Out of bounds position given");
 
     auto currPlayer = (c == BLACK) ? getBlackPlayer() : getWhitePlayer();
     std::unique_ptr<Piece> newPiece;
 
+    // Create the new piece based on type
     switch (type) {
         case 'Q': case 'q': newPiece = std::make_unique<Queen>(c, cPos, iPos); break;
         case 'R': case 'r': newPiece = std::make_unique<Rook>(c, cPos, iPos); break;
         case 'B': case 'b': newPiece = std::make_unique<Bishop>(c, cPos, iPos); break;
         case 'N': case 'n': newPiece = std::make_unique<Knight>(c, cPos, iPos); break;
         case 'K': case 'k':
-            if (currPlayer->hasKing) throw std::runtime_error("Trying to insert multiple kings is not allowed");
+            if (currPlayer->hasKing) 
+                throw std::runtime_error("Multiple kings are not allowed");
             newPiece = std::make_unique<King>(c, cPos, iPos);
+            currPlayer->hasKing = true;
             break;
         case 'P': case 'p':
-            if (iPos == 1 || iPos == 8) throw std::runtime_error("Invalid pawn placement");
+            if (iPos == 1 || iPos == 8) 
+                throw std::runtime_error("Invalid pawn placement");
             newPiece = std::make_unique<Pawn>(c, cPos, iPos);
             break;
-        default: throw std::runtime_error("Piece type not recognized");
+        default: throw std::runtime_error("Unrecognized piece type");
     }
 
+    // Ensure no piece is currently at the position
     if (!getBoardInfo(cPos, iPos)) {
-        currPlayer->activePieces.push_back(newPiece.get());
-        board[iPos - 1][cPos - 'a']->piece = std::move(newPiece);
+        currPlayer->activePieces.push_back(std::move(newPiece));
+        board[iPos - 1][cPos - 'a']->piece = currPlayer->activePieces.back().get();
     } else {
-        throw std::runtime_error("Piece already exists in this space, cannot add new piece");
+        throw std::runtime_error("A piece already exists in this space, cannot add new piece");
     }
 }
 
@@ -137,14 +142,15 @@ void BoardDisplay::removePiece(char cPos, int iPos) {
         auto currentPlayer = (p->getColour() == BLACK) ? getBlackPlayer() : getWhitePlayer();
         auto& activePieces = currentPlayer->activePieces;
 
+        // Find the piece in the activePieces vector
         auto it = std::find_if(activePieces.begin(), activePieces.end(),
-            [p](Piece* piece) { return piece == p; });
+            [p](const std::unique_ptr<Piece>& piece) { return piece.get() == p; });
 
         if (it != activePieces.end()) {
             activePieces.erase(it);
         }
 
-        board[iPos - 1][cPos - 'a']->piece.reset();
+        board[iPos - 1][cPos - 'a']->piece = nullptr;
     }
 }
 
@@ -166,20 +172,31 @@ void BoardDisplay::setState(Piece* p, char cPos, int iPos, bool tempState) {
             }
         } else if ((p->getType() == 'P' || p->getType() == 'p')) {
             if (((col == BLACK && iPos == 1) || (col == WHITE && iPos == 8)) && !tempState) {
-                char c;
-                if (std::cin >> c) {
+                // Remove the pawn from activePieces
+                auto& activePieces = currentPlayer->activePieces;
+                auto it = std::find_if(activePieces.begin(), activePieces.end(),
+                                       [p](const std::unique_ptr<Piece>& piece) { return piece.get() == p; });
+                if (it != activePieces.end()) {
+                    activePieces.erase(it);
+                }
+
+                char promotionType;
+                if (std::cin >> promotionType) {
                     std::unique_ptr<Piece> promotedPiece;
-                    switch (c) {
+                    switch (promotionType) {
                         case 'Q': case 'q': promotedPiece = std::make_unique<Queen>(col, cPos, iPos); break;
                         case 'R': case 'r': promotedPiece = std::make_unique<Rook>(col, cPos, iPos); break;
                         case 'B': case 'b': promotedPiece = std::make_unique<Bishop>(col, cPos, iPos); break;
                         case 'N': case 'n': promotedPiece = std::make_unique<Knight>(col, cPos, iPos); break;
-                        default: throw std::runtime_error("Wrong pawn promotion type");
+                        default: throw std::runtime_error("Invalid pawn promotion type");
                     }
-                    board[iPos - 1][cPos - 'a']->piece = std::move(promotedPiece);
+                    board[iPos - 1][cPos - 'a']->piece = promotedPiece.get();
+
+                    currentPlayer->activePieces.push_back(std::move(promotedPiece));
                 } else {
                     throw std::runtime_error("Expected pawn promotion");
                 }
+                return;
             }
         }
 
@@ -190,8 +207,7 @@ void BoardDisplay::setState(Piece* p, char cPos, int iPos, bool tempState) {
         p->setPos(cPos, iPos);
         p->hasMoved = true;
     }
-
-    board[iPos - 1][cPos - 'a']->piece.reset(p);
+    board[iPos - 1][cPos - 'a']->piece = p;
 }
 
 bool BoardDisplay::canCapture(Colour pieceColour, char cPos, int iPos) {
@@ -233,7 +249,7 @@ bool BoardDisplay::inCheck(Colour c) {
     auto opp = (c == BLACK) ? getWhitePlayer() : getBlackPlayer();
 
     for (auto& p : opp->activePieces) {
-        if (checkValid(p, curr->kingPosition.first, curr->kingPosition.second)) {
+        if (checkValid(p.get(), curr->kingPosition.first, curr->kingPosition.second)) {
             return true;
         }
     }
@@ -245,7 +261,7 @@ bool BoardDisplay::inCheckmate(Colour c) {
 
     auto curr = (c == BLACK) ? getBlackPlayer() : getWhitePlayer();
     for (const auto& p : curr->activePieces) {
-        if (!(getValidMoves(p).empty())) return false;
+        if (!(getValidMoves(p.get()).empty())) return false;
     }
     return true;
 }
@@ -255,13 +271,14 @@ bool BoardDisplay::inStalemate(Colour c) {
 
     auto curr = (c == BLACK) ? getBlackPlayer() : getWhitePlayer();
     for (const auto& p : curr->activePieces) {
-        if (!(getValidMoves(p).empty())) return false;
+        if (!(getValidMoves(p.get()).empty())) return false;
     }
     return true;
 }
 
 void BoardDisplay::setUpGame() {
     std::string setupCommand;
+    endGame();
     while (std::cin >> setupCommand) {
         if (setupCommand == "+") {
             char addnewPiece;
@@ -289,7 +306,16 @@ void BoardDisplay::resign(Colour c) {
     auto winningPlayer = (c == BLACK) ? getWhitePlayer() : getBlackPlayer();
     winningPlayer->score++;
     endGame();
+    message = "CURRENT SCORE\n-------------\nWHITE: " 
+            + std::to_string(getWhitePlayer()->score) 
+            + "\nBLACK: " 
+            + std::to_string(getBlackPlayer()->score);
     notifyObservers();
+}
+
+void BoardDisplay::PlayerInfo::reset() {
+    inCheck = false;
+    kingPosition = (colour == WHITE) ? std::make_pair('e', 1) : std::make_pair('e', 8);
 }
 
 void BoardDisplay::endGame() {
@@ -305,6 +331,11 @@ void BoardDisplay::endGame() {
 }
 
 void BoardDisplay::endSession() {
+    message = "FINAL SCORES\n-------------\nWHITE: " 
+            + std::to_string(getWhitePlayer()->score) 
+            + "\nBLACK: " 
+            + std::to_string(getBlackPlayer()->score);
+
     notifyObservers();
 }
 
@@ -383,28 +414,28 @@ void BoardDisplay::makeMove(Colour c) {
         std::pair<char, int> prevPosition;
 
         for (auto& active : currentPlayer->activePieces) {
-            std::vector<std::pair<char, int>> gotMoves = getValidMoves(active);
+            std::vector<std::pair<char, int>> gotMoves = getValidMoves(active.get());
 
             if (gotMoves.size() != 0) {
-                char currentType = active->getType();
-                std::pair<char, int> currentPosition = active->getPosition();
+                char currentType = active.get()->getType();
+                std::pair<char, int> currentPosition = active.get()->getPosition();
 
                 if (currentType != prevType || currentPosition != prevPosition) {
-                    pieceAndMoves.emplace_back(std::make_pair(active, gotMoves));
+                    pieceAndMoves.emplace_back(std::make_pair(active.get(), gotMoves));
                     prevType = currentType;
                     prevPosition = currentPosition;
                 }
             }
-            if (captureMoves.size() != 0) pieceAndCaptureMoves.emplace_back(std::make_pair(active, captureMoves));
+            if (captureMoves.size() != 0) pieceAndCaptureMoves.emplace_back(std::make_pair(active.get(), captureMoves));
             moves.clear();
         }
         for (const auto& active : otherPlayer->activePieces) {
             for (auto pair : active->generate()) {
-                if (checkValid(active, std::get<0>(pair), std::get<1>(pair))) {
+                if (checkValid(active.get(), std::get<0>(pair), std::get<1>(pair))) {
                     opponentMoves.emplace_back(std::make_pair(std::get<0>(pair), std::get<1>(pair)));
                 }
             }
-            if (opponentMoves.size() != 0) opponentPieceAndMoves.emplace_back(std::make_pair(active, moves));
+            if (opponentMoves.size() != 0) opponentPieceAndMoves.emplace_back(std::make_pair(active.get(), moves));
             opponentMoves.clear();
         }
 
@@ -419,6 +450,8 @@ void BoardDisplay::makeMove(Colour c) {
         setState(movePiece, moveC, moveI);
         setState(nullptr, oldC, oldI);
     }
+    getCurrentTurn = (getCurrentTurn == BLACK) ? WHITE : BLACK;
+    message = (getCurrentTurn == WHITE ? "White" : "Black") + std::string("'s Turn\n");
     notifyObservers();
 }
 
@@ -452,15 +485,15 @@ BoardDisplay::BoardDisplay() {
     notifyObservers();
 }
 
-
 Player* BoardDisplay::setPlayer(Colour c, std::string playerType) {
     Player* p = (c == WHITE) ? getWhitePlayer()->player.get() : getBlackPlayer()->player.get();
 
     if (p) {
-        if (c == WHITE) {
+        if(c == WHITE) {
             getWhitePlayer()->player.reset();
         } else {
             getBlackPlayer()->player.reset();
+
         }
     }
 
@@ -474,9 +507,7 @@ Player* BoardDisplay::setPlayer(Colour c, std::string playerType) {
         p = new LevelThree("level three", {}, c);
     } else if (playerType == "computer4") {
         p = new LevelFour("level four", {}, c);
-    } else {
-        throw std::runtime_error("Invalid player type received");
-    }
+    } else throw std::runtime_error("Invalid player type received");
 
     return p;
 }
@@ -562,9 +593,9 @@ bool BoardDisplay::simulateAttack(Piece* p, char newC, int newI, Piece* checkAtt
 
     for (const auto& piece : oppositePlayer->activePieces) {
         if (checkAttack) {
-            canBeAttacked = checkValid(piece, checkAttack->getPosition().first, checkAttack->getPosition().second);
+            canBeAttacked = checkValid(piece.get(), checkAttack->getPosition().first, checkAttack->getPosition().second);
         } else {
-            canBeAttacked = checkValid(piece, currentPlayer->kingPosition.first, currentPlayer->kingPosition.second);
+            canBeAttacked = checkValid(piece.get(), currentPlayer->kingPosition.first, currentPlayer->kingPosition.second);
         }
         if (canBeAttacked) break;
     }

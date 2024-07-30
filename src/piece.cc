@@ -25,3 +25,4 @@ int Piece::getPieceValue() {
 vector<pair<char,int>> Piece::generate(){
     return {};
 }
+

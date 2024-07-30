@@ -20,7 +20,7 @@ public:
 
     struct BoardSegment {
         Colour colour;
-        std::unique_ptr<Piece> piece;
+        Piece* piece;
 
         void setBegin();
         BoardSegment(Colour c);
@@ -35,7 +35,7 @@ public:
         bool inCheck;
         bool hasKing = false;
         pair<char, int> kingPosition;
-        vector<Piece *> activePieces;
+        vector<std::unique_ptr<Piece>> activePieces;
 
         void reset();
 
@@ -59,7 +59,7 @@ public:
     void addPiece(char type, string pos);
     void removePiece(char cPos, int iPos);
 
-    std::vector<std::string> messages;
+    std::string message;
 
     PlayerInfo* getWhitePlayer();
     PlayerInfo* getBlackPlayer();
@@ -90,3 +90,4 @@ public:
 };
 
 #endif
+

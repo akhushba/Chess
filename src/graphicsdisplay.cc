@@ -66,8 +66,6 @@ void GraphicsDisplay::notify() {
 
     xw->drawString(900, 100, "BOARD STATUS");
     int textOffset = 25;
-    for (auto s : display->messages) {
-        xw->drawString(900, 100 + textOffset, s);
-        textOffset += 25;
-    }
+    xw->drawString(900, 100 + textOffset, display->message);
 }
+

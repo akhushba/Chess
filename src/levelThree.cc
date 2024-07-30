@@ -129,3 +129,4 @@ pair<Piece*, pair<char, int>> LevelThree::move(vector<pair<Piece*, vector<pair<c
     // board->setState(pieceSet.at(0), potentialC, potentialI);
     // // pieceSet.at(0)->setPos(newC, newI);
 }
+

@@ -227,3 +227,4 @@ pair<Piece*, pair<char, int>> LevelFour::move(vector<pair<Piece*, vector<pair<ch
     //     pieceSet.at(index)->capture(newC, newI)->setActiveStatus(false);
     // }
 }
+

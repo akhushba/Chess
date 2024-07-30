@@ -17,3 +17,4 @@ ${EXEC}: ${OBJECTS}
 
 clean:
 	rm ${OBJECTS} ${DEPENDS} ${EXEC}
+

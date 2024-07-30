@@ -12,3 +12,4 @@ class Bishop : public Piece {
         vector <pair<char,int>> generate() override;
 };
 #endif
+
