@@ -2,7 +2,7 @@
 
 using namespace std;
 
-Player::Player(string name, vector<Piece*> *ps, Colour c) : name{name}, pieceSet{ps}, colour{c} {
+Player::Player(string name, vector<Piece*> ps, Colour c) : name{name}, pieceSet{ps}, colour{c} {
     // if (c == WHITE) {
     //     *pieceSet = board->whitePlayer->activePieces;
     // } else if (c == BLACK) {

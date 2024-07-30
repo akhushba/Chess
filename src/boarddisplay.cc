@@ -66,13 +66,14 @@ void BoardDisplay::defaultBoard() {
     addPiece('p', "f7");
     addPiece('p', "g7");
     addPiece('p', "h7");
+    attach(new TextDisplay(this));
+    notifyObservers();
 
-    // getWhitePlayer()->player->pieceSet = &(getWhitePlayer()->activePieces);
-    // getBlackPlayer()->player->pieceSet = &(getBlackPlayer()->activePieces);
-    // customSetup = false;
+    customSetup = false;
 }
 
 Piece* BoardDisplay::getBoardInfo(char c, int i) {
+    cout << i-1 << ", " << c-'a' << endl;
     return board[i - 1][c - 'a']->piece;
     }
 
@@ -142,25 +143,30 @@ void BoardDisplay::addPiece(char type, const std::string pos) {
     PlayerInfo* currentPlayer = (c == BLACK) ? blackPlayer : whitePlayer;
     setState(newPiece, cPos, iPos);
     currentPlayer->activePieces.push_back(newPiece);
-    // cout << "pushback new piece" << endl;
-    // currentPlayer->player->pieceSet->push_back(newPiece);
+    currentPlayer->player->pieceSet.push_back(newPiece);
+
 }
 
 
 void BoardDisplay::removePiece(string pos) {
     Piece* p = board[pos[1] - '0' - 1][pos[0] - 'a']->piece;
+    cout << pos[1] - '0' - 1 << ", " << pos[0] - 'a' << endl;
     if (p) {
         PlayerInfo* currentPlayer = (p->getColour() == BLACK) ? blackPlayer : whitePlayer;
+        cout << "----------" << currentPlayer->activePieces.size() << endl;
         auto& activePieces = currentPlayer->activePieces;
         auto it = std::find(activePieces.begin(), activePieces.end(), p);
         if (it != activePieces.end()) {
             currentPlayer->inactivePieces.push_back(*it);
             activePieces.erase(it);
         }
+        // setState(nullptr, pos[0], pos[1]-'0');
+        // cout << "----------" << currentPlayer->activePieces.size() << endl;
     }
 }
 
 void BoardDisplay::setState(Piece* p, char cPos, int iPos, char pawnPromote) {
+
     if (p) {
         PlayerInfo* currentPlayer = (p->getColour() == BLACK) ? blackPlayer : whitePlayer;
         if (p->getType() == 'K' || p->getType() == 'k') {
@@ -239,7 +245,9 @@ bool BoardDisplay::inCheck(Colour c) {
     PlayerInfo* oppositePlayer = (c == BLACK) ? whitePlayer : blackPlayer;
 
     for (auto& p : oppositePlayer->activePieces) {
-        if (p->isValidMove(currentPlayer->kingPosition.first, currentPlayer->kingPosition.second)) return true;
+        if (p->isValidMove(currentPlayer->kingPosition.first, currentPlayer->kingPosition.second)) 
+        return true;
+
     }
     return false;
 }
@@ -325,10 +333,14 @@ void BoardDisplay::endSession() {
 
 
 void BoardDisplay::makeMove(Colour c, string oldPos, string newPos){
-        
-        PlayerInfo* currentPlayer = (c == BLACK) ? blackPlayer : whitePlayer;
-        Piece* p = getBoardInfo(oldPos[0], (int)oldPos[1]);
-        currentPlayer->player->move(p, newPos[0], (int)newPos[1]);
+
+    cout << "++++++++++1" << endl;
+    PlayerInfo* currentPlayer = (c == BLACK) ? blackPlayer : whitePlayer;
+    Piece* p = getBoardInfo(oldPos[0], oldPos[1]-'0');
+    cout << "++++++++++3" << endl;
+    currentPlayer->player->move(p, newPos[0], (int)newPos[1]);
+    cout << "++++++++++4" << endl;
+
 }
 
 BoardDisplay::PlayerInfo* BoardDisplay::getWhitePlayer() {
@@ -360,7 +372,7 @@ BoardDisplay::BoardDisplay() {
     notifyObservers();
 }
 
-void BoardDisplay::setPlayer(Colour c, string playerType) {
+Player* BoardDisplay::setPlayer(Colour c, string playerType) {
     Player* p = c == WHITE ? whitePlayer->player : blackPlayer->player;
     if(p) delete p;
     if (playerType == "human") {
@@ -374,9 +386,11 @@ void BoardDisplay::setPlayer(Colour c, string playerType) {
     } else if (playerType == "computer4") {
         p = new LevelFour("level four", {}, c);
     }
+    return p;
 }
 
 void BoardDisplay::setPlayers(string playerOne, string playerTwo) {
+
     setPlayer(WHITE, playerOne);
     setPlayer(BLACK, playerTwo);
 }
