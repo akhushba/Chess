@@ -249,6 +249,7 @@ bool BoardDisplay::inCheck(Colour c) {
 
     for (auto& p : opp->activePieces) {
         if (checkValid(p.get(), curr->kingPosition.first, curr->kingPosition.second)) {
+            message += (c == WHITE ? "White" : "Black") + std::string("is in check!\n");
             return true;
         }
     }
@@ -262,6 +263,7 @@ bool BoardDisplay::inCheckmate(Colour c) {
     for (const auto& p : curr->activePieces) {
         if (!(getValidMoves(p.get()).empty())) return false;
     }
+    message = std::string("CHECK MATE ") + (c == WHITE ? "White" : "Black") + std::string(" wins!\n");
     return true;
 }
 
@@ -272,6 +274,8 @@ bool BoardDisplay::inStalemate(Colour c) {
     for (const auto& p : curr->activePieces) {
         if (!(getValidMoves(p.get()).empty())) return false;
     }
+    message = "Stalemated!";
+    notifyObservers();
     return true;
 }
 
@@ -305,7 +309,8 @@ void BoardDisplay::resign(Colour c) {
     auto winningPlayer = (c == BLACK) ? getWhitePlayer() : getBlackPlayer();
     winningPlayer->score++;
     endGame();
-    message = "CURRENT SCORE\n-------------\nWHITE: " 
+    message = (c == WHITE ? "White" : "Black") + std::string(" wins!\n") 
+            + std::string("CURRENT SCORE\n-------------\nWHITE: ") 
             + std::to_string(getWhitePlayer()->score) 
             + "\nBLACK: " 
             + std::to_string(getBlackPlayer()->score);
@@ -459,7 +464,7 @@ void BoardDisplay::makeMove(Colour c) {
     setState(nullptr, oldC, oldI);
 
     getCurrentTurn = (getCurrentTurn == BLACK) ? WHITE : BLACK;
-    message = (getCurrentTurn == WHITE ? "White" : "Black") + std::string("'s Turn\n");
+    message += (getCurrentTurn == WHITE ? "White" : "Black") + std::string("'s Turn\n");
     notifyObservers();
 }
 

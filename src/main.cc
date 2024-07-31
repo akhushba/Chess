@@ -83,7 +83,6 @@ int main () {
         } catch (runtime_error& e) {
             board_Display.message = e.what();
             board_Display.notifyObservers();
-            board_Display.message = "";
         }
     }
     board_Display.endSession();
