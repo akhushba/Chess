@@ -7,7 +7,7 @@
 
 using namespace std;
 
-LevelTwo::LevelTwo(string name, vector<Piece*> pieceSet, Colour c) : Computer(name, pieceSet, c) {}
+LevelTwo::LevelTwo(string name, Colour c) : Computer(name, c) {}
 
 pair<Piece*, pair<char, int>> LevelTwo::move(vector<pair<Piece*, vector<pair<char, int>>>> pieceAndMoves, vector<pair<Piece*, vector<pair<char, int>>>> pieceAndCaptureMoves, vector<pair<Piece*, vector<pair<char, int>>>> opponentPieceAndMoves) {
     int numPieces = pieceAndMoves.size();

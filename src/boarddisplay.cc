@@ -391,32 +391,37 @@ std::vector<std::pair<char, int>> BoardDisplay::getValidMoves(Piece* p) {
 
 void BoardDisplay::makeMove(Colour c) {
     auto currentPlayer = (c == BLACK) ? getBlackPlayer() : getWhitePlayer();
+    std::vector<std::pair<Piece*, std::vector<std::pair<char, int>>>> pieceAndMoves = {};
+    std::vector<std::pair<Piece*, std::vector<std::pair<char, int>>>> pieceAndCaptureMoves = {};
+    std::vector<std::pair<Piece*, std::vector<std::pair<char, int>>>> opponentPieceAndMoves = {};
+    std::pair<Piece*, std::pair<char, int>> pieceMovePair;
 
     if (currentPlayer->player->getName() == "human") {
         std::string oldPos, newPos;
         std::cin >> oldPos >> newPos;
         Piece* p = getBoardInfo(oldPos[0], oldPos[1] - '0');
+        std::vector<std::pair<char, int>> moveInput;
 
         if (checkValid(p, newPos[0], newPos[1] - '0')) {
-            setState(p, newPos[0], newPos[1] - '0');
-            setState(nullptr, oldPos[0], oldPos[1] - '0');
+            moveInput.emplace_back(make_pair(newPos[0], newPos[1]-'0'));
+            pieceAndMoves.emplace_back(make_pair(p, moveInput));
         } else throw std::runtime_error("Invalid move made");
 
     } else {
         auto otherPlayer = (c == BLACK) ? getWhitePlayer() : getBlackPlayer();
-        std::vector<std::pair<Piece*, std::vector<std::pair<char, int>>>> pieceAndMoves;
-        std::vector<std::pair<Piece*, std::vector<std::pair<char, int>>>> pieceAndCaptureMoves;
-        std::vector<std::pair<Piece*, std::vector<std::pair<char, int>>>> opponentPieceAndMoves;
-        std::vector<std::pair<char, int>> moves;
+        std::vector<std::pair<char, int>> gotMoves;
         std::vector<std::pair<char, int>> captureMoves;
         std::vector<std::pair<char, int>> opponentMoves;
-        std::pair<Piece*, std::pair<char, int>> pieceMovePair;
         char prevType;
         std::pair<char, int> prevPosition;
 
         for (auto& active : currentPlayer->activePieces) {
-            std::vector<std::pair<char, int>> gotMoves = getValidMoves(active.get());
-
+            gotMoves = getValidMoves(active.get());
+            for (auto& pair : active->generate()) {
+                if (canCapture(c, get<0>(pair), get<1>(pair))) {
+                    captureMoves.emplace_back(make_pair(get<0>(pair), get<1>(pair)));
+                }
+            }
             if (gotMoves.size() != 0) {
                 char currentType = active.get()->getType();
                 std::pair<char, int> currentPosition = active.get()->getPosition();
@@ -427,30 +432,32 @@ void BoardDisplay::makeMove(Colour c) {
                     prevPosition = currentPosition;
                 }
             }
-            if (captureMoves.size() != 0) pieceAndCaptureMoves.emplace_back(std::make_pair(active.get(), captureMoves));
-            moves.clear();
+            if (captureMoves.size() != 0) {
+                pieceAndCaptureMoves.emplace_back(std::make_pair(active.get(), captureMoves));
+            }
+            gotMoves.clear();
         }
         for (const auto& active : otherPlayer->activePieces) {
-            for (auto pair : active->generate()) {
-                if (checkValid(active.get(), std::get<0>(pair), std::get<1>(pair))) {
-                    opponentMoves.emplace_back(std::make_pair(std::get<0>(pair), std::get<1>(pair)));
-                }
+            opponentMoves = getValidMoves(active.get());
+
+            if (opponentMoves.size() != 0) {
+                opponentPieceAndMoves.emplace_back(std::make_pair(active.get(), gotMoves));
             }
-            if (opponentMoves.size() != 0) opponentPieceAndMoves.emplace_back(std::make_pair(active.get(), moves));
             opponentMoves.clear();
         }
-
-        pieceMovePair = currentPlayer->player->move(pieceAndMoves, pieceAndCaptureMoves, opponentPieceAndMoves);
-
-        Piece* movePiece = std::get<0>(pieceMovePair);
-        char oldC = movePiece->getPosition().first;
-        int oldI = movePiece->getPosition().second;
-        char moveC = std::get<0>(std::get<1>(pieceMovePair));
-        int moveI = std::get<1>(std::get<1>(pieceMovePair));
-
-        setState(movePiece, moveC, moveI);
-        setState(nullptr, oldC, oldI);
     }
+    
+    pieceMovePair = currentPlayer->player->move(pieceAndMoves, pieceAndCaptureMoves, opponentPieceAndMoves);
+
+    Piece* movePiece = std::get<0>(pieceMovePair);
+    char oldC = movePiece->getPosition().first;
+    int oldI = movePiece->getPosition().second;
+    char moveC = std::get<0>(std::get<1>(pieceMovePair));
+    int moveI = std::get<1>(std::get<1>(pieceMovePair));
+
+    setState(movePiece, moveC, moveI);
+    setState(nullptr, oldC, oldI);
+
     getCurrentTurn = (getCurrentTurn == BLACK) ? WHITE : BLACK;
     message = (getCurrentTurn == WHITE ? "White" : "Black") + std::string("'s Turn\n");
     notifyObservers();
@@ -505,17 +512,16 @@ Player* BoardDisplay::setPlayer(Colour c, std::string playerType) {
     }
 
     if (playerType == "human") {
-        p = new Human("human", {}, c);
+        p = new Human("human", c);
     } else if (playerType == "computer1") {
-        p = new LevelOne("level one", {}, c);
+        p = new LevelOne("level one", c);
     } else if (playerType == "computer2") {
-        p = new LevelTwo("level two", {}, c);
+        p = new LevelTwo("level two", c);
     } else if (playerType == "computer3") {
-        p = new LevelThree("level three", {}, c);
+        p = new LevelThree("level three", c );
     } else if (playerType == "computer4") {
-        p = new LevelFour("level four", {}, c);
-    } else throw std::runtime_error("Invalid player type received");
-
+        p = new LevelFour("level four", c);
+    }
     return p;
 }
 

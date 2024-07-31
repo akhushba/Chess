@@ -7,7 +7,7 @@
 
 using namespace std; 
 
-LevelThree::LevelThree(string name, vector<Piece*> pieceSet, Colour c) : Computer(name, pieceSet, c) {}
+LevelThree::LevelThree(string name, Colour c) : Computer(name, c) {}
 
 pair<Piece*, pair<char, int>> LevelThree::move(vector<pair<Piece*, vector<pair<char, int>>>> pieceAndMoves, vector<pair<Piece*, vector<pair<char, int>>>> pieceAndCaptureMoves, vector<pair<Piece*, vector<pair<char, int>>>> opponentPieceAndMoves) {
     char newC;

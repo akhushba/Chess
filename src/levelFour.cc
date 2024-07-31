@@ -8,7 +8,7 @@
 
 using namespace std;
 
-LevelFour::LevelFour(string name, vector<Piece*> pieceSet, Colour c) : Computer(name, pieceSet, c) {}
+LevelFour::LevelFour(string name, Colour c) : Computer(name, c) {}
 
 // returns which move option captures the most valuable piece
 int LevelFour::getMaxPieceValue(vector<pair<Piece*, pair<char, int>>> optionsVec) {
@@ -31,11 +31,6 @@ int LevelFour::getMaxPieceValue(vector<pair<Piece*, pair<char, int>>> optionsVec
 }
 
 pair<Piece*, pair<char, int>> LevelFour::move(vector<pair<Piece*, vector<pair<char, int>>>> pieceAndMoves, vector<pair<Piece*, vector<pair<char, int>>>> pieceAndCaptureMoves, vector<pair<Piece*, vector<pair<char, int>>>> opponentPieceAndMoves) {
-    
-    // find all moves in pieceAndMoves overlapping w pieceAndCaptureMoves not in opponentPieceAndMoves
-    // find all moves in pieceAndMoves not in opponentPieceAndMoves
-    // choose random move
-
     char newC;
     int newI;
     bool safeMove = true;

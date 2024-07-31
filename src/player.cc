@@ -2,7 +2,7 @@
 
 using namespace std;
 
-Player::Player(string name, vector<Piece*> ps, Colour c) : name{name}, pieceSet{ps}, colour{c} {
+Player::Player(string name, Colour c) : name{name}, colour{c} {
     // if (c == WHITE) {
     //     *pieceSet = board->whitePlayer->activePieces;
     // } else if (c == BLACK) {
@@ -10,12 +10,12 @@ Player::Player(string name, vector<Piece*> ps, Colour c) : name{name}, pieceSet{
     // }
 }
 
-bool Player::callSimulateAttack(Piece* p, char newC, int newI, Piece* reference) {
-    if (reference) {
-        return board->simulateAttack(p, newC, newI, reference);
-    }
-    return board->simulateAttack(p, newC, newI);
-}
+// bool Player::callSimulateAttack(Piece* p, char newC, int newI, Piece* reference) {
+//     if (reference) {
+//         return board->simulateAttack(p, newC, newI, reference);
+//     }
+//     return board->simulateAttack(p, newC, newI);
+// }
 
 string Player::getName() {
     return name;
