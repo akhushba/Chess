@@ -105,6 +105,7 @@ void BoardDisplay::addPiece(char type, const std::string pos) {
     std::unique_ptr<Piece> newPiece;
 
     // Create the new piece based on type
+    //cout<< type <<"      HI"<<endl;
     switch (type) {
         case 'Q': case 'q': newPiece = std::make_unique<Queen>(c, cPos, iPos); break;
         case 'R': case 'r': newPiece = std::make_unique<Rook>(c, cPos, iPos); break;
@@ -324,6 +325,8 @@ void BoardDisplay::endGame() {
     }
     whitePlayer->reset();
     blackPlayer->reset();
+    whitePlayer->hasKing = false;
+    blackPlayer->hasKing = false;
     customSetup = false;
     notifyObservers();
 }

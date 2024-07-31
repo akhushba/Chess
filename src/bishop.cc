@@ -1,6 +1,6 @@
 #include "bishop.h"
 
-Bishop::Bishop(Colour colour, char cPos, int iPos) : Piece(colour, 'k', cPos, iPos, 10) {
+Bishop::Bishop(Colour colour, char cPos, int iPos) : Piece(colour, 'b', cPos, iPos, 10) {
 }
 
 vector <pair<char,int>> Bishop::generate(){
