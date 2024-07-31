@@ -465,7 +465,15 @@ void BoardDisplay::makeMove(Colour c) {
 
     getCurrentTurn = (getCurrentTurn == BLACK) ? WHITE : BLACK;
     message += (getCurrentTurn == WHITE ? "White" : "Black") + std::string("'s Turn\n");
-    notifyObservers();
+
+    Colour check = getCurrentTurn == WHITE ? BLACK : WHITE;
+    if(inCheckmate(check)) {
+        endGame();
+    } else if(inStalemate(check)) {
+        endGame();
+    }  else if (inCheck(check)) {
+        notifyObservers();
+    } else notifyObservers();
 }
 
 BoardDisplay::PlayerInfo* BoardDisplay::getWhitePlayer() {
