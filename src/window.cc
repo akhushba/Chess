@@ -5,7 +5,7 @@
 #include <string>
 #include <unistd.h>
 #include "window.h"
-
+//essenitally the same as what we used in the assignment problems
 using namespace std;
 
 Xwindow::Xwindow(int width, int height) {

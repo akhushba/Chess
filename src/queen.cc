@@ -6,8 +6,9 @@ Queen::Queen(Colour colour, char cPos, int iPos): Piece(colour, 'q', cPos, iPos,
 
 vector <pair<char,int>>Queen::generate(){
     vector <pair<char,int>> possible;
+    //can move up, down, left, right, and in any diagonal direction
     int directions[8][2] = {{1, 1}, {1, -1}, {-1, 1}, {-1, -1}, {0, 1}, {0, -1}, {1, 0}, {-1, 0}};
-
+    //can move in any number of squares
     for (auto& direction : directions) {
         char col = cPos;
         int row = iPos;
@@ -17,7 +18,6 @@ vector <pair<char,int>>Queen::generate(){
             col += direction[1];
             if(col < 'a' || col > 'h' || row < 1 || row > 8) break;
             possible.emplace_back(make_pair(col, row));
-            // std::cout << "possible moves \t" << col << row << std::endl;
         }
     }
     return possible;

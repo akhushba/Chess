@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 
+//essenitally the same as what we used in the assignment problems
 class Xwindow {
   Display *d;
   Window w;

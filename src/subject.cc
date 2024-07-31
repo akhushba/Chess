@@ -15,6 +15,6 @@ void Subject::notifyObservers() {
         observer->notify(); 
     }
 }
-
+//using unique ptrs so we don't have to do any clean up
 Subject::~Subject() = default;
 
