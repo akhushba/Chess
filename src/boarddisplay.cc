@@ -299,6 +299,14 @@ void BoardDisplay::setUpGame() {
         } else if (setupCommand == "done") {
             notifyObservers();
             customSetup = true;
+            Colour check = getCurrentTurn;
+            if(inCheckmate(check)) {
+                endGame();
+            } else if(inStalemate(check)) {
+                endGame();
+            }  else if (inCheck(check)) {
+                notifyObservers();
+            }
             break;
         }
         notifyObservers();
@@ -365,7 +373,9 @@ std::vector<std::pair<char, int>> BoardDisplay::getValidMoves(Piece* p) {
             char currentCol = currC;
             int currentRow = currI;
 
-            while (currentCol != m.first || currentRow != m.second) {
+            while ((currentCol != m.first || currentRow != m.second) &&
+                   (currentCol >= 'a' && currentCol <= 'h') &&
+                   (currentRow >= 1 && currentRow <= 8)) {
                 currentCol += colStep;
                 currentRow += rowStep;
 
@@ -466,12 +476,11 @@ void BoardDisplay::makeMove(Colour c) {
     getCurrentTurn = (getCurrentTurn == BLACK) ? WHITE : BLACK;
     message += (getCurrentTurn == WHITE ? "White" : "Black") + std::string("'s Turn\n");
 
-    Colour check = getCurrentTurn == WHITE ? BLACK : WHITE;
-    if(inCheckmate(check)) {
+    if(inCheckmate(getCurrentTurn)) {
         endGame();
-    } else if(inStalemate(check)) {
+    } else if(inStalemate(getCurrentTurn)) {
         endGame();
-    }  else if (inCheck(check)) {
+    }  else if (inCheck(getCurrentTurn)) {
         notifyObservers();
     } else notifyObservers();
 }
